@@ -1,0 +1,140 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.7.8' apply (false)
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+    configurations {
+
+    }
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
+        implementation 'org.springdoc:springdoc-openapi-webmvc-core:1.7.0'
+        implementation 'org.springdoc:springdoc-openapi-webflux-ui:1.7.0'
+        implementation 'org.springdoc:springdoc-openapi-data-rest:1.7.0'
+        developmentOnly 'org.springframework.boot:spring-boot-devtools'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        testImplementation platform('org.junit:junit-bom:5.9.1')
+        testImplementation 'org.junit.jupiter:junit-jupiter'
+        testImplementation 'com.h2database:h2'
+    }
+}
+
+project("exceptions") {
+
+}
+
+project("common") {
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+        implementation project(":exceptions")
+    }
+}
+
+project("books") {
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+        runtimeOnly 'org.postgresql:postgresql'
+        implementation project(':common')
+        implementation project(':exceptions')
+    }
+}
+
+project("clients") {
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+        runtimeOnly 'com.mysql:mysql-connector-j'
+        implementation project(':common')
+        implementation project(':exceptions')
+    }
+}
+
+project("carts") {
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+        runtimeOnly 'com.mysql:mysql-connector-j'
+        implementation project(':common')
+        implementation project(':exceptions')
+    }
+}
+
+project("storage") {
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+        runtimeOnly 'org.postgresql:postgresql'
+        implementation project(':common')
+        implementation project(':exceptions')
+    }
+}
+
+project("orders") {
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+        runtimeOnly 'org.postgresql:postgresql'
+        implementation project(':common')
+        implementation project(':exceptions')
+    }
+}
+
+project("ratings") {
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+        runtimeOnly 'com.mysql:mysql-connector-j'
+        implementation project(':common')
+        implementation project(':exceptions')
+    }
+}
+
+project("payments") {
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+        runtimeOnly 'com.mysql:mysql-connector-j'
+        implementation project(':common')
+        implementation project(':exceptions')
+    }
+}
+
+project("dynapay") {
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+        runtimeOnly 'com.mysql:mysql-connector-j'
+        implementation project(':common')
+        implementation project(':exceptions')
+    }
+}
+
+project("ingest") {
+    dependencies {
+        implementation 'org.yaml:snakeyaml:1.33'
+        implementation 'com.github.javafaker:javafaker:1.0.2'
+        implementation project(':exceptions')
+    }
+}
+
+allprojects {
+    group = 'com.dynatrace'
+    version = '0.0.1-SNAPSHOT'
+    sourceCompatibility = '17'
+
+    configurations {
+
+    }
+
+    repositories {
+        mavenCentral()
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+    }
+}
+

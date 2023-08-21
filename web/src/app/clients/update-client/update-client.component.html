@@ -1,0 +1,22 @@
+<div class="col-md-6 offset-md-3">
+  <h3>Update Client</h3>
+  <form (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label>First Name</label>
+      <input type="text" class="form-control" id="firstName" [(ngModel)] = "client.firstName" name="firstName">
+    </div>
+    <br>
+    <div class="form-group">
+      <label>Last Name</label>
+      <input type="text" class="form-control" id="lastName" [(ngModel)] = "client.lastName" name="lastName">
+    </div>
+    <br>
+    <div class="form-group">
+      <label>e-mail</label>
+      <input type="text" class="form-control" id="email" [(ngModel)] = "client.email" name="email">
+    </div>
+
+    <br>
+    <button class="btn btn-success" type="submit">Submit</button>
+  </form>
+</div>

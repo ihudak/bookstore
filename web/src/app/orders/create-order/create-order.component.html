@@ -1,0 +1,34 @@
+<div class="col-md-6 offset-md-3">
+  <h3>Create Order</h3>
+  <form (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label>e-mail</label>
+      <input type="text" class="form-control" id="email" [(ngModel)] = "order.email" name="email">
+    </div>
+    <br>
+    <div class="form-group">
+      <label>ISBN</label>
+      <input type="text" class="form-control" id="isbn" [(ngModel)] = "order.isbn" name="isbn">
+    </div>
+    <br>
+    <div class="form-group">
+      <label>Quantity</label>
+      <input type="number" class="form-control" id="quantity" [(ngModel)] = "order.quantity" name="quantity">
+    </div>
+    <br>
+    <div class="form-group">
+      <label>Price</label>
+      <input type="number" class="form-control" id="price" [(ngModel)] = "order.price" name="price" readonly="readonly">
+    </div>
+    <br>
+    <div class="form-group">
+      <label>Completed</label>
+      <input type="text" class="form-control" id="completed" [(ngModel)] = "order.completed" name="completed" readonly="readonly">
+    </div>
+    <br>
+
+
+    <br>
+    <button class="btn btn-success" type="submit">Submit</button>
+  </form>
+</div>

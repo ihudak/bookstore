@@ -1,0 +1,31 @@
+<h2>Ratings List</h2>
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <th>email</th>
+    <th>ISBN</th>
+    <th>Ratings</th>
+    <th>Comment</th>
+    <th>LastUpdated</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let rating of ratings">
+    <td>{{rating.email}}</td>
+    <td>{{rating.isbn}}</td>
+    <td>{{rating.rating}}</td>
+    <td>{{rating.comment}}</td>
+    <td>{{rating.updatedAt}}</td>
+    <td>
+      <button (click) = "updateRating(rating.id)" class="btn btn-info" style="margin-left: 10px">Update</button>
+      <button (click) = "deleteRating(rating)" class="btn btn-danger" style="margin-left: 10px">Delete</button>
+      <button (click) = "ratingDetails(rating.id)" class="btn btn-info" style="margin-left: 10px">Details</button>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+<br>
+<a routerLink="/create-rating"   routerLinkActive="active" class="btn btn-primary">New Rating</a>
+<button (click) = "deleteAllRatings()" class="btn btn-danger" style="margin-left: 10px">Delete All</button>

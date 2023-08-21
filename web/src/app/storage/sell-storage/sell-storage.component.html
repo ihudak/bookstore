@@ -1,0 +1,23 @@
+<div class="col-md-6 offset-md-3">
+  <h3>Sell Book</h3>
+  <form (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label>ISBN</label>
+      <input type="text" class="form-control" id="isbn" [(ngModel)] = "storage.isbn" name="isbn" readonly="readonly">
+    </div>
+    <br>
+    <div class="form-group">
+      <label>Quantity</label>
+      <input type="number" class="form-control" id="quantity" [(ngModel)] = "storage.quantity" name="quantity">
+    </div>
+    <br>
+    <div class="form-group">
+      <label>Updated at</label>
+      <input type="text" class="form-control" id="updatedAt" [(ngModel)] = "storage.updatedAt" name="updatedAt" readonly="readonly">
+    </div>
+    <br>
+
+    <br>
+    <button class="btn btn-success" type="submit">Submit</button>
+  </form>
+</div>

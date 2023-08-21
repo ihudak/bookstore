@@ -1,0 +1,28 @@
+<div class="col-md-6 offset-md-3">
+  <h3>Create Rating</h3>
+  <form (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label>e-mail</label>
+      <input type="text" class="form-control" id="email" [(ngModel)] = "rating.email" name="email">
+    </div>
+    <br>
+    <div class="form-group">
+      <label>ISBN</label>
+      <input type="text" class="form-control" id="isbn" [(ngModel)] = "rating.isbn" name="isbn">
+    </div>
+    <br>
+    <div class="form-group">
+      <label>Rating</label>
+      <input type="number" class="form-control" id="rating" [(ngModel)] = "rating.rating" name="rating">
+    </div>
+    <br>
+    <div class="form-group">
+      <label>Comment</label>
+      <input type="text" class="form-control" id="comment" [(ngModel)] = "rating.comment" name="comment">
+    </div>
+    <br>
+
+    <br>
+    <button class="btn btn-success" type="submit">Submit</button>
+  </form>
+</div>

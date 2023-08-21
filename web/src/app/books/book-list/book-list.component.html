@@ -1,0 +1,36 @@
+<h2>Books List</h2>
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <th>ISBN</th>
+    <th>Title</th>
+    <th>Author</th>
+    <th>Price</th>
+    <th>Lang</th>
+    <th>OnVend</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let book of books">
+    <td>{{book.isbn}}</td>
+    <td>{{book.title}}</td>
+    <td>{{book.author}}</td>
+    <td>{{book.price}}</td>
+    <td>{{book.language}}</td>
+    <td>{{book.published}}</td>
+    <td>
+      <button (click) = "vendBook(book)" class="btn btn-secondary" style="margin-left: 10px">Vend</button>
+      <button (click) = "updateBook(book.id)" class="btn btn-info" style="margin-left: 10px">Update</button>
+      <button (click) = "deleteBook(book.id)" class="btn btn-danger" style="margin-left: 10px">Delete</button>
+      <button (click) = "bookDetails(book.isbn)" class="btn btn-info" style="margin-left: 10px">Details</button>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+<br>
+<a routerLink="/create-book"   routerLinkActive="active" class="btn btn-primary">New Book</a>
+<button (click) = "deleteAllBooks()" class="btn btn-danger" style="margin-left: 10px">Delete All</button>
+<button (click) = "vendAllBooks()" class="btn btn-success" style="margin-left: 10px">Vend All</button>
+<button (click) = "unvendAllBooks()" class="btn btn-secondary" style="margin-left: 10px">Unvend All</button>

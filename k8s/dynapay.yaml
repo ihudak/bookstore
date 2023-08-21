@@ -1,0 +1,168 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: superpay
+  namespace: bookstore
+  labels:
+    app: superpay
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: superpay
+  template:
+    metadata:
+      annotations:
+        metrics.dynatrace.com/path: /stats/prometheus
+        metrics.dynatrace.com/port: "15020"
+        metrics.dynatrace.com/scrape: "true"
+        metrics.dynatrace.com/secure: "false"
+      namespace: bookstore
+      labels:
+        app: superpay
+    spec:
+      containers:
+        - name: superpay
+          image: ivangudak096/dynapay-{AGENT}-{ARCH}:latest
+          ports:
+            - containerPort: 8080
+            - containerPort: 5005
+          env:
+            - name: DT_BOOKSTORE_PROFILE
+              valueFrom:
+                configMapKeyRef:
+                  name: bookstore-configmap
+                  key: bookstore_profile
+            - name: DT_SERVER_PORT
+              value: "8080"
+            - name: DT_MYSQL_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  name: bookstore-configmap
+                  key: mysql_server
+            - name: DT_MYSQL_PORT
+              value: "3306"
+            - name: DT_MYSQL_DBNAME
+              value: dt_books_dynapays # DB NAME HERE
+            - name: DT_MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: bookstore-secret
+                  key: mysql-user-name
+            - name: DT_MYSQL_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: bookstore-secret
+                  key: mysql-user-pass
+            - name: DT_PG_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  name: bookstore-configmap
+                  key: pgdb_server
+            - name: DT_PG_PORT
+              value: "5432"
+            - name: DT_PG_DBNAME
+              value: none # DB NAME HERE
+            - name: DT_PG_USER
+              valueFrom:
+                secretKeyRef:
+                  name: bookstore-secret
+                  key: pgdb-user-name
+            - name: DT_PG_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: bookstore-secret
+                  key: pgdb-user-pass
+            - name:   DT_CLIENTS_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  name: bookstore-configmap
+                  key: clients_svc
+            - name:   DT_BOOKS_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  name: bookstore-configmap
+                  key: books_svc
+            - name:   DT_CART_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  name: bookstore-configmap
+                  key: carts_svc
+            - name:   DT_STORAGE_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  name: bookstore-configmap
+                  key: storage_svc
+            - name:   DT_ORDERS_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  name: bookstore-configmap
+                  key: orders_svc
+            - name:   DT_PAYMENT_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  name: bookstore-configmap
+                  key: payments_svc
+            - name:   DT_DYNAPAY_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  name: bookstore-configmap
+                  key: dynapay_svc
+            - name:   DT_RATINGS_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  name: bookstore-configmap
+                  key: ratings_svc
+            - name:   AGENT
+              valueFrom:
+                configMapKeyRef:
+                  name: bookstore-configmap
+                  key: dynapay_agent
+            - name:   TENANT_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: bookstore-configmap
+                  key: tenant_id
+            - name:   TENANT_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: bookstore-configmap
+                  key: tenant_url
+            - name: OA_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: bookstore-secret
+                  key: oneagent-token
+            - name: OTEL_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: bookstore-secret
+                  key: otel-token
+          resources:
+            limits:
+              cpu: 300m
+              memory: 512Mi
+            requests:
+              cpu: 200m
+              memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: superpay-svc
+  namespace: bookstore
+spec:
+  selector:
+    app: superpay
+  type: LoadBalancer
+  ports:
+    - name: http
+      port: 87
+      protocol: TCP
+      targetPort: 8080
+      nodePort: 30007
+    - name: debug
+      port: 5007
+      protocol: TCP
+      targetPort: 5005
+      nodePort: 32007

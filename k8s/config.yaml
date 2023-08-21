@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bookstore-configmap
+  namespace: bookstore
+data:
+  mysql_server: mysql-service
+  pgdb_server: postgres-service
+  clients_svc: clients-svc:81
+  books_svc: books-svc:82
+  carts_svc: carts-svc:83
+  storage_svc: storage-svc:84
+  orders_svc: orders-svc:85
+  payments_svc: payments-svc:86
+  dynapay_svc: superpay-svc:87
+  ratings_svc: ratings-svc:88
+  tenant_id: <tenant-id>
+  tenant_url: <tenant-url>
+  clients_agent: otelAgent
+  books_agent: oneAgent
+  carts_agent: otelAgent
+  storage_agent: otelAgent
+  orders_agent: oneAgent
+  payments_agent: otelAgent
+  dynapay_agent: oneAgent
+  ratings_agent: otelAgent
+  ingest_agent: oneAgent
+  web_agent: otelAgent
+  bookstore_profile: prod

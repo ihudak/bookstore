@@ -1,0 +1,14 @@
+rootProject.name = 'bookstore'
+
+include 'common'
+include 'clients'
+include 'books'
+include 'carts'
+include 'storage'
+include 'orders'
+include 'ratings'
+include 'payments'
+include 'dynapay'
+include 'ingest'
+include 'exceptions'
+

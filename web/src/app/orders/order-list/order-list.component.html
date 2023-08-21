@@ -1,0 +1,35 @@
+<h2>Orders List</h2>
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <th>email</th>
+    <th>ISBN</th>
+    <th>Qty</th>
+    <th>Price</th>
+    <th>Paid</th>
+    <th>LastUpdated</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let order of orders">
+    <td>{{order.email}}</td>
+    <td>{{order.isbn}}</td>
+    <td>{{order.quantity}}</td>
+    <td>{{order.price}}</td>
+    <td>{{order.completed}}</td>
+    <td>{{order.updatedAt}}</td>
+    <td>
+      <button (click) = "updateOrder(order.id)" class="btn btn-info" style="margin-left: 10px">Update</button>
+      <button *ngIf="!order.completed" (click) = "payOrder(order)" class="btn btn-success" style="margin-left: 10px">Pay</button>
+      <button *ngIf="order.completed" (click) = "cancelOrder(order)" class="btn btn-secondary" style="margin-left: 10px">Cancel</button>
+      <button (click) = "deleteOrder(order.id)" class="btn btn-danger" style="margin-left: 10px">Delete</button>
+      <button (click) = "orderDetails(order.id)" class="btn btn-info" style="margin-left: 10px">Details</button>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+<br>
+<a routerLink="/create-order"   routerLinkActive="active" class="btn btn-primary">New Order</a>
+<button (click) = "deleteAllOrders()" class="btn btn-danger" style="margin-left: 10px">Delete All</button>
