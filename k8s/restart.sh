@@ -1,3 +1,4 @@
+kubectl apply -f namespace.yaml
 kubectl apply -f config.yaml
 kubectl apply -f secret.yaml
 
