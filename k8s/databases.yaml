@@ -53,12 +53,12 @@ metadata:
 spec:
   selector:
     app: mysql
-  type: LoadBalancer
+  type: LoadBalancer # ClusterIP
   ports:
     - port: 3306
       protocol: TCP
       targetPort: 3306
-      nodePort: 31306
+      nodePort: 31306 # comment if ClusterIP
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -115,9 +115,9 @@ metadata:
 spec:
   selector:
     app: postgres
-  type: LoadBalancer
+  type: LoadBalancer # ClusterIP
   ports:
     - port: 5432
       protocol: TCP
       targetPort: 5432
-      nodePort: 31432
+      nodePort: 31432 # comment if ClusterIP

@@ -154,15 +154,15 @@ metadata:
 spec:
   selector:
     app: carts
-  type: LoadBalancer
+  type: LoadBalancer # ClusterIP
   ports:
     - name: http
       port: 83
       protocol: TCP
       targetPort: 8080
-      nodePort: 30003
+      nodePort: 30003 # comment if ClusterIP
     - name: debug
       port: 5003
       protocol: TCP
       targetPort: 5005
-      nodePort: 32003
+      nodePort: 32003 # comment if ClusterIP

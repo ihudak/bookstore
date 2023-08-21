@@ -154,15 +154,15 @@ metadata:
 spec:
   selector:
     app: clients
-  type: LoadBalancer
+  type: LoadBalancer # ClusterIP
   ports:
     - name: http
       port: 81
       protocol: TCP
       targetPort: 8080
-      nodePort: 30001
+      nodePort: 30001 # comment if ClusterIP
     - name: debug
       port: 5001
       protocol: TCP
       targetPort: 5005
-      nodePort: 32001
+      nodePort: 32001 # comment if ClusterIP

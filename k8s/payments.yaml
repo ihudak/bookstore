@@ -154,15 +154,15 @@ metadata:
 spec:
   selector:
     app: payments
-  type: LoadBalancer
+  type: LoadBalancer # ClusterIP
   ports:
     - name: http
       port: 86
       protocol: TCP
       targetPort: 8080
-      nodePort: 30006
+      nodePort: 30006 # comment if ClusterIP
     - name: debug
       port: 5006
       protocol: TCP
       targetPort: 5005
-      nodePort: 32006
+      nodePort: 32006 # comment if ClusterIP
