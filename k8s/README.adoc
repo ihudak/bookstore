@@ -46,6 +46,35 @@ Purposes: demonstrating of Dynatrace capabilities in high-load and unhealthy env
     oneagent-token: <base64-ed OneAgent token (make sure you concatenated if it's multiline)>
     otel-token: <base64-ed Otel token (make sure you concatenated if it's multiline)>
 
+=== deployment's yaml files
+the yaml configurations for deployments need to be preconfigured.
+Use preset_deployment.sh for that:
+
+==== use preinstrumented images for Intel/AMD architecture:
+```
+./preset_deployment.sh -agents -x64
+```
+
+==== use preinstrumented images for ARMv8 architecture:
+```
+./preset_deployment.sh -agents -arm
+```
+
+==== use non-instrumented images for Intel/AMD architecture:
+```
+./preset_deployment.sh -noagent -x64
+```
+
+==== use non-instrumented images for ARMv8 architecture:
+```
+./preset_deployment.sh -noagent -arm
+```
+
+==== reset the yaml-files:
+```
+./preset_deployment.sh -reset
+```
+
 == Deployment
 
 1. Create configmap:
