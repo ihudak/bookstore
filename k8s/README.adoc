@@ -76,6 +76,9 @@ Use preset_deployment.sh for that:
 ```
 
 == Deployment
+0. Create namespace:
+
+    kubectl apply -f namespace.yaml
 
 1. Create configmap:
 
