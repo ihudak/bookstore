@@ -27,3 +27,4 @@ data:
   ingest_agent: oneAgent
   web_agent: otelAgent
   bookstore_profile: prod
+  web_app_profile: staging
