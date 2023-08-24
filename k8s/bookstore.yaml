@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: bookstore
-          image: ivangudak096/bookstore-webapp-x64:latest
+          image: ivangudak096/bookstore-webapp-{ARCH}:latest
           ports:
             - containerPort: 4200
           env:
@@ -163,4 +163,4 @@ spec:
     - port: 90
       protocol: TCP
       targetPort: 4200
-#      nodePort: 30000
+      nodePort: 30000

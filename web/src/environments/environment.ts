@@ -1,11 +1,11 @@
 export const environment = {
   production: true,
-  clientsUrl: 'http://20.120.126.92/api/v1/clients',
-  booksUrl: 'http://20.124.53.1/api/v1/books',
-  cartsUrl: 'http://20.120.127.168/api/v1/carts',
-  storageUrl: 'http://20.120.124.67/api/v1/storage',
-  ordersUrl: 'http://20.121.224.83/api/v1/orders',
-  ratingsUrl: 'http://20.121.224.233/api/v1/ratings',
+  clientsUrl: 'http://localhost:81/api/v1/clients',
+  booksUrl: 'http://localhost:82/api/v1/books',
+  cartsUrl: 'http://localhost:83/api/v1/carts',
+  storageUrl: 'http://localhost:84/api/v1/storage',
+  ordersUrl: 'http://localhost:85/api/v1/orders',
+  ratingsUrl: 'http://localhost:88/api/v1/ratings',
   verGUI: '1.0.1',
   dateGUI: 'May-25-2023'
 };

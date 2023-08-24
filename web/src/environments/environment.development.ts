@@ -6,6 +6,6 @@ export const environment = {
   storageUrl: 'http://localhost:8084/api/v1/storage',
   ordersUrl: 'http://localhost:8085/api/v1/orders',
   ratingsUrl: 'http://localhost:8088/api/v1/ratings',
-  verGUI: '1.0.0',
-  dateGUI: 'Feb-05-2023'
+  verGUI: '1.0.1',
+  dateGUI: 'May-25-2023'
 };
