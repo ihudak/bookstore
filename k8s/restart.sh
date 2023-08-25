@@ -1,3 +1,5 @@
+#export NS=boostrore
+
 kubectl apply -f namespace.yaml
 kubectl apply -f config.yaml
 kubectl apply -f secret.yaml
@@ -6,7 +8,19 @@ kubectl apply -f secret.yaml
 # but must be a part of a new deployment
 if [ $# -gt 0 ] && [ $1 = "-all" ]; then
   kubectl apply -f databases.yaml;
+  read -t 15 -p "Wait till the databases get up and running..."
 fi
+
+#kubectl delete deployment clients -n $NS
+#kubectl delete deployment books -n $NS
+#kubectl delete deployment carts -n $NS
+#kubectl delete deployment storage -n $NS
+#kubectl delete deployment orders -n $NS
+#kubectl delete deployment payments -n $NS
+#kubectl delete deployment dynapay -n $NS
+#kubectl delete deployment superpay -n $NS
+#kubectl delete deployment ratings -n $NS
+#kubectl delete deployment ingest -n $NS
 
 kubectl apply -f clients.yaml
 kubectl apply -f books.yaml
@@ -18,14 +32,3 @@ kubectl apply -f dynapay.yaml
 kubectl apply -f ingest.yaml
 kubectl apply -f ratings.yaml
 kubectl apply -f bookstore.yaml
-
-#k delete deployment clients
-#k delete deployment books
-#k delete deployment carts
-#k delete deployment storage
-#k delete deployment orders
-#k delete deployment payments
-#k delete deployment dynapay
-#k delete deployment superpay
-#k delete deployment ratings
-#k delete deployment ingest

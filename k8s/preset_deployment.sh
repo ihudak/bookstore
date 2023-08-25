@@ -52,7 +52,7 @@ sed -i.bak "s/-{ARCH}:latest/-$PLATFORM:latest/g" databases.yaml
 sed -i.bak "s/bookstore-webapp-{ARCH}:latest/bookstore-webapp-$PLATFORM:latest/g" bookstore.yaml
 
 # set ClusterIP and comment nodePorts
-if [ $3 = "-minimizePorts" ] || [ $2 = "-minimizePorts" ] || [ $1 = "-minimizePorts" ]; then
+if [ $# -gt 2 ] && [ $3 = "-minimizePorts" ] || [ $# -gt 1 ] && [ $2 = "-minimizePorts" ]; then
     sed -i.bak "s/type: LoadBalancer # ClusterIP/type: ClusterIP # LoadBalancer/g" *.yaml
     sed -i.bak -E "/^      nodePort: / s/^#*/#/g" *.yaml
 fi

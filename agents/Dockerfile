@@ -22,7 +22,7 @@ ARG ENV_FILE=env
 COPY ${ENV_FILE} /opt/env
 RUN mkdir -p /opt/app && mkdir -p  /var/lib/dynatrace/oneagent && \
     apt-get update && apt-get install -y zip unzip && rm -rf /var/lib/apt/lists/* && \
-    export DT_AGENT_DOWNLOAD_TENANT_URL=`cat /opt/env | grep DT_AGENT_DOWNLOAD_TENANT_URL | sed s/DT_AGENT_DOWNLOAD_TENANT_URL=//` && \
+    export DT_AGENT_DOWNLOAD_TENANT_URL=`cat /opt/env | grep DT_AGENT_DOWNLOAD_TENANT_URL | sed s/DT_AGENT_DOWNLOAD_TENANT_URL=// | sed -E 's/[ '$'/'']+$//'` && \
     export DT_AGENT_DOWNLOAD_TOKEN=`cat /opt/env | grep DT_AGENT_DOWNLOAD_TOKEN | sed s/DT_AGENT_DOWNLOAD_TOKEN=// | base64 -d` &&  \
     curl -v --request GET -sL \
     --url "$DT_AGENT_DOWNLOAD_TENANT_URL/api/v1/deployment/installer/agent/unix/paas/latest?flavor=default&arch=$PLATFORM&bitness=64&include=java&skipMetadata=true" \
@@ -37,6 +37,7 @@ RUN mkdir -p /opt/app && mkdir -p  /var/lib/dynatrace/oneagent && \
     echo "tenantToken tenant_token"                     >> $OA_CONF_FILE && \
     echo "serverAddress {tenant_url:443/communication}" >> $OA_CONF_FILE && \
     echo ""                                             >> $OA_CONF_FILE && \
+    echo "export TENANT_URL=\`echo \$TENANT_URL | sed -E 's/[ '\$'/'']+\$//'\`"             >> /opt/oneAgent.sh && \
     echo "curl -X GET \$TENANT_URL/api/v1/deployment/installer/agent/connectioninfo \\"     >> /opt/oneAgent.sh && \
     echo "  -H \"accept: application/json\" \\"                                             >> /opt/oneAgent.sh && \
     echo "  -H \"Authorization: Api-Token \$OA_TOKEN\" | \\"                                >> /opt/oneAgent.sh && \
@@ -48,7 +49,8 @@ RUN mkdir -p /opt/app && mkdir -p  /var/lib/dynatrace/oneagent && \
     echo "sed -i \"s|tenant_url|\$TENANT_URL|g\" $OA_CONF_FILE"                             >> /opt/oneAgent.sh && \
     echo "sed -i s/tenant_token/\$TENANT_TOKEN/g $OA_CONF_FILE"                             >> /opt/oneAgent.sh && \
     echo ""                                                                                 >> /opt/oneAgent.sh && \
-    chmod +x /opt/oneAgent.sh
+    chmod +x /opt/oneAgent.sh && \
+    cp /opt/oneAgent.sh /opt/oneAgent.bak
 
 ENV JAVA_TOOL_OPTIONS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
 
@@ -59,7 +61,7 @@ ENTRYPOINT if [ -z ${AGENT+x} ]; then \
                 java -jar -agentpath:/var/lib/dynatrace/oneagent/agent/lib64/liboneagentloader.so -Xshare:off /opt/app/app.jar -nofork; \
            elif [ $AGENT = $OTEL_AGENT ]; then \
                 . /opt/otel.sh; \
-                java -javaagent:/opt/opentelemetry-javaagent.jar -jar /opt/app/app.jar; \
+                java -javaagent:/opt/opentelemetry-javaagent.jar -Dotel.service.name=$SVC_NAME -jar /opt/app/app.jar; \
            else \
                 java -jar /opt/app/app.jar; \
            fi
