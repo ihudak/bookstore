@@ -11,7 +11,8 @@ ARG OTEL_VER="v1.25.0"
 ENV OTEL_RESOURCE_ATTRIBUTES="service.name=java-quickstart,service.version=1.0.1"
 ENV OTEL_METRICS_EXPORTER=none
 ENV OTEL_EXPORTER_OTLP_TRACES_PROTOCOL=http/protobuf
-RUN echo "export OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=\$TENANT_URL/api/v2/otlp/v1/traces" >> /opt/otel.sh && \
+RUN echo "export TENANT_URL=\`echo \$TENANT_URL | sed -E 's/[ '\$'/'']+\$//'\`"              >> /opt/otel.sh && \
+    echo "export OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=\$TENANT_URL/api/v2/otlp/v1/traces"      >> /opt/otel.sh && \
     echo "export OTEL_EXPORTER_OTLP_TRACES_HEADERS=Authorization=\"Api-Token \$OTEL_TOKEN\"" >> /opt/otel.sh && \
     chmod +x /opt/otel.sh && \
     wget -O /opt/opentelemetry-javaagent.jar https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/$OTEL_VER/opentelemetry-javaagent.jar
@@ -49,8 +50,7 @@ RUN mkdir -p /opt/app && mkdir -p  /var/lib/dynatrace/oneagent && \
     echo "sed -i \"s|tenant_url|\$TENANT_URL|g\" $OA_CONF_FILE"                             >> /opt/oneAgent.sh && \
     echo "sed -i s/tenant_token/\$TENANT_TOKEN/g $OA_CONF_FILE"                             >> /opt/oneAgent.sh && \
     echo ""                                                                                 >> /opt/oneAgent.sh && \
-    chmod +x /opt/oneAgent.sh && \
-    cp /opt/oneAgent.sh /opt/oneAgent.bak
+    chmod +x /opt/oneAgent.sh
 
 ENV JAVA_TOOL_OPTIONS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
 
