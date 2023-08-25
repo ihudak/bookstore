@@ -7,4 +7,4 @@ MAINTAINER dynatrace.com
 
 ARG JAR_FILE=build/libs/*0.0.1-SNAPSHOT.jar
 COPY ${JAR_FILE} /opt/app/app.jar
-ENV SVC_NAME=Ingest
+ENV SVC_NAME=BookStore-Ingest
