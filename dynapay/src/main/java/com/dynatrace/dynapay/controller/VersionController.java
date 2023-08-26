@@ -15,10 +15,12 @@ public class VersionController {
     private String svcVer;
     @Value("${application.date}")
     private String svcDate;
+    @Value("${docker.version}")
+    private String svcVerDocker;
 
     @GetMapping("")
     @Operation(summary = "Get version, release date")
     public Version getVersion() {
-        return new Version("dynapay", svcVer, svcDate, "OK", "Healthy");
+        return new Version("dynapay", svcVer, svcVerDocker, svcDate, "OK", "Healthy");
     }
 }

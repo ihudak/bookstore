@@ -19,10 +19,12 @@ public class VersionController {
     private String svcVer;
     @Value("${application.date}")
     private String svcDate;
+    @Value("${docker.version}")
+    private String svcVerDocker;
 
     @GetMapping("")
     @Operation(summary = "Get version, release date and number of records in the DB")
     public Version getVersion() {
-        return new Version("books", svcVer, svcDate, "OK", "Count: " + bookRepository.count());
+        return new Version("books", svcVer, svcVerDocker, svcDate, "OK", "Count: " + bookRepository.count());
     }
 }

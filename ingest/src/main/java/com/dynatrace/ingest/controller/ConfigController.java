@@ -97,6 +97,21 @@ public class ConfigController {
         return configRepository.createOrUpdate(config);
     }
 
+    @PostMapping("")
+    @Operation(summary = "Set the same config to all services")
+    public Map<String, Config> setConfigsAllServices(@RequestBody Config config) {
+        HashMap<String, Config> allConfigs = new HashMap<>();
+        String[] services = { "clients", "books", "carts", "storage", "ratings", "orders", "payments", "dynapay" };
+
+        for(String service: services) {
+            ConfigRepository configRepository = getConfigRepoByServiceId(service);
+            if (configRepository != null) {
+                allConfigs.put(service, configRepository.createOrUpdate(config));
+            }
+        }
+        return allConfigs;
+    }
+
     // update a config
     @PutMapping("/{serviceId}/{id}")
     @Operation(summary = "Update a configuration for the given service by its serviceID and setting identifier")

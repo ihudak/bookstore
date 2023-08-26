@@ -20,6 +20,8 @@ public class VersionController {
     private String svcVer;
     @Value("${application.date}")
     private String svcDate;
+    @Value("${docker.version}")
+    private String svcVerDocker;
 
     @Autowired
     ClientVersionRepository clientVersionRepository;
@@ -42,7 +44,7 @@ public class VersionController {
     @Operation(summary = "Get versions of all services, their release dates and numbers of records in the DBs")
     public List<Version> getVersion() {
         List<Version> versions = new ArrayList<>();
-        versions.add(new Version("ingest", svcVer, svcDate, (IngestController.isIsWorking() ? "generation in progress" : "generation is off"), "Healthy"));
+        versions.add(new Version("ingest", svcVer, svcVerDocker, svcDate, (IngestController.isIsWorking() ? "generation in progress" : "generation is off"), "Healthy"));
 
         versions.add(clientVersionRepository.getVersion());
         versions.add(bookVersionRepository.getVersion());

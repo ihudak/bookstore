@@ -5,6 +5,8 @@ ARG PLATFORM=x86
 ENV ONE_AGENT="oneAgent"
 ENV OTEL_AGENT="otelAgent"
 
+ENV DOCKER_VER=1.0.0
+
 # Prepare OTel config
 # otel.sh will set tenant-specific settings on deploy
 ARG OTEL_VER="v1.25.0"

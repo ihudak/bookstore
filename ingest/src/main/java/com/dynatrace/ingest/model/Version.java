@@ -1,6 +1,5 @@
 package com.dynatrace.ingest.model;
 
-import com.dynatrace.ingest.model.Model;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public class Version implements Model {
@@ -8,6 +7,8 @@ public class Version implements Model {
     private String serviceId;
     @Schema(name = "ver", example = "1.0.2", requiredMode = Schema.RequiredMode.AUTO, description = "the version of the service")
     private String ver;
+    @Schema(name = "ver-docker", example = "1.0.2", requiredMode = Schema.RequiredMode.AUTO, description = "the version of the Docker Config")
+    private String verDocker;
     @Schema(name = "date", example = "Jul 12, 2023", requiredMode = Schema.RequiredMode.AUTO, description = "the release date")
     private String date;
     @Schema(name = "status", example = "Healthy", requiredMode = Schema.RequiredMode.AUTO, description = "the status of the service or number of records in its DB")
@@ -34,9 +35,10 @@ public class Version implements Model {
         this.status = status;
     }
 
-    public Version(String serviceId, String ver, String date, String status, String message) {
+    public Version(String serviceId, String ver, String verDocker, String date, String status, String message) {
         this.serviceId = serviceId;
         this.ver = ver;
+        this.verDocker = verDocker;
         this.date = date;
         this.status = status;
         this.message = message;
@@ -46,6 +48,7 @@ public class Version implements Model {
         this.serviceId = serviceId;
         this.message   = message;
         this.ver = "N/A";
+        this.verDocker = "N/A";
         this.date = "N/A";
         this.status = "N/A";
     }
@@ -69,6 +72,14 @@ public class Version implements Model {
 
     public void setVer(String ver) {
         this.ver = ver;
+    }
+
+    public String getVerDocker() {
+        return verDocker;
+    }
+
+    public void setVerDocker(String verDocker) {
+        this.ver = verDocker;
     }
 
     public String getMessage() {

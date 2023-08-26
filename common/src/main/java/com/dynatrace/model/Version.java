@@ -3,6 +3,7 @@ package com.dynatrace.model;
 public class Version implements Model {
     private String serviceId;
     private String ver;
+    private String verDocker;
     private String date;
     private String status;
     private String message;
@@ -26,9 +27,10 @@ public class Version implements Model {
         this.status = status;
     }
 
-    public Version(String serviceId, String ver, String date, String status, String message) {
+    public Version(String serviceId, String ver, String verDocker, String date, String status, String message) {
         this.serviceId = serviceId;
         this.ver = ver;
+        this.verDocker = verDocker;
         this.date = date;
         this.status = status;
         this.message = message;
@@ -53,6 +55,14 @@ public class Version implements Model {
 
     public void setVer(String ver) {
         this.ver = ver;
+    }
+
+    public String getVerDocker() {
+        return verDocker;
+    }
+
+    public void setVerDocker(String verDocker) {
+        this.ver = verDocker;
     }
 
     public String getMessage() {
