@@ -7,7 +7,7 @@ public class Version implements Model {
     private String serviceId;
     @Schema(name = "ver", example = "1.0.2", requiredMode = Schema.RequiredMode.AUTO, description = "the version of the service")
     private String ver;
-    @Schema(name = "ver-docker", example = "1.0.2", requiredMode = Schema.RequiredMode.AUTO, description = "the version of the Docker Config")
+    @Schema(name = "verDocker", example = "1.0.0", requiredMode = Schema.RequiredMode.AUTO, description = "the version of the Docker Config")
     private String verDocker;
     @Schema(name = "date", example = "Jul 12, 2023", requiredMode = Schema.RequiredMode.AUTO, description = "the release date")
     private String date;
@@ -79,7 +79,7 @@ public class Version implements Model {
     }
 
     public void setVerDocker(String verDocker) {
-        this.ver = verDocker;
+        this.verDocker = verDocker;
     }
 
     public String getMessage() {
