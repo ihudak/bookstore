@@ -29,9 +29,9 @@ for i in $dt_projects; do
   PROJ_DIR=$i
 
   cd $SCRIPT_DIR/../$PROJ_DIR
-  $SCRIPT_DIR/push_docker.sh $i -noagent
-  $SCRIPT_DIR/push_docker.sh $i -agents
-  $SCRIPT_DIR/push_docker.sh $i -noagent -arm
-  $SCRIPT_DIR/push_docker.sh $i -agents -arm
+  $SCRIPT_DIR/push_docker.sh $i
+  $SCRIPT_DIR/push_docker.sh $i -gyes
+  $SCRIPT_DIR/push_docker.sh $i -arm
+  $SCRIPT_DIR/push_docker.sh $i -gyes -arm
 done
 
