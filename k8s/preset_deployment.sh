@@ -1,19 +1,19 @@
 #!/bin/bash
 
 display_usage() {
-  echo "Bad/no argument(s) supplied";
-      echo "Sets agent instrumentation and architecture in the deployment yaml files"
-      echo "Usage:";
-      echo "   ./preset_deployment.sh -agents  -arm|-x64 {-minimizePorts} # takes docker image with OA and OTel agents";
-      echo "   ./preset_deployment.sh -noagent -arm|-x64 {-minimizePorts} # takes docker image with no agents embedded";
-      echo "   ./preset_deployment.sh -reset              # resets yamls";
-      echo "                   -minimizePorts makes most k8s services ClusterIP to reduce allocating public IP address"
-      echo;
-      echo "Please supply at least either -agents, -noagent or -reset";
-      echo "      optionally specify platform as -arm or -x64";
-      echo "      default platform is x64";
-	  echo;
-      exit 1;
+  echo "Sets agent instrumentation and architecture in the deployment yaml files"
+  echo "Usage:";
+  echo "   ${0} -gyes -ax64 -pmin -n bookstore  # takes docker image with OA and OTel agents";
+  echo "   ${0} -reset              # resets yamls";
+  echo "Flags:";
+  echo " -g - agent: yes/no. default = yes - preloads otel and dynatrace java agents";
+  echo " -a - architecture: arm/x64. default = x64 - sets architecture";
+  echo " -p - ports for k8s services: all/min. default = all - defines whether all k8s should get an external IP. Min - only ingest";
+  echo " -n - namespace. default bookstore";
+  echo;
+  echo "Please supply at least one flag";
+  echo;
+  exit 0;
 }
 
 reset_settings() {
@@ -29,33 +29,76 @@ reset_settings() {
   # setting LoadBalancer back
   sed -i.bak "s/type: ClusterIP # LoadBalancer/type: LoadBalancer # ClusterIP/g" *.yaml
   sed -i.bak -E "/^#.+nodePort: / s/^#//g" *.yaml
+  sed -i.bak -E "/name:.*$/ s/name:.*$/name: bookstore/g" namespace.yaml
+  sed -i.bak -E "/namespace:.*$/ s/namespace:.*$/namespace: bookstore/g" *.yaml
   rm *.bak
+  echo Reset complete
 }
 
-if [ $# -lt 1 ]; then
-  display_usage;
-elif [ $1 != "-agents" ] && [ $1 != "-noagent" ] && [ $1 != "-reset" ]; then
-  display_usage;
-elif [ $1 = "-reset" ]; then
-  reset_settings
-  echo "Reset Completed"
-  exit 0
-fi
+get_params() {
+  ag="yes"       # default - with agents
+  ar="x64"       # default - x64
+  po="all"       # default - all k8s have their public IPs
+  ns="bookstore" # default namespace
+  rs="no"        # no reset by default
+  hl="no"        # help
+  xx="boo"       # placeholder for x flag (can be used to force x64 arch)
+  while getopts hg:a:x:p:n:r flag
+  do
+      case "${flag}" in
+        h) hl="yes";;
+        g) ag=${OPTARG};;
+        a) ar=${OPTARG};;
+        x) xx=${OPTARG};;
+        p) po=${OPTARG};;
+        n) ns=${OPTARG};;
+        r) rs="yes";;
+        *) echo unsupported flag ${flag}
+      esac
+  done
 
-if [ $1 = "-agents" ]; then AGENT=agents; else AGENT=noagent; fi
+  # fixing most common typos
+  if [ $ag != "no" ];                                         then ag="yes";   fi
+  if [ $ar = "arm" ] || [ $ar = "rm64" ] || [ $ar = "rm" ];   then ar="arm64"; fi # cover -aarm64, -arm64, -aarm, -arm
+  if [ $ar != "arm64" ];                                      then ar="x64";   fi
+  if [ $xx = "86" ] || [ $xx = "64" ];                        then ar="x64";   fi
+  if [ $po != "min" ];                                        then po="all";   fi
+  if [ $ns = "" ];                                            then ns="bookstore"; fi
 
-if [ $# -gt 1 ] && [ $2 = "-arm" ]; then PLATFORM="arm64"; else PLATFORM="x64"; fi
+  if [ $hl = "yes" ]; then # user wanted help. ignoring everything else
+    display_usage;
+  elif [ $rs = "yes" ]; then # resetting. ignoring everything else
+    echo Resetting the config...;
+    reset_settings;
+    exit 0;
+  else # doing the job. show configuration first
+    echo Parameters configured:
+    echo " agents:    " $ag;
+    echo " arch:      " $ar;
+    echo " ports:     " $po;
+    echo " namespace: " $ns;
+  fi
+}
 
-reset_settings
-sed -i.bak "s/-{AGENT}-{ARCH}:latest/-$AGENT-$PLATFORM:latest/g" *.yaml
-sed -i.bak "s/-{ARCH}:latest/-$PLATFORM:latest/g" databases.yaml
-sed -i.bak "s/bookstore-webapp-{ARCH}:latest/bookstore-webapp-$PLATFORM:latest/g" bookstore.yaml
+# Main Script
+get_params "$@";
+reset_settings # before doing anything - reset yamls
+
+# set agents and platform
+if [ $ag = "no" ]; then ag="noagent"; else ag="agents"; fi
+sed -i.bak "s/-{AGENT}-{ARCH}:latest/-$ag-$ar:latest/g" *.yaml
+sed -i.bak "s/-{ARCH}:latest/-$ar:latest/g" databases.yaml
+sed -i.bak "s/bookstore-webapp-{ARCH}:latest/bookstore-webapp-$ar:latest/g" bookstore.yaml
+
+# set namespace
+sed -i.bak -E "/name:.*$/ s/name:.*$/name: ${ns}/g" namespace.yaml
+sed -i.bak -E "/namespace:.*$/ s/namespace:.*$/namespace: ${ns}/g" *.yaml
 
 # set ClusterIP and comment nodePorts
-if ([ $# -gt 2 ] && [ $3 = "-minimizePorts" ]) || ([ $# -gt 1 ] && [ $2 = "-minimizePorts" ]); then
+if [ $po = "min" ]; then
     sed -i.bak "s/type: LoadBalancer # ClusterIP/type: ClusterIP # LoadBalancer/g" *.yaml
     sed -i.bak -E "/^      nodePort: / s/^#*/#/g" *.yaml
 fi
 
 rm *.bak
-echo "Preparation done: $AGENT $PLATFORM"
+echo "Preparation done: $ag $ar"

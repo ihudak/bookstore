@@ -9,7 +9,7 @@ ENV DOCKER_VER=1.0.0
 
 # Prepare OTel config
 # otel.sh will set tenant-specific settings on deploy
-ARG OTEL_VER="v1.29.0"
+ARG OTEL_VER="v1.25.0"
 ENV OTEL_RESOURCE_ATTRIBUTES="service.name=java-quickstart,service.version=1.0.1"
 ENV OTEL_METRICS_EXPORTER=none
 ENV OTEL_EXPORTER_OTLP_TRACES_PROTOCOL=http/protobuf
