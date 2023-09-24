@@ -6,7 +6,7 @@ display_usage() {
   echo "   ${0} -gyes -ax64 -pmin -n bookstore  # takes docker image with OA and OTel agents";
   echo "   ${0} -reset              # resets yamls";
   echo "Flags:";
-  echo " -g - agent: yes/no. default = yes - preloads otel and dynatrace java agents";
+  echo " -g - agent: yes/no. default = no - preloads otel and dynatrace java agents";
   echo " -a - architecture: arm/x64. default = x64 - sets architecture";
   echo " -p - ports for k8s services: all/min. default = all - defines whether all k8s should get an external IP. Min - only ingest";
   echo " -n - namespace. default bookstore";
@@ -36,7 +36,7 @@ reset_settings() {
 }
 
 get_params() {
-  ag="yes"       # default - with agents
+  ag="no"       # default - with agents
   ar="x64"       # default - x64
   po="all"       # default - all k8s have their public IPs
   ns="bookstore" # default namespace
@@ -58,7 +58,7 @@ get_params() {
   done
 
   # fixing most common typos
-  if [ $ag != "no" ];                                         then ag="yes";   fi
+  if [ $ag != "yes" ] && [ $ag != "y" ];                      then ag="no";    fi
   if [ $ar = "arm" ] || [ $ar = "rm64" ] || [ $ar = "rm" ];   then ar="arm64"; fi # cover -aarm64, -arm64, -aarm, -arm
   if [ $ar != "arm64" ];                                      then ar="x64";   fi
   if [ $xx = "86" ] || [ $xx = "64" ];                        then ar="x64";   fi
