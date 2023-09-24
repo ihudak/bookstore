@@ -9,7 +9,7 @@ ENV DOCKER_VER=1.0.0
 
 # Prepare OTel config
 # otel.sh will set tenant-specific settings on deploy
-ARG OTEL_VER="v1.25.0"
+ARG OTEL_VER="v1.29.0"
 ENV OTEL_RESOURCE_ATTRIBUTES="service.name=java-quickstart,service.version=1.0.1"
 ENV OTEL_METRICS_EXPORTER=none
 ENV OTEL_EXPORTER_OTLP_TRACES_PROTOCOL=http/protobuf
@@ -17,7 +17,7 @@ RUN echo "export TENANT_URL=\`echo \$TENANT_URL | sed -E 's/[ '\$'/'']+\$//'\`" 
     echo "export OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=\$TENANT_URL/api/v2/otlp/v1/traces"      >> /opt/otel.sh && \
     echo "export OTEL_EXPORTER_OTLP_TRACES_HEADERS=Authorization=\"Api-Token \$OTEL_TOKEN\"" >> /opt/otel.sh && \
     chmod +x /opt/otel.sh && \
-    wget -O /opt/opentelemetry-javaagent.jar https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/$OTEL_VER/opentelemetry-javaagent.jar
+    wget -O /opt/opentelemetry-javaagent.jar https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/latest/download/opentelemetry-javaagent.jar
 
 # Prepare OA. Download Java Agent
 # oneAgent.sh will set tenant-specific settings on deploy
