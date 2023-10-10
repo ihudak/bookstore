@@ -13,5 +13,5 @@ if [ $# -gt 0 ] && [ $1 = "-all" ]; then
   kubectl delete -f databases.yaml;
   kubectl delete -f secret.yaml;
   kubectl delete -f config.yaml;
-  kubectl delete -f namespace.yaml
+  kubectl delete -f namespace.yaml;
 fi
