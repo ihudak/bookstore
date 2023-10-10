@@ -140,10 +140,10 @@ spec:
                   key: otel-token
           resources:
             limits:
-              cpu: 400m
+              cpu: 200m
               memory: 1Gi
             requests:
-              cpu: 250m
+              cpu: 200m
               memory: 512Mi
 ---
 apiVersion: v1
