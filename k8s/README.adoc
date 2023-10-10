@@ -52,22 +52,22 @@ Use preset_deployment.sh for that:
 
 ==== use preinstrumented images for Intel/AMD architecture:
 ```
-./preset_deployment.sh -agents -x64
+./preset_deployment.sh -gyes -ax64
 ```
 
 ==== use preinstrumented images for ARMv8 architecture:
 ```
-./preset_deployment.sh -agents -arm
+./preset_deployment.sh -gyes -aarm
 ```
 
 ==== use non-instrumented images for Intel/AMD architecture:
 ```
-./preset_deployment.sh -noagent -x64
+./preset_deployment.sh -gno -ax64
 ```
 
 ==== use non-instrumented images for ARMv8 architecture:
 ```
-./preset_deployment.sh -noagent -arm
+./preset_deployment.sh -gno -aarm
 ```
 
 ==== reset the yaml-files:
