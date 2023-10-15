@@ -127,11 +127,13 @@ spec:
                 configMapKeyRef:
                   name: bookstore-configmap
                   key: tenant_id
-            - name:   TENANT_URL
+            - name: TENANT_LAYER
               valueFrom:
                 configMapKeyRef:
                   name: bookstore-configmap
-                  key: tenant_url
+                  key: tenant_layer
+            - name: TENANT_URL
+              value: "https://$(TENANT_ID).$(TENANT_LAYER).dynatracelabs.com"
             - name: OA_TOKEN
               valueFrom:
                 secretKeyRef:

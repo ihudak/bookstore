@@ -8,12 +8,31 @@ Ivan Gudak <ivan.gudak@dynatrace.com>
 Bookstore project consists of 8 primary microservices, one web application, and load generator.
 Purposes: demonstrating of Dynatrace capabilities in high-load and unhealthy environments
 
+== Build
+
+=== Prerequisite
+. Docker service (docker desktop) should be running
+
+=== Linux
+. Go to k8s directory
+. execute, optionally providing otel token with the scopes of trace_otel_ingest, log_otel_ingest, metric_otel_ingest
+* #__the token can be base64-ed or open__#
+
+    ./build_docker_all.sh [<otel_ingest_token>]
+
+=== Windows
+. Go to k8s directory
+. execute, optionally providing otel token with the scopes of trace_otel_ingest, log_otel_ingest, metric_otel_ingest
+
+    .\build_docker_all.bat [<otel_ingest_token>]
+
+
 == Configuration
 === configmap
 . Set your tenant's id and URL in *config.yaml*
 
     tenant_id: <tenant-id> ## for instance, fdg3423
-    tenant_url: <url> ## e.g. https://fdg3423.sprint.dynatracelabs.com
+    tenant_layer: <layer> ## e.g. sprint or dev
 
 . Define instrumentation (OneAgent or Otel) for the microservices in *config.yaml*
 
@@ -50,22 +69,22 @@ Purposes: demonstrating of Dynatrace capabilities in high-load and unhealthy env
 the yaml configurations for deployments need to be preconfigured.
 Use preset_deployment.sh for that:
 
-==== use preinstrumented images for Intel/AMD architecture:
+==== use preinstrumented images for Intel/AMD architecture, books namespace (default ns is bookstore):
 ```
-./preset_deployment.sh -gyes -ax64
-```
-
-==== use preinstrumented images for ARMv8 architecture:
-```
-./preset_deployment.sh -gyes -aarm
+./preset_deployment.sh -gyes -ax64 -n books
 ```
 
-==== use non-instrumented images for Intel/AMD architecture:
+==== use preinstrumented images for ARMv8 architecture, books namespace (default ns is bookstore):
+```
+./preset_deployment.sh -gyes -aarm -n books
+```
+
+==== use non-instrumented images for Intel/AMD architecture, bookstore namespace (-n to override):
 ```
 ./preset_deployment.sh -gno -ax64
 ```
 
-==== use non-instrumented images for ARMv8 architecture:
+==== use non-instrumented images for ARMv8 architecture, bookstore namespace (-n to override):
 ```
 ./preset_deployment.sh -gno -aarm
 ```

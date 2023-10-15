@@ -1,4 +1,6 @@
 @ECHO OFF
+REM if the script gets a param, it will be considered as tenant-token
+REM can be either open of base64-ed
 CLS
 ECHO.
 ECHO ==============================================
@@ -22,7 +24,11 @@ SET DT_PROJECTS[8]=ingest
 
 cd %BATCH_DIR%\..\%DT_JAVA_AGENT%
 ECHO ============ Building Agents =================
-CALL push_docker.bat
+IF "%1"=="" (
+  CALL push_docker.bat
+) ELSE (
+  CALL push_docker.bat %1
+)
 timeout 3
 cd %BATCH_DIR%\..\%DT_NO_AGENT%
 ECHO ============ Building NoAgent ================
