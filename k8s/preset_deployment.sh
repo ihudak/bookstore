@@ -17,6 +17,7 @@ display_usage() {
 }
 
 reset_settings() {
+  echo Resetting the config...
   # reset settings
   sed -i.bak "s/-noagent-x64:latest/-{AGENT}-{ARCH}:latest/g" *.yaml
   sed -i.bak "s/-agents-x64:latest/-{AGENT}-{ARCH}:latest/g" *.yaml
@@ -68,7 +69,6 @@ get_params() {
   if [ $hl = "yes" ]; then # user wanted help. ignoring everything else
     display_usage;
   elif [ $rs = "yes" ]; then # resetting. ignoring everything else
-    echo Resetting the config...;
     reset_settings;
     exit 0;
   else # doing the job. show configuration first

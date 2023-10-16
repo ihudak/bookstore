@@ -1,5 +1,4 @@
 #!/bin/bash
-
 ## Set Otel env variables that come from the monitoring tenant
 if [ -z ${TENANT_ID+x} ] || [ -z ${TENANT_URL_SHELL+x} ] || [ -z ${OTEL_TOKEN_SHELL+x} ]; then
   # Cannot monitor
@@ -39,8 +38,8 @@ else
   # turn on instrumenting
   . /usr/bin/opentelemetry_shell.sh;
   otel_instrument echo;
-  otel_outstrument curl; # causes errors. skipping for now
-  otel_outstrument wget; # causes errors. skipping for now
+  #otel_outstrument curl; # causes errors. skipping for now
+  #otel_outstrument wget; # causes errors. skipping for now
 fi
 
 # the first echo will give trace a name
