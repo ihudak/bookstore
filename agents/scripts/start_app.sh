@@ -1,4 +1,5 @@
 #!/bin/bash
+
 ## Set Otel env variables that come from the monitoring tenant
 if [ -z ${TENANT_ID+x} ] || [ -z ${TENANT_URL_SHELL+x} ] || [ -z ${OTEL_TOKEN_SHELL+x} ]; then
   # Cannot monitor
@@ -16,7 +17,7 @@ else
   export TENANT_URL_SHELL;
 
   # check if the token is base64-ed. If yes, unbase
-  if [[ $OTEL_TOKEN_SHELL != dt0c01.* ]]; then
+  if [ "$(echo OTEL_TOKEN_SHELL | cut -c 1-7)" != "dt0c01." ]; then
     export OTEL_TOKEN_SHELL=$(echo $OTEL_TOKEN_SHELL | base64 -d);
   fi
 
@@ -38,8 +39,6 @@ else
   # turn on instrumenting
   . /usr/bin/opentelemetry_shell.sh;
   otel_instrument echo;
-  #otel_outstrument curl; # causes errors. skipping for now
-  #otel_outstrument wget; # causes errors. skipping for now
 fi
 
 # the first echo will give trace a name
@@ -47,10 +46,10 @@ echo "BookStoreAppDocker: $SVC_NAME:$(uname -p)"
 
 if [ $AGENT = $ONE_AGENT ] && [ -n "${TENANT_URL+x}" ] && [ -n "${OA_TOKEN+x}" ]; then
   . /opt/get_oa.sh;
-   java -jar -agentpath:/var/lib/dynatrace/oneagent/agent/lib64/liboneagentloader.so -Xshare:off /opt/app/app.jar -nofork;
+  exec java -jar -agentpath:/var/lib/dynatrace/oneagent/agent/lib64/liboneagentloader.so -Xshare:off /opt/app/app.jar -nofork;
 elif [ $AGENT = $OTEL_AGENT ] && [ -n "${TENANT_URL+x}" ] && [ -n "${OTEL_TOKEN+x}" ]; then
   . /opt/get_otel.sh;
-  java -javaagent:/opt/opentelemetry-javaagent.jar -Dotel.service.name=$SVC_NAME -jar /opt/app/app.jar;
+  exec java -javaagent:/opt/opentelemetry-javaagent.jar -Dotel.service.name=$SVC_NAME -jar /opt/app/app.jar;
 else
-  java -jar /opt/app/app.jar;
+  exec java -jar /opt/app/app.jar;
 fi

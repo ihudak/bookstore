@@ -24,10 +24,9 @@ COPY scripts/*.sh /opt/
 RUN chmod +x /opt/*.sh
 
 RUN apt-get update && \
-    apt-get install -y zip unzip python3 python3-pip python3-venv vim jq
-RUN wget -O /opt/opentelemetry-shell.deb $(curl --no-progress-meter https://api.github.com/repos/plengauer/opentelemetry-bash/releases/latest | jq -r '.assets[].browser_download_url') && \
-    apt-get install -y --fix-missing /opt/opentelemetry-shell.deb && \
-    rm -rf /var/lib/apt/lists/* && rm -f /opt/opentelemetry-shell.deb
+    apt-get install -y zip unzip vim jq && \
+    wget -O - https://raw.githubusercontent.com/plengauer/opentelemetry-bash/main/INSTALL.sh | sh -E && \
+    rm -rf /var/lib/apt/lists/*
 
 # create directory for the application
 RUN mkdir -p /opt/app
