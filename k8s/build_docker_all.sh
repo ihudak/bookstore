@@ -16,18 +16,21 @@ dt_projects="clients books carts storage orders ratings payments dynapay ingest"
 
 cd $SCRIPT_DIR/../$DT_JAVA_AGENT
 echo "============ Building Agents ================="
-if [ $# -lt 2 ]; then
-  ./push_docker.sh;
+if [ $# -lt 4 ]; then
+  ./push_docker.sh agents;
 else
-  ./push_docker.sh $1;
+  ./push_docker.sh agents "$1" "$2" "$3";
+fi
+
+echo "============ Building PreAgent ================="
+if [ $# -lt 4 ]; then
+  ./push_docker.sh preinstrument;
+else
+  ./push_docker.sh preinstrument "$1" "$2" "$3";
 fi
 
 cd $SCRIPT_DIR/../$DT_NO_AGENT
 echo "============ Building NoAgent ================="
-./push_docker.sh
-
-cd $SCRIPT_DIR/../DT_PRE_AGENT
-echo "============ Building PreAgent ================="
 ./push_docker.sh
 
 cd $SCRIPT_DIR/../$DT_GUI

@@ -29,7 +29,7 @@ get_params() {
         g) ag=${OPTARG};;
         a) ar=${OPTARG};;
         x) xx=${OPTARG};;
-        *) echo unsupported flag ${flag}
+        *) echo unsupported flag "${flag}"
       esac
   done
 
@@ -70,15 +70,15 @@ fi
 PROJECT=$1
 IMG_NAME=$BASE_REPO/$PROJECT-$AGENT-$PLATFORM:$TAG
 
-echo "### Building "$PROJECT " -=- " $PLATFORM " -=- " $AGENT...
+echo "### Building $PROJECT -=- $PLATFORM -=- $AGENT..."
 
 # ./gradlew clean build
 docker image build \
   --platform linux/$PLATFORM_FULL \
-  -t $IMG_NAME \
+  -t "$IMG_NAME" \
   --build-arg BASE_REPO=$BASE_REPO \
   --build-arg AGENT=$AGENT \
   --build-arg PLATFORM=$PLATFORM \
   --build-arg BASE_IMG_TAG=$TAG \
   .
-docker push $IMG_NAME
+docker push "$IMG_NAME"

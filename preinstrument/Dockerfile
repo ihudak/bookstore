@@ -6,13 +6,16 @@ ARG OTEL_SERVICE_NAME=BookStoreDeploy
 ENV ONE_AGENT="oneAgent"
 ENV OTEL_AGENT="otelAgent"
 
-ARG TENANT_ID
-ARG TENANT_LAYER=dev
-ARG TENANT_TOKEN
-ENV TENANT_URL_SHELL="https://$TENANT_ID.$TENANT_LAYER.dynatracelabs.com"
-ENV OTEL_TOKEN_SHELL=$TENANT_TOKEN
+ARG AGENTS_PRELOAD=true
 
-ENV DOCKER_VER=1.0.1
+ARG TENANT_ID_SHELL
+ARG TENANT_LAYER_SHELL=dev
+ARG TENANT_TOKEN_SHELL
+ENV TENANT_ID_SHELL=$TENANT_ID_SHELL
+ENV TENANT_URL_SHELL="https://$TENANT_ID_SHELL.$TENANT_LAYER_SHELL.dynatracelabs.com"
+ENV OTEL_TOKEN_SHELL=$TENANT_TOKEN_SHELL
+
+ENV DOCKER_VER=1.2.0
 
 # Prepare OA config
 ENV OA_INSTALL_DIR=/var/lib/dynatrace/oneagent
@@ -39,36 +42,38 @@ RUN mkdir -p /opt/app
 
 ENV JAVA_TOOL_OPTIONS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
 
-# get otel
-RUN echo "export TENANT_URL=\`echo \$TENANT_URL | sed -E 's/[ '\$'/'']+\$//'\`"              >> /opt/otel.sh && \
-    echo "export OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=\$TENANT_URL/api/v2/otlp/v1/traces"      >> /opt/otel.sh && \
-    echo "export OTEL_EXPORTER_OTLP_TRACES_HEADERS=Authorization=\"Api-Token \$OTEL_TOKEN\"" >> /opt/otel.sh && \
-    chmod +x /opt/otel.sh && \
-    wget -O /opt/opentelemetry-javaagent.jar https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/latest/download/opentelemetry-javaagent.jar
-
 # Prepare OA. Download Java Agent
 # oneAgent.sh will set tenant-specific settings on deploy
 ARG ENV_FILE=env
 COPY ${ENV_FILE} /opt/env
-RUN mkdir -p  /var/lib/dynatrace/oneagent && \
-    TENANT_URL=`cat /opt/env | grep DT_AGENT_DOWNLOAD_TENANT_URL | sed s/DT_AGENT_DOWNLOAD_TENANT_URL=// | sed -E 's/[ '$'/'']+$//'` && \
-    export TENANT_URL && \
-    OA_TOKEN=`cat /opt/env | grep DT_AGENT_DOWNLOAD_TOKEN | sed s/DT_AGENT_DOWNLOAD_TOKEN=// | base64 -d` &&  \
-    export OA_TOKEN && \
-    rm /opt/env && \
-    /opt/get_oa.sh
-
-
+RUN if [ "$AGENTS_PRELOAD" = true ]; then \
+      . /opt/set_bash_instrumentation.sh ; \
+      TENANT_URL=`cat /opt/env | grep DT_AGENT_DOWNLOAD_TENANT_URL | sed s/DT_AGENT_DOWNLOAD_TENANT_URL=// | sed -E 's/[ '$'/'']+$//'` ; \
+      export TENANT_URL ; \
+      OA_TOKEN=`cat /opt/env | grep DT_AGENT_DOWNLOAD_TOKEN | sed s/DT_AGENT_DOWNLOAD_TOKEN=// | base64 -d` ; \
+      export OA_TOKEN ; \
+      /opt/get_otel.sh ; \
+      /opt/get_oa.sh ; \
+    fi
+RUN rm /opt/env
 
 
 ENTRYPOINT if [ -z ${AGENT+x} ]; then \
                 java -jar /opt/app/app.jar; \
-           elif [ $AGENT = $ONE_AGENT ]; then \
-                [ -f /opt/config_oa.sh ] && { /opt/config_oa.sh; rm /opt/config_oa.sh; } || echo "config_oa.sh gone"; \
-                java -jar -agentpath:/var/lib/dynatrace/oneagent/agent/lib64/liboneagentloader.so -Xshare:off /opt/app/app.jar -nofork; \
-           elif [ $AGENT = $OTEL_AGENT ]; then \
+           elif [ $AGENT = $ONE_AGENT ] && [ -n "${TENANT_URL+x}" ] && [ -n "${OA_TOKEN+x}" ]; then \
+                . /opt/set_bash_instrumentation.sh; \
+                if [ "$AGENTS_PRELOAD" = true ]; then \
+                    . /opt/get_oa.sh; \
+                    . /opt/config_oa.sh; \
+                else \
+                    [ -f /opt/config_oa.sh ] && { /opt/config_oa.sh; rm /opt/config_oa.sh; } || echo "config_oa.sh gone"; \
+                fi; \
+                exec java -jar -agentpath:/var/lib/dynatrace/oneagent/agent/lib64/liboneagentloader.so -Xshare:off /opt/app/app.jar -nofork; \
+           elif [ $AGENT = $OTEL_AGENT ] && [ -n "${TENANT_URL+x}" ] && [ -n "${OTEL_TOKEN+x}" ]; then \
+                . /opt/set_bash_instrumentation.sh; \
+                if [ "$AGENTS_PRELOAD" = true ]; then . /opt/get_otel.sh; fi; \
                 . /opt/config_otel.sh; \
-                java -javaagent:/opt/opentelemetry-javaagent.jar -Dotel.service.name=$SVC_NAME -jar /opt/app/app.jar; \
+                exec java -javaagent:/opt/opentelemetry-javaagent.jar -Dotel.service.name=$SVC_NAME -jar /opt/app/app.jar; \
            else \
                 java -jar /opt/app/app.jar; \
            fi

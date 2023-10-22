@@ -18,3 +18,5 @@ _normally you don't need to change this. the image will automatically download a
 
     docker image build --platform linux/amd64 -t ivangudak096/dt-java-agents:latest .
     docker push ivangudak096/dt-java-agents:latest
+
+   or use push_docker.bat/sh

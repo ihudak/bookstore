@@ -1,7 +1,11 @@
 #!/bin/sh
 
+log() {
+  echo "$1" >&2
+}
+
 ## Set Otel env variables that come from the monitoring tenant
-if [ -z ${TENANT_ID+x} ] || [ -z ${TENANT_URL_SHELL+x} ] || [ -z ${OTEL_TOKEN_SHELL+x} ]; then
+if [ -z ${TENANT_ID_SHELL+x} ] || [ -z ${TENANT_URL_SHELL+x} ] || [ -z ${OTEL_TOKEN_SHELL+x} ]; then
   # Cannot monitor
   export OTEL_SHELL_TRACES_ENABLE=FALSE;
   export OTEL_SHELL_METRICS_ENABLE=FALSE;
@@ -40,6 +44,8 @@ else
   # turn on instrumenting
   . /usr/bin/opentelemetry_shell.sh;
   otel_instrument echo;
+  otel_instrument log;
   # the first echo will give trace a name
-  echo "BookStoreAppDocker: $SVC_NAME:$(uname -p)"
+  log "BookStoreAppDocker: $SVC_NAME:$(uname -p)"
+  log "Otel-bash instrumentation complete"
 fi

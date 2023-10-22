@@ -25,15 +25,18 @@ SET DT_PROJECTS[8]=ingest
 
 cd %BATCH_DIR%\..\%DT_JAVA_AGENT%
 ECHO ============ Building Agents =================
-IF "%1"=="" (
-  CALL push_docker.bat
+IF [%4]==[] (
+  CALL push_docker.bat agents
 ) ELSE (
-  CALL push_docker.bat %1
+  CALL push_docker.bat agents %1 %2 %3
 )
 timeout 3
-cd %BATCH_DIR%\..\%DT_PRE_AGENT%
 ECHO ============ Building PreAgent ================
-CALL push_docker.bat
+IF [%4]==[] (
+  CALL push_docker.bat preinstrument
+) ELSE (
+  CALL push_docker.bat preinstrument %1 %2 %3
+)
 timeout 3
 cd %BATCH_DIR%\..\%DT_NO_AGENT%
 ECHO ============ Building NoAgent ================
