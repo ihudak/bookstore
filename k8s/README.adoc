@@ -69,14 +69,24 @@ Purposes: demonstrating of Dynatrace capabilities in high-load and unhealthy env
 the yaml configurations for deployments need to be preconfigured.
 Use preset_deployment.sh for that:
 
-==== use preinstrumented images for Intel/AMD architecture, books namespace (default ns is bookstore):
+==== "on-deploy agent installation" images for Intel/AMD architecture, books namespace (default ns is bookstore):
 ```
 ./preset_deployment.sh -gyes -ax64 -n books
 ```
 
-==== use preinstrumented images for ARMv8 architecture, books namespace (default ns is bookstore):
+==== "on-deploy agent installation"  images for ARMv8 architecture, books namespace (default ns is bookstore):
 ```
 ./preset_deployment.sh -gyes -aarm -n books
+```
+
+==== "on-build agent installation" images for Intel/AMD architecture, books namespace (default ns is bookstore):
+```
+./preset_deployment.sh -gpre -ax64 -n books
+```
+
+==== "on-build agent installation"  images for ARMv8 architecture, books namespace (default ns is bookstore):
+```
+./preset_deployment.sh -gpre -aarm -n books
 ```
 
 ==== use non-instrumented images for Intel/AMD architecture, bookstore namespace (-n to override):
@@ -93,6 +103,14 @@ Use preset_deployment.sh for that:
 ```
 ./preset_deployment.sh -reset
 ```
+
+===== "on deploy" vs "on build":
+. -gyes parameter makes OneAgent and Otel to be downloaded and configured on every pod start.
+.. pros: you get the latest agent on every pod restart
+.. cons: more traffic (download agents); more time for pod to start
+. -gpre parameter makes OneAgent and Otel to be a part of docker image.
+.. pros: quicker to start, less traffic (agent is already in the image)
+.. cons: to update the Agents you need to rebuild the docker images
 
 == Deployment
 0. Create namespace:
