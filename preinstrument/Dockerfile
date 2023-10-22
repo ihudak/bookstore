@@ -2,16 +2,38 @@ FROM eclipse-temurin:17-focal
 MAINTAINER dynatrace.com
 
 ARG PLATFORM=x86
+ARG OTEL_SERVICE_NAME=BookStoreDeploy
 ENV ONE_AGENT="oneAgent"
 ENV OTEL_AGENT="otelAgent"
 
-ENV DOCKER_VER=1.0.0
+ARG TENANT_ID
+ARG TENANT_LAYER=dev
+ARG TENANT_TOKEN
+ENV TENANT_URL_SHELL="https://$TENANT_ID.$TENANT_LAYER.dynatracelabs.com"
+ENV OTEL_TOKEN_SHELL=$TENANT_TOKEN
+
+ENV DOCKER_VER=1.0.1
 
 # Prepare OTel config
-# otel.sh will set tenant-specific settings on deploy
 ENV OTEL_RESOURCE_ATTRIBUTES="service.name=java-quickstart,service.version=1.0.1"
 ENV OTEL_METRICS_EXPORTER=none
 ENV OTEL_EXPORTER_OTLP_TRACES_PROTOCOL=http/protobuf
+
+COPY ../agents/scripts/*.sh /opt/
+RUN chmod +x /opt/*.sh
+
+# install unzip and otel bash agent
+RUN apt-get update && \
+    apt-get install -y zip unzip vim jq && \
+    wget -O - https://raw.githubusercontent.com/plengauer/opentelemetry-bash/main/INSTALL.sh | sh -E && \
+    rm -rf /var/lib/apt/lists/*
+
+# create directory for the application
+RUN mkdir -p /opt/app
+
+ENV JAVA_TOOL_OPTIONS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+
+
 RUN echo "export TENANT_URL=\`echo \$TENANT_URL | sed -E 's/[ '\$'/'']+\$//'\`"              >> /opt/otel.sh && \
     echo "export OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=\$TENANT_URL/api/v2/otlp/v1/traces"      >> /opt/otel.sh && \
     echo "export OTEL_EXPORTER_OTLP_TRACES_HEADERS=Authorization=\"Api-Token \$OTEL_TOKEN\"" >> /opt/otel.sh && \
@@ -22,8 +44,7 @@ RUN echo "export TENANT_URL=\`echo \$TENANT_URL | sed -E 's/[ '\$'/'']+\$//'\`" 
 # oneAgent.sh will set tenant-specific settings on deploy
 ARG ENV_FILE=env
 COPY ${ENV_FILE} /opt/env
-RUN mkdir -p /opt/app && mkdir -p  /var/lib/dynatrace/oneagent && \
-    apt-get update && apt-get install -y zip unzip && rm -rf /var/lib/apt/lists/* && \
+RUN mkdir -p  /var/lib/dynatrace/oneagent && \
     export DT_AGENT_DOWNLOAD_TENANT_URL=`cat /opt/env | grep DT_AGENT_DOWNLOAD_TENANT_URL | sed s/DT_AGENT_DOWNLOAD_TENANT_URL=// | sed -E 's/[ '$'/'']+$//'` && \
     export DT_AGENT_DOWNLOAD_TOKEN=`cat /opt/env | grep DT_AGENT_DOWNLOAD_TOKEN | sed s/DT_AGENT_DOWNLOAD_TOKEN=// | base64 -d` &&  \
     curl -v --request GET -sL \
@@ -53,7 +74,8 @@ RUN mkdir -p /opt/app && mkdir -p  /var/lib/dynatrace/oneagent && \
     echo ""                                                                                 >> /opt/oneAgent.sh && \
     chmod +x /opt/oneAgent.sh
 
-ENV JAVA_TOOL_OPTIONS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+
+
 
 ENTRYPOINT if [ -z ${AGENT+x} ]; then \
                 java -jar /opt/app/app.jar; \
