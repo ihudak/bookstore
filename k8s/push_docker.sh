@@ -6,7 +6,8 @@ TAG=latest
 
 display_usage() {
   echo "Usage:";
-  echo "   ${0} <project> -gyes -ax64  # makes docker image with OA and OTel agents, x64 architecture";
+  echo "   ${0} <project> -gyes -ax64  # makes docker image with OA and OTel agents installed on deploy, x64 architecture";
+  echo "   ${0} <project> -gpre -ax64  # makes docker image with OA and OTel agents preloaded, x64 architecture";
   echo "   ${0} <project> -gno  -arm   # makes docker image with no agents embedded, arm architecture";
   echo "Flags:";
   echo " -g - agent: yes/no. default = no - preloads otel and dynatrace java agents";
@@ -17,7 +18,7 @@ display_usage() {
 }
 
 get_params() {
-  ag="no"       # default - with agents
+  ag="no"        # default - with agents
   ar="x64"       # default - x64
   hl="no"        # help
   xx="boo"       # placeholder for x flag (can be used to force x64 arch)
@@ -33,10 +34,10 @@ get_params() {
   done
 
   # fixing most common typos
-  if [ $ag != "yes" ] && [ $ag != "y" ];                      then ag="no";    fi
-  if [ $ar = "arm" ] || [ $ar = "rm64" ] || [ $ar = "rm" ];   then ar="arm64"; fi # cover -aarm64, -arm64, -aarm, -arm
-  if [ $ar != "arm64" ];                                      then ar="x64";   fi
-  if [ $xx = "86" ] || [ $xx = "64" ];                        then ar="x64";   fi
+  if [ $ag != "yes" ] && [ $ag != "y" ] && [ $ag != "pre" ] && [ $ag != "p" ]; then ag="no";    fi
+  if [ $ar = "arm" ] || [ $ar = "rm64" ] || [ $ar = "rm" ];                    then ar="arm64"; fi # cover -aarm64, -arm64, -aarm, -arm
+  if [ $ar != "arm64" ];                                                       then ar="x64";   fi
+  if [ $xx = "86" ] || [ $xx = "64" ];                                         then ar="x64";   fi
 
   if [ $hl = "yes" ]; then # user wanted help. ignoring everything else
     display_usage;
@@ -50,7 +51,13 @@ get_params() {
 # Main Script
 get_params "$@";
 
-if [ $ag = "yes" ]; then AGENT=agents; else AGENT=noagent; fi
+if [ $ag = "no" ]; then
+  AGENT=noagent;
+elif [ $ag = "pre" ] || [ $ag = "p" ]; then
+  AGENT=preinstrument;
+else
+  AGENT=agents;
+fi
 
 if [ $ar = "-arm64" ]; then
   PLATFORM="arm64";

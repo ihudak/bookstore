@@ -1,0 +1,20 @@
+_normally you don't need to change this. the image will automatically download and setup Dynatrace Java agent and otel_
+
+== Configuration
+. Generate Token
+.. OneAgent token
+... Open Dynatrace UI > Manage > Access tokens
+... click on *Generate new token*
+... select *PaaS integration - Installer download* in the scope
+... click *Generate*
+. Update the *env* file
+.. Open *env* file for edit
+.. replace <tenant_url> with the tenant URL, like https://lrx09136.dev.dynatracelabs.com
+.. replace <agent_download_token_base64> with the token generated earlier and base64-ed:
+
+    echo -n <token> | base64 -w 0
+
+. Build and deploy the docker image
+
+    docker image build --platform linux/amd64 -t ivangudak096/dt-java-preinstrument:latest .
+    docker push ivangudak096/dt-java-preinstrument:latest

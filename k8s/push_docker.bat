@@ -14,6 +14,8 @@ IF "%2"=="-noagent" (
     SET AGENT=noagent
 ) ELSE IF "%2"=="-agents"  (
     SET AGENT=agents
+) ELSE IF "%2"=="-preinstrument" (
+    SET AGENT=preinstrument
 ) ELSE GOTO UNKNOWN
 
 IF "%~3"=="-arm" (
@@ -47,6 +49,7 @@ ECHO Bad/No Parameters
 ECHO Usage:
 ECHO    push_docker.bat <project> -agents  -arm/-x86  # makes docker image with OA and OTel agents
 ECHO    push_docker.bat <project> -noagent -arm/-x86  # makes docker image with no agents embedded
+ECHO    push_docker.bat <project> -preinstrument -arm/-x86  # makes docker image with agents preloaded
 ECHO.
 ECHO Please supply at least either -agents or -noagent
 ECHO       optionally specify platform as -arm or -x64

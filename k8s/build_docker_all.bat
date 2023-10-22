@@ -10,6 +10,7 @@ SET JAR_FILE=build\libs\*0.0.1-SNAPSHOT.jar
 
 SET DT_JAVA_AGENT=agents
 SET DT_NO_AGENT=noagent
+SET DT_PRE_AGENT=preinstrument
 SET DT_GUI=web
 
 SET DT_PROJECTS[0]=clients
@@ -29,6 +30,10 @@ IF "%1"=="" (
 ) ELSE (
   CALL push_docker.bat %1
 )
+timeout 3
+cd %BATCH_DIR%\..\%DT_PRE_AGENT%
+ECHO ============ Building PreAgent ================
+CALL push_docker.bat
 timeout 3
 cd %BATCH_DIR%\..\%DT_NO_AGENT%
 ECHO ============ Building NoAgent ================
@@ -56,9 +61,13 @@ if defined DT_PROJECTS[%x%] (
     timeout 3
     CALL %BATCH_DIR%\push_docker.bat !PROJ! -agents
     timeout 3
+    CALL %BATCH_DIR%\push_docker.bat !PROJ! -preinstrument
+    timeout 3
     CALL %BATCH_DIR%\push_docker.bat !PROJ! -noagent -arm
     timeout 3
     CALL %BATCH_DIR%\push_docker.bat !PROJ! -agents -arm
+    timeout 3
+    CALL %BATCH_DIR%\push_docker.bat !PROJ! -preinstrument -arm
     timeout 3
     SET /a "x+=1"
     GOTO :SymLoop

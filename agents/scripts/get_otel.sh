@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 ## Workaround for the tailing slash in the URL
 export TENANT_URL=`echo $TENANT_URL | sed -E 's/[ '\$'/'']+\$//'`
 

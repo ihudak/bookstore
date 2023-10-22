@@ -9,6 +9,7 @@ JAR_FILE=build/libs/*0.0.1-SNAPSHOT.jar
 
 DT_JAVA_AGENT=agents
 DT_NO_AGENT=noagent
+DT_PRE_AGENT=preinstrument
 DT_GUI=web
 
 dt_projects="clients books carts storage orders ratings payments dynapay ingest"
@@ -24,6 +25,11 @@ fi
 cd $SCRIPT_DIR/../$DT_NO_AGENT
 echo "============ Building NoAgent ================="
 ./push_docker.sh
+
+cd $SCRIPT_DIR/../DT_PRE_AGENT
+echo "============ Building PreAgent ================="
+./push_docker.sh
+
 cd $SCRIPT_DIR/../$DT_GUI
 echo "============ Building GUI ================="
 ./push_docker.sh
@@ -38,6 +44,8 @@ for i in $dt_projects; do
   cd $SCRIPT_DIR/../$PROJ_DIR
   $SCRIPT_DIR/push_docker.sh $i
   $SCRIPT_DIR/push_docker.sh $i -gyes
+  $SCRIPT_DIR/push_docker.sh $i -gpre
   $SCRIPT_DIR/push_docker.sh $i -arm
   $SCRIPT_DIR/push_docker.sh $i -gyes -arm
+  $SCRIPT_DIR/push_docker.sh $i -gpre -arm
 done

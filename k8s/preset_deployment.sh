@@ -6,7 +6,7 @@ display_usage() {
   echo "   ${0} -gyes -ax64 -pmin -n bookstore  # takes docker image with OA and OTel agents";
   echo "   ${0} -reset              # resets yamls";
   echo "Flags:";
-  echo " -g - agent: yes/no. default = yes - preloads otel and dynatrace java agents";
+  echo " -g - agent: yes/no/pre. default = yes - preloads otel and dynatrace java agents. pre - use preinstrumented images";
   echo " -a - architecture: arm/x64. default = x64 - sets architecture";
   echo " -p - ports for k8s services: all/min. default = all - defines whether all k8s should get an external IP. Min - only ingest";
   echo " -n - namespace. default bookstore";
@@ -21,8 +21,10 @@ reset_settings() {
   # reset settings
   sed -i.bak "s/-noagent-x64:latest/-{AGENT}-{ARCH}:latest/g" *.yaml
   sed -i.bak "s/-agents-x64:latest/-{AGENT}-{ARCH}:latest/g" *.yaml
+  sed -i.bak "s/-preinstrument-x64:latest/-{AGENT}-{ARCH}:latest/g" *.yaml
   sed -i.bak "s/-noagent-arm64:latest/-{AGENT}-{ARCH}:latest/g" *.yaml
   sed -i.bak "s/-agents-arm64:latest/-{AGENT}-{ARCH}:latest/g" *.yaml
+  sed -i.bak "s/-preinstrument-arm64:latest/-{AGENT}-{ARCH}:latest/g" *.yaml
   sed -i.bak "s/-x64:latest/-{ARCH}:latest/g" databases.yaml
   sed -i.bak "s/-arm64:latest/-{ARCH}:latest/g" databases.yaml
   sed -i.bak "s/bookstore-webapp-x64:latest/bookstore-webapp-{ARCH}:latest/g" bookstore.yaml
@@ -59,12 +61,12 @@ get_params() {
   done
 
   # fixing most common typos
-  if [ $ag != "yes" ] && [ $ag != "y" ];                      then ag="no";    fi
-  if [ $ar = "arm" ] || [ $ar = "rm64" ] || [ $ar = "rm" ];   then ar="arm64"; fi # cover -aarm64, -arm64, -aarm, -arm
-  if [ $ar != "arm64" ];                                      then ar="x64";   fi
-  if [ $xx = "86" ] || [ $xx = "64" ];                        then ar="x64";   fi
-  if [ $po != "min" ];                                        then po="all";   fi
-  if [ $ns = "" ];                                            then ns="bookstore"; fi
+  if [ $ag != "yes" ] && [ $ag != "y" ] && [ $ag != "pre" ] && [ $ag != "p" ]; then ag="no";    fi
+  if [ $ar = "arm" ] || [ $ar = "rm64" ] || [ $ar = "rm" ];                    then ar="arm64"; fi # cover -aarm64, -arm64, -aarm, -arm
+  if [ $ar != "arm64" ];                                                       then ar="x64";   fi
+  if [ $xx = "86" ] || [ $xx = "64" ];                                         then ar="x64";   fi
+  if [ $po != "min" ];                                                         then po="all";   fi
+  if [ $ns = "" ];                                                             then ns="bookstore"; fi
 
   if [ $hl = "yes" ]; then # user wanted help. ignoring everything else
     display_usage;
@@ -85,7 +87,13 @@ get_params "$@";
 reset_settings # before doing anything - reset yamls
 
 # set agents and platform
-if [ $ag = "no" ]; then ag="noagent"; else ag="agents"; fi
+if [ $ag = "no" ]; then
+  ag="noagent";
+elif [ $ag = "pre" ] || [ $ag = "p" ]; then
+  ag="preinstrument";
+else
+  ag="agents";
+fi
 sed -i.bak "s/-{AGENT}-{ARCH}:latest/-$ag-$ar:latest/g" *.yaml
 sed -i.bak "s/-{ARCH}:latest/-$ar:latest/g" databases.yaml
 sed -i.bak "s/bookstore-webapp-{ARCH}:latest/bookstore-webapp-$ar:latest/g" bookstore.yaml
