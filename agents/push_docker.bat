@@ -5,7 +5,7 @@ REM can be either open of base64-ed
 SET DT_JAVA_AGENT=agents
 SET DT_PRE_AGENT=preinstrument
 
-IF "%1"==%DT_PRE_AGENT% (
+IF %1==%DT_PRE_AGENT% (
   SET IMG_NAME=%DT_PRE_AGENT%
   SET PRELOAD=true
 ) ELSE (
