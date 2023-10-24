@@ -5,12 +5,12 @@
 export DT_JAVA_AGENT=agents
 export DT_PRE_AGENT=preinstrument
 
-if [ $# -lt 2 ] || [ $1 != $DT_PRE_AGENT ]; then
+if [ $# -lt 1 ] || [ "$1" != $DT_PRE_AGENT ]; then
   export IMG_NAME=$DT_JAVA_AGENT;
   export PRELOAD=false;
 else
-    export IMG_NAME=$DT_PRE_AGENT;
-    export PRELOAD=true;
+  export IMG_NAME=$DT_PRE_AGENT;
+  export PRELOAD=true;
 fi
 
 if [ $# -lt 5 ]; then
