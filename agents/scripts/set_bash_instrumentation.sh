@@ -40,7 +40,7 @@ else
   export OTEL_EXPORTER_OTLP_LOGS_HEADERS;
 
   # Configure service
-  export OTEL_SERVICE_NAME=BookStoreAppDocker;
+  export OTEL_SERVICE_NAME="BookStoreAppDocker $SVC_NAME";
   # turn on instrumenting
   . /usr/bin/opentelemetry_shell.sh;
   otel_instrument echo;
