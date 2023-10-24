@@ -56,7 +56,7 @@ RUN if [ "$AGENTS_PRELOAD" = true ]; then \
       /opt/get_oa.sh ; \
     fi
 RUN rm /opt/env
-
+ENV AGENTS_PRELOAD=$AGENTS_PRELOAD
 
 ENTRYPOINT if [ -z ${AGENT+x} ]; then \
                 java -jar /opt/app/app.jar; \

@@ -1,25 +1,23 @@
 #!/bin/sh
 
-log() {
-  echo "$1" >&2
-}
-
-if [ "$(echo OA_TOKEN | cut -c 1-7)" != "dt0c01." ]; then
-  log "Invalid OA token";
+echo $OA_TOKEN
+sleep 25
+if [ "$(echo $OA_TOKEN | cut -c 1-7)" != "dt0c01." ]; then
+  echo "Invalid OA token";
   exit 1;
 fi
 
 if [ ! -d "$OA_INSTALL_DIR" ]; then
-  log "OneAgent is not installed.";
+  echo "OneAgent is not installed.";
   exit 1;
 fi
 
 if [ ! -e "$OA_CONF_FILE" ]; then
-  log "OneAgent config file does not exist.";
+  echo "OneAgent config file does not exist.";
   exit 1;
 fi
 
-log "Getting OneAgent configuration..."
+echo "Getting OneAgent configuration..."
 ## Workaround for the tailing slash in the URL
 TENANT_URL=$(echo "$TENANT_URL" | sed -E 's/[ '\$'/'']+\$//')
 export TENANT_URL
@@ -36,4 +34,4 @@ sed -i s/tenant_id/"$TENANT_ID"/g "$OA_CONF_FILE"
 sed -i "s|tenant_url|$TENANT_URL|g" "$OA_CONF_FILE"
 sed -i s/tenant_token/"$TENANT_TOKEN"/g "$OA_CONF_FILE"
 
-log "OA config done"
+echo "OA config done"

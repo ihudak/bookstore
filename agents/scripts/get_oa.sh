@@ -1,9 +1,5 @@
 #!/bin/sh
 
-log() {
-  echo "$1" >&2
-}
-
 # clear the OA directory
 rm -rf $OA_INSTALL_DIR && mkdir -p $OA_INSTALL_DIR
 
@@ -23,7 +19,7 @@ if [ -z ${PLATFORM+x} ]; then
   fi;
 fi
 
-log "Downloading the latest OneAgent..."
+echo "Downloading the latest OneAgent..."
 # Download OA (Java Agent only)
 curl --request GET -sL \
 --url "$TENANT_URL/api/v1/deployment/installer/agent/unix/paas/latest?flavor=default&arch=$PLATFORM&bitness=64&include=java&skipMetadata=true" \
@@ -31,19 +27,19 @@ curl --request GET -sL \
 --header "Authorization: Api-Token $OA_TOKEN" \
 --output "$AGENT_ZIP"
 
-log "Checking if OneAgent.zip file is ok"
+echo "Checking if OneAgent.zip file is ok"
 if [ ! -e "$AGENT_ZIP" ]; then
-  log "OneAgent.zip does not exist.";
+  echo "OneAgent.zip does not exist.";
   exit 1;
 fi
 
 FILESIZE=$(stat -c%s "$AGENT_ZIP")
 export FILESIZE
 if [ $FILESIZE -lt $MINSIZE ]; then
-  log "OneAgent.zip is too small. Please check it for errors";
+  echo "OneAgent.zip is too small. Please check it for errors";
   exit 1;
 else
-  log "OneAgent.zip download is ok";
+  echo "OneAgent.zip download is ok";
   stat -c%s "$AGENT_ZIP";
 fi
 
@@ -53,4 +49,4 @@ cd "$OA_INSTALL_DIR" && unzip "$AGENT_ZIP" && rm "$AGENT_ZIP"
 # copy the template of the config file
 cp /opt/standalone.conf "$OA_INSTALL_DIR"/agent/conf/
 
-log "OA load done"
+echo "OA load done"
