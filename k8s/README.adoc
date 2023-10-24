@@ -18,13 +18,13 @@ Purposes: demonstrating of Dynatrace capabilities in high-load and unhealthy env
 . execute, optionally providing otel token with the scopes of trace_otel_ingest, log_otel_ingest, metric_otel_ingest
 * #__the token can be base64-ed or open__#
 
-    ./build_docker_all.sh [<otel_ingest_token>]
+    ./build_docker_all.sh [<tenantID>] [dev|sprint] [<otel_ingest_token>]
 
 === Windows
 . Go to k8s directory
 . execute, optionally providing otel token with the scopes of trace_otel_ingest, log_otel_ingest, metric_otel_ingest
 
-    .\build_docker_all.bat [<otel_ingest_token>]
+    .\build_docker_all.bat [<tenantID>] [dev|sprint] [<otel_ingest_token>]
 
 
 == Configuration
