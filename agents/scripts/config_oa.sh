@@ -1,7 +1,5 @@
 #!/bin/sh
 
-echo $OA_TOKEN
-sleep 25
 if [ "$(echo $OA_TOKEN | cut -c 1-7)" != "dt0c01." ]; then
   echo "Invalid OA token";
   exit 1;
