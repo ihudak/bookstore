@@ -45,10 +45,10 @@ for i in $dt_projects; do
   PROJ_DIR=$i
 
   cd $SCRIPT_DIR/../$PROJ_DIR
-  $SCRIPT_DIR/push_docker.sh $i
-  $SCRIPT_DIR/push_docker.sh $i -gyes
-  $SCRIPT_DIR/push_docker.sh $i -gpre
-  $SCRIPT_DIR/push_docker.sh $i -arm
-  $SCRIPT_DIR/push_docker.sh $i -gyes -arm
-  $SCRIPT_DIR/push_docker.sh $i -gpre -arm
+  $SCRIPT_DIR/push_docker.sh -p $i
+  $SCRIPT_DIR/push_docker.sh -p $i -gyes
+  $SCRIPT_DIR/push_docker.sh -p $i -gpre
+  $SCRIPT_DIR/push_docker.sh -p $i -arm
+  $SCRIPT_DIR/push_docker.sh -p $i -gyes -arm
+  $SCRIPT_DIR/push_docker.sh -p $i -gpre -arm
 done
