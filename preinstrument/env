@@ -1,7 +1,0 @@
-DT_AGENT_DOWNLOAD_TENANT_URL=<tenant-url>
-DT_AGENT_DOWNLOAD_TOKEN=<agent_download_token_base64>
-
-## to store token on Linux, please do:
-# echo -n <token> | base64 -w 0
-# on MacOS, please do:
-# echo -n <token> | base64
