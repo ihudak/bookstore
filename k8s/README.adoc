@@ -175,7 +175,7 @@ Use preset_deployment.sh for that:
     ./restart.sh -web  # deploys everything including the web app
     ./restart.sh -nodb # won't touch the DB (restart of the DB causes data reset)
     ./delete.sh        # undeploys microservices and the web app (DBs stay)
-    ./delete.sh -all   # undeploys everything, including the DBs, configmap, secrets, and namespace
+    ./delete.sh -all   # undeploys everything, including the DBs, configmaps
 
 ==== Windows
 
@@ -185,4 +185,4 @@ Use preset_deployment.sh for that:
     .\restart.bat -web  &REM deploys everything including the web app
     .\restart.bat -nodb &REM won't touch the DB (restart of the DB causes data reset)
     .\delete.bat        &REM undeploys microservices and the web app (DBs stay)
-    .\delete.bat -all   &REM undeploys everything, including the DBs, configmap, secrets, and namespace
+    .\delete.bat -all   &REM undeploys everything, including the DBs, configs
