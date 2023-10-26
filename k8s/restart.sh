@@ -6,9 +6,9 @@ kubectl apply -f secret.yaml
 
 # does not have to be a part of restart as all data would be lost
 # but must be a part of a new deployment
-if [ $# -gt 0 ] && [ $1 = "-all" ]; then
+if [ $# -eq 0 ] || [ $1 != "-nodb" ]; then
   kubectl apply -f databases.yaml;
-  read -t 15 -p "Wait till the databases get up and running..."
+  read -t 15 -p "Wait till the databases get up and running...";
 fi
 
 #kubectl delete deployment clients -n $NS
