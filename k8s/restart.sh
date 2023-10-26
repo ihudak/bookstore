@@ -31,4 +31,7 @@ kubectl apply -f payments.yaml
 kubectl apply -f dynapay.yaml
 kubectl apply -f ingest.yaml
 kubectl apply -f ratings.yaml
-kubectl apply -f bookstore.yaml
+
+if [ $1 == "-web" ] || [ $2 == "-web" ]; then
+  kubectl apply -f bookstore.yaml;
+fi

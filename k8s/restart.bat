@@ -18,4 +18,11 @@ kubectl apply -f payments.yaml
 kubectl apply -f dynapay.yaml
 kubectl apply -f ingest.yaml
 kubectl apply -f ratings.yaml
-kubectl apply -f bookstore.yaml
+
+SET WEB="FALSE"
+IF "%1"=="-web" SET WEB="TRUE"
+IF "%2"=="-web" SET WEB="TRUE"
+
+IF WEB=="TRUE" (
+  kubectl apply -f bookstore.yaml
+)
