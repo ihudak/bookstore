@@ -113,6 +113,7 @@ Use preset_deployment.sh for that:
 .. cons: to update the Agents you need to rebuild the docker images
 
 == Deployment
+=== Manual deployment
 0. Create namespace:
 
     kubectl apply -f namespace.yaml
@@ -149,6 +150,39 @@ Use preset_deployment.sh for that:
 
     kubectl apply -f bookstore.yaml
 
+6. Delete the app:
 
+    kubectl delete -f bookstore.yaml
+    kubectl delete -f clients.yaml
+    kubectl delete -f books.yaml
+    kubectl delete -f carts.yaml
+    kubectl delete -f storage.yaml
+    kubectl delete -f orders.yaml
+    kubectl delete -f ratings.yaml
+    kubectl delete -f payments.yaml
+    kubectl delete -f dynapay.yaml
+    kubectl delete -f ingest.yaml
+    kubectl delete -f databases.yaml
+    kubectl delete -f secret.yaml
+    kubectl delete -f config.yaml
+    kubectl delete -f namespace.yaml
 
+=== Automated deployment
 
+==== Linux
+
+    ./restart.sh       # deploys databases and backend microservices
+    ./restart.sh -web  # deploys everything including the web app
+    ./restart.sh -nodb # won't touch the DB (restart of the DB causes data reset)
+    ./delete.sh        # undeploys microservices and the web app (DBs stay)
+    ./delete.sh -all   # undeploys everything, including the DBs, configmap, secrets, and namespace
+
+==== Windows
+
+==== Linux
+
+    .\restart.bat       &REM deploys databases and backend microservices
+    .\restart.bat -web  &REM deploys everything including the web app
+    .\restart.bat -nodb &REM won't touch the DB (restart of the DB causes data reset)
+    .\delete.bat        &REM undeploys microservices and the web app (DBs stay)
+    .\delete.bat -all   &REM undeploys everything, including the DBs, configmap, secrets, and namespace
