@@ -14,10 +14,10 @@ kubectl apply -f books.yaml
 kubectl apply -f carts.yaml
 kubectl apply -f storage.yaml
 kubectl apply -f orders.yaml
+kubectl apply -f ratings.yaml
 kubectl apply -f payments.yaml
 kubectl apply -f dynapay.yaml
 kubectl apply -f ingest.yaml
-kubectl apply -f ratings.yaml
 
 SET WEB="FALSE"
 IF "%1"=="-web" SET WEB="TRUE"
