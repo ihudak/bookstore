@@ -26,3 +26,5 @@ IF "%2"=="-web" SET WEB="TRUE"
 IF WEB=="TRUE" (
   kubectl apply -f bookstore.yaml
 )
+
+kubectl apply -f ingress.yaml

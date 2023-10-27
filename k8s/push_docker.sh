@@ -1,6 +1,6 @@
 #!/bin/sh
 ######## Project Configuration ##########
-BASE_REPO=ihudak
+BASE_REPO=ivangudak096
 TAG=latest
 ######## Project Configuration ##########
 

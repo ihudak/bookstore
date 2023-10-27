@@ -35,3 +35,5 @@ kubectl apply -f ingest.yaml
 if [ $1 == "-web" ] || [ $2 == "-web" ]; then
   kubectl apply -f bookstore.yaml;
 fi
+
+kubectl apply -f ingress.yaml

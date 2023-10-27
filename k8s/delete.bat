@@ -10,6 +10,7 @@ kubectl delete -f ingest.yaml
 kubectl delete -f bookstore.yaml
 
 IF "%1"=="-all" (
+  kubectl delete -f ingress.yaml
   kubectl delete -f databases.yaml
   kubectl delete -f secret.yaml
   kubectl delete -f config.yaml

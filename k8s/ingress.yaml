@@ -4,80 +4,89 @@ metadata:
   name: bookstore-ingress
   namespace: bookstore
   annotations:
-    kubernetes.io/ingress.class: "nginx"
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/rewrite-target: /$1
 spec:
+  ingressClassName: nginx
   rules:
     - host: kubernetes.docker.internal
       http:
         paths:
-          - path: /ingest(/|$)(.*)
+          - path: /ingest/?(.*)
             pathType: ImplementationSpecific
             backend:
               service:
                 name: ingest-svc
                 port:
-                  number: 89
-          - path: /clients
-            pathType: Prefix
+                  number: 80
+          - path: /clients/?(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: clients-svc
                 port:
-                  number: 81
-          - path: /books
-            pathType: Prefix
+                  number: 80
+          - path: /books/?(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: books-svc
                 port:
-                  number: 82
-          - path: /carts
-            pathType: Prefix
+                  number: 80
+          - path: /carts/?(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: carts-svc
                 port:
-                  number: 83
-          - path: /storage
-            pathType: Prefix
+                  number: 80
+          - path: /storage/?(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: storage-svc
                 port:
-                  number: 84
-          - path: /orders
-            pathType: Prefix
+                  number: 80
+          - path: /orders/?(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: orders-svc
                 port:
-                  number: 85
-          - path: /ratings
-            pathType: Prefix
+                  number: 80
+          - path: /ratings/?(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: ratings-svc
                 port:
-                  number: 88
-          - path: /payments
-            pathType: Prefix
+                  number: 80
+          - path: /payments/?(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: payments-svc
                 port:
-                  number: 86
-          - path: /superpay
-            pathType: Prefix
+                  number: 80
+          - path: /superpay/?(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: superpay-svc
                 port:
-                  number: 87
-          - path: /bookstore
-            pathType: Prefix
+                  number: 80
+          - path: /dynapay/?(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: superpay-svc
+                port:
+                  number: 80
+          - path: /bookstore/?(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: bookstore-svc
                 port:
-                  number: 90
+                  number: 80
