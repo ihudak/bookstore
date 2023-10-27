@@ -13,6 +13,20 @@ Purposes: demonstrating of Dynatrace capabilities in high-load and unhealthy env
 === Prerequisite
 . Docker service (docker desktop) should be running
 
+==== Ingress Controller
+Install Ingress controller to enable WebApp access all microservices in your deployment
+Here is the instruction how to setup Ingress-Nginx controller on Docker Desktop
+
+===== Using Helm
+
+    helm upgrade --install ingress-nginx ingress-nginx --repo https://kubernetes.github.io/ingress-nginx --namespace ingress-nginx --create-namespace
+
+==== Using kubectl
+
+    kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.2/deploy/static/provider/cloud/deploy.yaml
+
+*Note:* Restart Docker Desktop after setting up ingress-nginx
+
 === Linux
 . Go to k8s directory
 . execute, optionally providing otel token with the scopes of trace_otel_ingest, log_otel_ingest, metric_otel_ingest
@@ -150,7 +164,11 @@ Use preset_deployment.sh for that:
 
     kubectl apply -f bookstore.yaml
 
-6. Delete the app:
+6. Setup Ingress:
+
+    kubectl apply -f ingress.yaml
+
+7. Delete the app:
 
     kubectl delete -f bookstore.yaml
     kubectl delete -f clients.yaml
@@ -162,6 +180,7 @@ Use preset_deployment.sh for that:
     kubectl delete -f payments.yaml
     kubectl delete -f dynapay.yaml
     kubectl delete -f ingest.yaml
+    kubectl delete -f ingress.yaml
     kubectl delete -f databases.yaml
     kubectl delete -f secret.yaml
     kubectl delete -f config.yaml
