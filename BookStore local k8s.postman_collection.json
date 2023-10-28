@@ -1,0 +1,832 @@
+{
+	"info": {
+		"_postman_id": "f6c190b6-7b17-4a65-85e9-d2f761105070",
+		"name": "BookStore local k8s",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11780368"
+	},
+	"item": [
+		{
+			"name": "DataIngest",
+			"item": [
+				{
+					"name": "Generate Data",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"code\": 0,\n    \"message\": \"generate\",\n    \"numBooksVend\": 2000,\n    \"numBooksNotvend\": 100,\n    \"numBooksRandVend\": 50,\n    \"numClients\": 1500,\n    \"numCarts\": 1000,\n    \"numOrders\": 500,\n    \"numSubmitOrders\": 455,\n    \"numRatings\": 700,\n    \"numStorage\": 2000,\n    \"randomPrice\": true,\n    \"numBooksPerStorage\": 0,\n    \"numBooksPerOrder\": 0,\n    \"continuousLoad\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{ingestSrv}}/api/v1/ingest",
+							"protocol": "http",
+							"host": [
+								"{{ingestSrv}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"ingest"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Generate Books",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"code\": 0,\n    \"message\": \"generate\",\n    \"numBooksVend\": 20,\n    \"numBooksNotvend\": 10,\n    \"numBooksRandVend\": 5,\n    \"numClients\": 15,\n    \"numCarts\": 10,\n    \"numOrders\": 20,\n    \"numSubmitOrders\": 5,\n    \"numRatings\": 7,\n    \"numStorage\": 10,\n    \"randomPrice\": true,\n    \"numBooksPerStorage\": 0,\n    \"numBooksPerOrder\": 0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{ingestSrv}}/api/v1/ingest/books",
+							"protocol": "http",
+							"host": [
+								"{{ingestSrv}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"ingest",
+								"books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Generate Clients",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"code\": 0,\n    \"message\": \"generate\",\n    \"numBooksVend\": 20,\n    \"numBooksNotvend\": 10,\n    \"numBooksRandVend\": 5,\n    \"numClients\": 15,\n    \"numCarts\": 10,\n    \"numOrders\": 20,\n    \"numSubmitOrders\": 5,\n    \"numRatings\": 7,\n    \"numStorage\": 10,\n    \"randomPrice\": true,\n    \"numBooksPerStorage\": 0,\n    \"numBooksPerOrder\": 0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{ingestSrv}}/api/v1/ingest/clients",
+							"protocol": "http",
+							"host": [
+								"{{ingestSrv}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"ingest",
+								"clients"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Generate Carts",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"code\": 0,\n    \"message\": \"generate\",\n    \"numBooksVend\": 20,\n    \"numBooksNotvend\": 10,\n    \"numBooksRandVend\": 5,\n    \"numClients\": 15,\n    \"numCarts\": 5,\n    \"numOrders\": 20,\n    \"numSubmitOrders\": 5,\n    \"numRatings\": 7,\n    \"numStorage\": 10,\n    \"randomPrice\": true,\n    \"numBooksPerStorage\": 0,\n    \"numBooksPerOrder\": 0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{ingestSrv}}/api/v1/ingest/carts",
+							"protocol": "http",
+							"host": [
+								"{{ingestSrv}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"ingest",
+								"carts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Generate Storage",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"code\": 0,\n    \"message\": \"generate\",\n    \"numBooksVend\": 20,\n    \"numBooksNotvend\": 10,\n    \"numBooksRandVend\": 5,\n    \"numClients\": 15,\n    \"numCarts\": 10,\n    \"numOrders\": 20,\n    \"numSubmitOrders\": 5,\n    \"numRatings\": 7,\n    \"numStorage\": 10,\n    \"randomPrice\": true,\n    \"numBooksPerStorage\": 0,\n    \"numBooksPerOrder\": 0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{ingestSrv}}/api/v1/ingest/storage",
+							"protocol": "http",
+							"host": [
+								"{{ingestSrv}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"ingest",
+								"storage"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Generate Orders (not paid)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"code\": 0,\n    \"message\": \"generate\",\n    \"numBooksVend\": 20,\n    \"numBooksNotvend\": 10,\n    \"numBooksRandVend\": 5,\n    \"numClients\": 15,\n    \"numCarts\": 10,\n    \"numOrders\": 50,\n    \"numSubmitOrders\": 45,\n    \"numRatings\": 7,\n    \"numStorage\": 10,\n    \"randomPrice\": true,\n    \"numBooksPerStorage\": 0,\n    \"numBooksPerOrder\": 0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{ingestSrv}}/api/v1/ingest/orders",
+							"protocol": "http",
+							"host": [
+								"{{ingestSrv}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"ingest",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Pay Orders",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"code\": 0,\n    \"message\": \"generate\",\n    \"numBooksVend\": 20,\n    \"numBooksNotvend\": 10,\n    \"numBooksRandVend\": 5,\n    \"numClients\": 15,\n    \"numCarts\": 10,\n    \"numOrders\": 50,\n    \"numSubmitOrders\": 45,\n    \"numRatings\": 7,\n    \"numStorage\": 10,\n    \"randomPrice\": true,\n    \"numBooksPerStorage\": 0,\n    \"numBooksPerOrder\": 0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{ingestSrv}}/api/v1/ingest/orders/submit",
+							"protocol": "http",
+							"host": [
+								"{{ingestSrv}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"ingest",
+								"orders",
+								"submit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel Orders",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"code\": 0,\n    \"message\": \"generate\",\n    \"numBooksVend\": 20,\n    \"numBooksNotvend\": 10,\n    \"numBooksRandVend\": 5,\n    \"numClients\": 15,\n    \"numCarts\": 10,\n    \"numOrders\": 20,\n    \"numSubmitOrders\": 5,\n    \"numRatings\": 7,\n    \"numStorage\": 10,\n    \"randomPrice\": true,\n    \"numBooksPerStorage\": 0,\n    \"numBooksPerOrder\": 0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{ingestSrv}}/api/v1/ingest/orders/cancel",
+							"protocol": "http",
+							"host": [
+								"{{ingestSrv}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"ingest",
+								"orders",
+								"cancel"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Generate Ratings",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"code\": 0,\n    \"message\": \"generate\",\n    \"numBooksVend\": 20,\n    \"numBooksNotvend\": 10,\n    \"numBooksRandVend\": 5,\n    \"numClients\": 15,\n    \"numCarts\": 10,\n    \"numOrders\": 20,\n    \"numSubmitOrders\": 5,\n    \"numRatings\": 7,\n    \"numStorage\": 10,\n    \"randomPrice\": true,\n    \"numBooksPerStorage\": 0,\n    \"numBooksPerOrder\": 0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{ingestSrv}}/api/v1/ingest/ratings",
+							"protocol": "http",
+							"host": [
+								"{{ingestSrv}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"ingest",
+								"ratings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Clear Data",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"code\": 0,\n    \"message\": \"generate\",\n    \"numBooksVend\": 40,\n    \"numBooksNotvend\": 20,\n    \"numBooksRandVend\": 5,\n    \"numClients\": 15,\n    \"numCarts\": 10,\n    \"numOrders\": 10,\n    \"numSubmitOrders\": 5,\n    \"numRatings\": 7,\n    \"numStorage\": 50,\n    \"randomPrice\": true,\n    \"numBooksPerStorage\": 0,\n    \"numBooksPerOrder\": 0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{ingestSrv}}/api/v1/ingest",
+							"protocol": "http",
+							"host": [
+								"{{ingestSrv}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"ingest"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Universal Config",
+			"item": [
+				{
+					"name": "Config",
+					"item": [
+						{
+							"name": "configs",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{ingestSrv}}/api/v1/config",
+									"protocol": "http",
+									"host": [
+										"{{ingestSrv}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"config"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "version",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{ingestSrv}}/api/v1/version",
+									"protocol": "http",
+									"host": [
+										"{{ingestSrv}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"version"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "config - work hard",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"dt.work.hard\",\n    \"turnedOn\": true,\n    \"loadCPU\": 1500000,\n    \"loadRAM\": 64\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{ingestSrv}}/api/v1/config/books",
+									"protocol": "http",
+									"host": [
+										"{{ingestSrv}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"config",
+										"books"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "configAll - work hard",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"dt.work.hard\",\n    \"turnedOn\": false,\n    \"loadCPU\": 1500000,\n    \"loadRAM\": 64\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{ingestSrv}}/api/v1/config",
+									"protocol": "http",
+									"host": [
+										"{{ingestSrv}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"config"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "config - payment failure percent",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"dt.failure.payment.percent\",\n    \"turnedOn\": true,\n    \"probabilityFailure\": 25.0\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{ingestSrv}}/api/v1/config/dynapay",
+									"protocol": "http",
+									"host": [
+										"{{ingestSrv}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"config",
+										"dynapay"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "crash simulator",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"dt.simulate.crash\",\n    \"probabilityFailure\": 0.0,\n    \"propertyStr\": \"10/20/4\",\n    \"turnedOn\": false\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{ingestSrv}}/api/v1/config/books",
+									"protocol": "http",
+									"host": [
+										"{{ingestSrv}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"config",
+										"books"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Clients",
+			"item": [
+				{
+					"name": "Config",
+					"item": [
+						{
+							"name": "configs",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{clientsSrv}}/api/v1/config",
+									"protocol": "http",
+									"host": [
+										"{{clientsSrv}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"config"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "config - work hard",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"dt.work.hard\",\n    \"turnedOn\": true,\n    \"loadCPU\": 200000000,\n    \"loadRAM\": 64\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{clientsSrv}}/api/v1/config",
+									"protocol": "http",
+									"host": [
+										"{{clientsSrv}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"config"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "config - payment failure percent",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"dt.failure.payment.percent\",\n    \"turnedOn\": true,\n    \"probabilityFailure\": 92.0\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{clientsSrv}}/api/v1/config/",
+									"protocol": "http",
+									"host": [
+										"{{clientsSrv}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"config",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "crash simulator",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"dt.simulate.crash\",\n    \"probabilityFailure\": 0.0,\n    \"propertyStr\": \"10/20/4\",\n    \"turnedOn\": false\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{clientsSrv}}/api/v1/config",
+									"protocol": "http",
+									"host": [
+										"{{clientsSrv}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"config"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "version",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{clientsSrv}}/api/v1/version",
+									"protocol": "http",
+									"host": [
+										"{{clientsSrv}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"version"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Books",
+			"item": [
+				{
+					"name": "Config",
+					"item": [
+						{
+							"name": "configs",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{booksSrv}}/api/v1/config",
+									"protocol": "http",
+									"host": [
+										"{{booksSrv}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"config"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "config - work hard",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"dt.work.hard\",\n    \"turnedOn\": true,\n    \"loadCPU\": 200000000,\n    \"loadRAM\": 64\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{booksSrv}}/api/v1/config",
+									"protocol": "http",
+									"host": [
+										"{{booksSrv}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"config"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "config - payment failure percent",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"dt.failure.payment.percent\",\n    \"turnedOn\": true,\n    \"probabilityFailure\": 92.0\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{booksSrv}}/api/v1/config/",
+									"protocol": "http",
+									"host": [
+										"{{booksSrv}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"config",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "crash simulator",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"dt.simulate.crash\",\n    \"probabilityFailure\": 0.0,\n    \"propertyStr\": \"10/20/4\",\n    \"turnedOn\": false\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{booksSrv}}/api/v1/config",
+									"protocol": "http",
+									"host": [
+										"{{booksSrv}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"config"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "version",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{booksSrv}}/api/v1/version",
+									"protocol": "http",
+									"host": [
+										"{{booksSrv}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"version"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "bookstoreBaseURL",
+			"value": "localhost",
+			"type": "string"
+		},
+		{
+			"key": "clientsSrv",
+			"value": "localhost:81",
+			"type": "string"
+		},
+		{
+			"key": "booksSrv",
+			"value": "localhost:82",
+			"type": "string"
+		},
+		{
+			"key": "cartsSrv",
+			"value": "localhost:83",
+			"type": "string"
+		},
+		{
+			"key": "storageSrv",
+			"value": "localhost:84",
+			"type": "string"
+		},
+		{
+			"key": "ordersSrv",
+			"value": "localhost:85",
+			"type": "string"
+		},
+		{
+			"key": "paymentsSrv",
+			"value": "localhost:86",
+			"type": "string"
+		},
+		{
+			"key": "dynapaySrv",
+			"value": "localhost:87",
+			"type": "string"
+		},
+		{
+			"key": "ratingsSrv",
+			"value": "localhost:88",
+			"type": "string"
+		},
+		{
+			"key": "ingestSrv",
+			"value": "localhost:89",
+			"type": "string"
+		}
+	]
+}
