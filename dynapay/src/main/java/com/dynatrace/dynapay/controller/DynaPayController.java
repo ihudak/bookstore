@@ -27,7 +27,7 @@ public class DynaPayController extends HardworkingController {
         simulateCrash();
 
         double rand = Math.random();
-        logger.info("Processing Payment... Rand = " + rand + " probability to fail = " + getPercentFailure());
+        logger.info("Processing Payment... Rand = " + rand + " probability to fail = " + getPercentFailure() + "%");
 
         if (rand >= getPercentFailure() / 100.0) {
             // successful payment
