@@ -21,11 +21,11 @@ public class Config implements ConfigModel {
     private long loadRAM;
 
     @Column(name="probab_fail", nullable = true)
-    @Schema(name = "probab_fail", example = "75", requiredMode = Schema.RequiredMode.NOT_REQUIRED, description = "Has no effect in this service")
+    @Schema(name = "probab_fail", example = "75", requiredMode = Schema.RequiredMode.NOT_REQUIRED, description = "for dt.simulate.crash is the probability to crash, in %")
     private double probabilityFailure;
 
     @Column(name="property_str", nullable = true)
-    @Schema(name = "property_str", example = "", requiredMode = Schema.RequiredMode.NOT_REQUIRED, description = "Has no effect in this service")
+    @Schema(name = "property_str", example = "15/33/5", requiredMode = Schema.RequiredMode.NOT_REQUIRED, description = "for dt.simulate.crash can be a string like m1/m2/h, which means crash from m1 to m2 every h hour")
     private String propertyStr;
 
     @Column(name="turn_on", nullable = true)

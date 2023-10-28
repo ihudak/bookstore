@@ -11,9 +11,9 @@ public class Config {
     private long loadCPU;
     @Schema(name = "load_ram", example = "64", requiredMode = Schema.RequiredMode.NOT_REQUIRED, description = "for dt.work.hard only - megabytes to allocate on each operation to simulate memory pressure")
     private long loadRAM;
-    @Schema(name = "probab_fail", example = "75", requiredMode = Schema.RequiredMode.NOT_REQUIRED, description = "for dt.failure.payment.percent setting on dynapay service only. Causes payment failures (% of payments to fail)")
+    @Schema(name = "probab_fail", example = "75", requiredMode = Schema.RequiredMode.NOT_REQUIRED, description = "for dt.simulate.crash - probability to crash; for dt.failure.payment.percent on dynapay service: causes payment failures (% of payments to fail)")
     private double probabilityFailure;
-    @Schema(name = "property_str", example = "", requiredMode = Schema.RequiredMode.NOT_REQUIRED, description = "Has no effect")
+    @Schema(name = "property_str", example = "15/33/5", requiredMode = Schema.RequiredMode.NOT_REQUIRED, description = "for dt.simulate.crash can be a string like m1/m2/h, which means crash from m1 to m2 every h hour")
     private String propertyStr;
 
     @Schema(name = "turn_on", example = "true", requiredMode = Schema.RequiredMode.NOT_REQUIRED, description = "enables or suppresses the config. Suppress is default")
