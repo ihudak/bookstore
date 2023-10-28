@@ -70,7 +70,6 @@ public class BookController extends HardworkingController {
     @Operation(summary = "Create a book")
     public Book ingestBook(@RequestBody Book book) {
         simulateHardWork();
-        simulateCrash();
         logger.debug("Creating book " + book.getIsbn());
         return bookRepository.save(book);
     }

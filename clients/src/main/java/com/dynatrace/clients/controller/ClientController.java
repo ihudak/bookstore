@@ -67,7 +67,6 @@ public class ClientController extends HardworkingController {
     @Operation(summary = "Create a new client")
     public Client createClient(@RequestBody Client client) {
         simulateHardWork();
-        simulateCrash();
         logger.debug("Creating Client " + client.getEmail());
         return clientRepository.save(client);
     }
