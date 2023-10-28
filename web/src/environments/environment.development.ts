@@ -1,11 +1,22 @@
+/**
+ * Development configuration to be executed directly on the workstation, without kubernetes
+ * Replace baseSrvUrl with your Ingress URL if you need to deploy on other env
+ * Each service must be accessible by the "http://localhost:<port>" URL on your host
+ *    e.g. kubernetes services must be of "LoadBalanceer" kind
+ */
+
+const baseSrvUrl = 'http://localhost';
 export const environment = {
   production: false,
-  clientsUrl: 'http://localhost:8081/api/v1/clients',
-  booksUrl: 'http://localhost:8082/api/v1/books',
-  cartsUrl: 'http://localhost:8083/api/v1/carts',
-  storageUrl: 'http://localhost:8084/api/v1/storage',
-  ordersUrl: 'http://localhost:8085/api/v1/orders',
-  ratingsUrl: 'http://localhost:8088/api/v1/ratings',
-  verGUI: '1.0.1',
-  dateGUI: 'May-25-2023'
+  clientsSrvUrl: `${baseSrvUrl}:8081`,
+  booksSrvUrl: `${baseSrvUrl}:8082`,
+  cartsSrvUrl: `${baseSrvUrl}:8083`,
+  storageSrvUrl: `${baseSrvUrl}:8084`,
+  ordersSrvUrl: `${baseSrvUrl}:8085`,
+  ratingsSrvUrl: `${baseSrvUrl}:8088`,
+  paymentsSrvUrl: `${baseSrvUrl}:8086`,
+  dynapatSrvUrl: `${baseSrvUrl}:8087`,
+  ingestSrvUrl: `${baseSrvUrl}:8089`,
+  verGUI: '1.0.2',
+  dateGUI: 'Oct-28-2023'
 };

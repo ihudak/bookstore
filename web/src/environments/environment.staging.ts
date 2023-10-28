@@ -1,11 +1,22 @@
+/**
+ * Stating configuration for kubernetes withOUT Ingress Controller
+ * It's made for docker desktop.
+ * Each service must be accessible by the "http://localhost:<port>" URL on your host
+ *    e.g. kubernetes services must be of "LoadBalanceer" kind
+ */
+
+const baseSrvUrl = 'http://localhost';
 export const environment = {
   production: false,
-  clientsUrl: 'http://localhost:81/api/v1/clients',
-  booksUrl: 'http://localhost:82/api/v1/books',
-  cartsUrl: 'http://localhost:83/api/v1/carts',
-  storageUrl: 'http://localhost:84/api/v1/storage',
-  ordersUrl: 'http://localhost:85/api/v1/orders',
-  ratingsUrl: 'http://localhost:88/api/v1/ratings',
-  verGUI: '1.0.1',
-  dateGUI: 'May-25-2023'
+  clientsSrvUrl: `${baseSrvUrl}:81`,
+  booksSrvUrl: `${baseSrvUrl}:82`,
+  cartsSrvUrl: `${baseSrvUrl}:83`,
+  storageSrvUrl: `${baseSrvUrl}:84`,
+  ordersSrvUrl: `${baseSrvUrl}:85`,
+  ratingsSrvUrl: `${baseSrvUrl}:88`,
+  paymentsSrvUrl: `${baseSrvUrl}:86`,
+  dynapatSrvUrl: `${baseSrvUrl}:87`,
+  ingestSrvUrl: `${baseSrvUrl}:89`,
+  verGUI: '1.0.2',
+  dateGUI: 'Oct-28-2023'
 };

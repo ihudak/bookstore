@@ -8,7 +8,7 @@ import {environment} from "../../environments/environment";
   providedIn: 'root'
 })
 export class ClientService {
-  private baseURL=environment.clientsUrl;
+  private baseURL=`${environment.clientsSrvUrl}/api/v1/clients`;
   constructor(private httpClient: HttpClient) { }
   getClientsList(): Observable<Client[]> {
     return this.httpClient.get<Client[]>(`${this.baseURL}`);

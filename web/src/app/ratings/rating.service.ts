@@ -9,7 +9,7 @@ import {environment} from "../../environments/environment";
 })
 export class RatingService {
 
-  private baseURL=environment.ratingsUrl;
+  private baseURL=`${environment.ratingsSrvUrl}/api/v1/ratings`;
 
   constructor(private httpClient: HttpClient) { }
 

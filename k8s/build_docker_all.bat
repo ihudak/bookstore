@@ -44,7 +44,11 @@ CALL push_docker.bat
 timeout 3
 cd %BATCH_DIR%\..\%DT_GUI%
 ECHO ============= Building GUI ===================
-CALL push_docker.bat
+IF [%4]==[] (
+  CALL push_docker.bat
+) ELSE (
+  push_docker.bat %1 %2 %3
+)
 timeout 3
 
 ECHO ============= Building Java Projects ===================

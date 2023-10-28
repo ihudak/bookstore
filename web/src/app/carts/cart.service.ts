@@ -8,7 +8,7 @@ import {environment} from "../../environments/environment";
   providedIn: 'root'
 })
 export class CartService {
-  private baseURL=environment.cartsUrl;
+  private baseURL=`${environment.cartsSrvUrl}/api/v1/carts`;
 
   constructor(private httpClient: HttpClient) { }
 

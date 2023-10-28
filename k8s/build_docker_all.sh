@@ -35,7 +35,11 @@ echo "============ Building NoAgent ================="
 
 cd $SCRIPT_DIR/../$DT_GUI
 echo "============ Building GUI ================="
-./push_docker.sh
+if [ $# -lt 3 ]; then
+  ./push_docker.sh;
+else
+  ./push_docker.sh "$1" "$2" "$3";
+fi
 
 echo "============ Building Projects ================="
 cd $SCRIPT_DIR/..

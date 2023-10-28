@@ -8,7 +8,7 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class StorageService {
-  private baseURL=environment.storageUrl;
+  private baseURL=`${environment.storageSrvUrl}/api/v1/storage`;
 
   constructor(private httpClient: HttpClient) { }
 
