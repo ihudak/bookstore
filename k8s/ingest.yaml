@@ -113,6 +113,11 @@ spec:
                 configMapKeyRef:
                   name: bookstore-configmap
                   key: ratings_svc
+            - name: DT_INGEST_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  name: bookstore-configmap
+                  key: ingest_svc
             - name:   AGENT
               valueFrom:
                 configMapKeyRef:

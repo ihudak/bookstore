@@ -25,6 +25,7 @@ public class IngestController {
     private RatingRepository ratingRepository;
     @Autowired
     private StorageRepository storageRepository;
+    private BookstoreDataGenerator bookstoreDataGenerator = new BookstoreDataGenerator();
     public static boolean isIsWorking() {
         return isWorking;
     }
@@ -38,18 +39,18 @@ public class IngestController {
     @Operation(summary = "Start/Stop data generator")
     public Ingest generateData(@RequestBody Ingest ingest) {
         ingest.setCode(200);
-        if (IngestController.isWorking) {
+        if (IngestController.isWorking || bookstoreDataGenerator.isAlive()) {
             IngestController.isWorking = false;
-            ingest.setMessage("Generation Stopped");
+            bookstoreDataGenerator.interrupt();
+            ingest.setMessage("Stopping the Data Generator...");
         } else if (ingest.isContinuousLoad()) {
             IngestController.isWorking = true;
             ingest.setMessage("Generation In Loop Started");
-            this.generateInLoop(ingest);
+            bookstoreDataGenerator.generateData(ingest, true);
         } else {
             IngestController.isWorking = true;
             ingest.setMessage("One-time Generation Started");
-            this.generate(ingest);
-            IngestController.isWorking = false;
+            bookstoreDataGenerator.generateData(ingest, false);
         }
 
         return ingest;
@@ -60,7 +61,7 @@ public class IngestController {
     public Ingest createBooks(@RequestBody Ingest ingest) {
         ingest.setCode(200);
         logger.info("Generate books");
-        booksGenerator(ingest);
+        bookstoreDataGenerator.booksGenerator(ingest);
         ingest.setMessage("Ok");
         return ingest;
     }
@@ -192,104 +193,145 @@ public class IngestController {
             return;
         }
         logger.info("Clear Data");
-        clearData(true, true);
+        bookstoreDataGenerator.clearData(true, true);
     }
 
-    private void booksGenerator(@RequestBody Ingest ingest) {
-        logger.info("Generate Books");
-        // always generate one extra book ( i <= .. in the for loops)
-        for (int i = 0; i <= ingest.getNumBooksVend(); i++) {
-            if (ingest.isRandomPrice()) {
-                bookRepository.create(true);
-            } else {
-                bookRepository.create(true, 12);
-            }
+    @GetMapping("/status")
+    @Operation(summary = "Returns data-generation status as a string")
+    public String getGenerationStatus() {
+        String result;
+        if (IngestController.isWorking && bookstoreDataGenerator.isAlive()) {
+            result = "Data Generation is in progress";
+        } else if (IngestController.isWorking && !bookstoreDataGenerator.isAlive()) {
+            IngestController.isWorking = false;
+            result = "Data Generation is dead";
+        } else if (!IngestController.isWorking && bookstoreDataGenerator.isAlive()) {
+            result = "Data Generation is being stopped...";
+        } else {
+            result = "Data Generation is OFF";
         }
-        for (int i = 0; i <= ingest.getNumBooksNotvend(); i++) {
-            if (ingest.isRandomPrice()) {
-                bookRepository.create(false);
-            } else {
-                bookRepository.create(false, 12);
-            }
-        }
-        for (int i = 0; i <= ingest.getNumBooksRandVend(); i++) {
-            if (ingest.isRandomPrice()) {
-                bookRepository.create();
-            } else {
-                bookRepository.create(12);
-            }
-        }
+        logger.info(result);
+        return result;
     }
 
-    private void clearData(boolean clearBooksAndClients, boolean clearRatings) {
-        if (clearRatings) {
+
+    /**
+     * Bookstore data generator subclass. Designed to generate the data in background threads
+     */
+    private class BookstoreDataGenerator extends Thread {
+        private Ingest ingest;
+        private boolean loop;
+
+        private void booksGenerator(@RequestBody Ingest ingest) {
+            logger.info("Generate Books");
+            // always generate one extra book ( i <= .. in the for loops)
+            for (int i = 0; i <= ingest.getNumBooksVend(); i++) {
+                if (ingest.isRandomPrice()) {
+                    bookRepository.create(true);
+                } else {
+                    bookRepository.create(true, 12);
+                }
+            }
+            for (int i = 0; i <= ingest.getNumBooksNotvend(); i++) {
+                if (ingest.isRandomPrice()) {
+                    bookRepository.create(false);
+                } else {
+                    bookRepository.create(false, 12);
+                }
+            }
+            for (int i = 0; i <= ingest.getNumBooksRandVend(); i++) {
+                if (ingest.isRandomPrice()) {
+                    bookRepository.create();
+                } else {
+                    bookRepository.create(12);
+                }
+            }
+        }
+
+        public void clearData(boolean clearBooksAndClients, boolean clearRatings) {
+            if (clearRatings) {
+                logger.info("Clearing ratings");
+                ratingRepository.deleteAll();
+            }
+            logger.info("Clearing orders");
+            orderRepository.deleteAll();
+            logger.info("Clearing carts");
+            cartRepository.deleteAll();
+            logger.info("Clearing storage");
+            storageRepository.deleteAll();
+
+            if (clearBooksAndClients) {
+                logger.info("Clearing clients");
+                clientRepository.deleteAll();
+                logger.info("Clearing books");
+                bookRepository.deleteAll();
+            }
+        }
+
+        public void generateData(Ingest ingest, boolean inLoop) {
+            if (!IngestController.isWorking) {
+                logger.info("Stopping Generator");
+                return;
+            }
+            this.ingest = ingest;
+            this.loop = inLoop;
+            this.start();
+        }
+
+        public void run() {
+            if (this.ingest == null) {
+                return;
+            }
+            while (IngestController.isWorking) {
+                this.generate(this.ingest);
+
+                if (!this.loop) {
+                    IngestController.isWorking = false;
+                    break;
+                }
+            }
+        }
+
+        private void generate(Ingest ingest) {
+            logger.info("Generate Data");
+            if (ingest.getNumBooksRandVend() + ingest.getNumBooksVend() + ingest.getNumBooksNotvend() < ingest.getNumStorage()) {
+                ingest.setNumStorage(ingest.getNumBooksRandVend() + ingest.getNumBooksVend() + ingest.getNumBooksNotvend());
+            }
+            logger.info("clearing data");
+            boolean regenerateBooksAndClients = ingest.getNumBooks() > Book.getNumOfISBNs() || ingest.getNumClients() > Client.getNumOfClients();
+            clearData(regenerateBooksAndClients, false); // let's keep ratings queryable in the GUI till the other data is being generated
+
+            if (regenerateBooksAndClients) {
+                logger.info("books");
+                booksGenerator(ingest);
+                for (int i = 0; i < ingest.getNumClients(); i++) {
+                    logger.info("clients");
+                    clientRepository.create();
+                }
+            }
+            for (int i = 0; i < ingest.getNumCarts(); i++) {
+                logger.info("carts");
+                cartRepository.create();
+            }
+            for (int i = 0; i < ingest.getNumStorage(); i++) {
+                logger.info("storage");
+                storageRepository.create();
+            }
+            for (int i = 0; i < ingest.getNumOrders(); i++) {
+                logger.info("orders");
+                orderRepository.create();
+            }
+            for (int i = 0; i < ingest.getNumSubmitOrders(); i++) {
+                logger.info("pay orders");
+                orderRepository.update(null); // random order
+            }
+            // clearing ratings now
             logger.info("Clearing ratings");
             ratingRepository.deleteAll();
-        }
-        logger.info("Clearing orders");
-        orderRepository.deleteAll();
-        logger.info("Clearing carts");
-        cartRepository.deleteAll();
-        logger.info("Clearing storage");
-        storageRepository.deleteAll();
-
-        if (clearBooksAndClients) {
-            logger.info("Clearing clients");
-            clientRepository.deleteAll();
-            logger.info("Clearing books");
-            bookRepository.deleteAll();
-        }
-    }
-
-    protected void generateInLoop(Ingest ingest) {
-        if (!IngestController.isWorking) {
-            logger.info("Stopping Generator");
-            return;
-        }
-        while (IngestController.isWorking) {
-            this.generate(ingest);
-        }
-    }
-
-    private void generate(Ingest ingest) {
-        logger.info("Generate Data");
-        if (ingest.getNumBooksRandVend() + ingest.getNumBooksVend() + ingest.getNumBooksNotvend() < ingest.getNumStorage()) {
-            ingest.setNumStorage(ingest.getNumBooksRandVend() + ingest.getNumBooksVend() + ingest.getNumBooksNotvend());
-        }
-        logger.info("clearing data");
-        boolean regenerateBooksAndClients = ingest.getNumBooks() > Book.getNumOfISBNs() || ingest.getNumClients() > Client.getNumOfClients();
-        clearData(regenerateBooksAndClients, false); // let's keep ratings queriable in the GUI till the other data is being generated
-
-        if (regenerateBooksAndClients) {
-            logger.info("books");
-            booksGenerator(ingest);
-            for (int i = 0; i < ingest.getNumClients(); i++) {
-                logger.info("clients");
-                clientRepository.create();
+            for (int i = 0; i < ingest.getNumRatings(); i++) {
+                logger.info("ratings");
+                ratingRepository.create();
             }
-        }
-        for (int i = 0; i < ingest.getNumCarts(); i++) {
-            logger.info("carts");
-            cartRepository.create();
-        }
-        for (int i = 0; i < ingest.getNumStorage(); i++) {
-            logger.info("storage");
-            storageRepository.create();
-        }
-        for (int i = 0; i < ingest.getNumOrders(); i++) {
-            logger.info("orders");
-            orderRepository.create();
-        }
-        for (int i = 0; i < ingest.getNumSubmitOrders(); i++) {
-            logger.info("pay orders");
-            orderRepository.update(null); // random order
-        }
-        // clearing ratings now
-        logger.info("Clearing ratings");
-        ratingRepository.deleteAll();
-        for (int i = 0; i < ingest.getNumRatings(); i++) {
-            logger.info("ratings");
-            ratingRepository.create();
         }
     }
 }

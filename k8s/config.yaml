@@ -14,6 +14,7 @@ data:
   payments_svc: payments-svc:86
   dynapay_svc: superpay-svc:87
   ratings_svc: ratings-svc:88
+  ingest_svc: ingest-svc:89
   tenant_id: <tenant-id>
   tenant_layer: dev # dev | sprint
   clients_agent: otelAgent
