@@ -15,26 +15,31 @@ Purposes: demonstrating of Dynatrace capabilities in high-load and unhealthy env
 
 ==== Ingress Controller
 Install Ingress controller to enable WebApp access all microservices in your deployment
-Here is the instruction how to setup Ingress-Nginx controller on Docker Desktop
 
-===== Using Helm
+===== Docker Desktop: Using Helm
 
     helm upgrade --install ingress-nginx ingress-nginx --repo https://kubernetes.github.io/ingress-nginx --namespace ingress-nginx --create-namespace
 
-==== Using kubectl
+*Note:* Restart Docker Desktop after setting up ingress-nginx
+
+==== Docker Desktop: Using kubectl
 
     kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.2/deploy/static/provider/cloud/deploy.yaml
 
 *Note:* Restart Docker Desktop after setting up ingress-nginx
 
-=== Linux
+==== Minikube
+
+    minikube addons enable ingress
+
+=== Build on Linux/MacOS/WLS2
 . Go to k8s directory
 . execute, optionally providing otel token with the scopes of trace_otel_ingest, log_otel_ingest, metric_otel_ingest
 * #__the token can be base64-ed or open__#
 
     ./build_docker_all.sh [<tenantID>] [dev|sprint] [<otel_ingest_token>]
 
-=== Windows
+=== Build on Windows
 . Go to k8s directory
 . execute, optionally providing otel token with the scopes of trace_otel_ingest, log_otel_ingest, metric_otel_ingest
 
