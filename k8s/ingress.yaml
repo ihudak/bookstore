@@ -13,80 +13,80 @@ spec:
     - host: kubernetes.docker.internal
       http:
         paths:
-          - path: /ingest/?(.*)
+          - path: /api/ingest/?(.*)
             pathType: ImplementationSpecific
             backend:
               service:
                 name: ingest-svc
                 port:
-                  number: 80
-          - path: /clients/?(.*)
+                  number: 89
+          - path: /api/clients/?(.*)
             pathType: ImplementationSpecific
             backend:
               service:
                 name: clients-svc
                 port:
-                  number: 80
-          - path: /books/?(.*)
+                  number: 81
+          - path: /api/books/?(.*)
             pathType: ImplementationSpecific
             backend:
               service:
                 name: books-svc
                 port:
-                  number: 80
-          - path: /carts/?(.*)
+                  number: 82
+          - path: /api/carts/?(.*)
             pathType: ImplementationSpecific
             backend:
               service:
                 name: carts-svc
                 port:
-                  number: 80
-          - path: /storage/?(.*)
+                  number: 83
+          - path: /api/storage/?(.*)
             pathType: ImplementationSpecific
             backend:
               service:
                 name: storage-svc
                 port:
-                  number: 80
-          - path: /orders/?(.*)
+                  number: 84
+          - path: /api/orders/?(.*)
             pathType: ImplementationSpecific
             backend:
               service:
                 name: orders-svc
                 port:
-                  number: 80
-          - path: /ratings/?(.*)
+                  number: 85
+          - path: /api/ratings/?(.*)
             pathType: ImplementationSpecific
             backend:
               service:
                 name: ratings-svc
                 port:
-                  number: 80
-          - path: /payments/?(.*)
+                  number: 88
+          - path: /api/payments/?(.*)
             pathType: ImplementationSpecific
             backend:
               service:
                 name: payments-svc
                 port:
-                  number: 80
-          - path: /superpay/?(.*)
+                  number: 86
+          - path: /api/superpay/?(.*)
             pathType: ImplementationSpecific
             backend:
               service:
                 name: superpay-svc
                 port:
-                  number: 80
-          - path: /dynapay/?(.*)
+                  number: 87
+          - path: /api/dynapay/?(.*)
             pathType: ImplementationSpecific
             backend:
               service:
                 name: superpay-svc
                 port:
-                  number: 80
-          - path: /bookstore/?(.*)
+                  number: 87
+          - path: /?(.*)
             pathType: ImplementationSpecific
             backend:
               service:
                 name: bookstore-svc
                 port:
-                  number: 80
+                  number: 90

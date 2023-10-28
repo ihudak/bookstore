@@ -26,5 +26,6 @@ data:
   ratings_agent: otelAgent
   ingest_agent: oneAgent
   web_agent: otelAgent
-  bookstore_profile: prod
-  web_app_profile: staging
+  bookstore_profile: prod # prod | stage | dev -- logging levels -- prod:ERROR; stage:INFO; dev:DEBUG
+  web_app_profile: production # production|staging|development|custom -- production (k8s docker desktop w Ingress) | staging (k8s docker desktop w/o Ingress) | development (w/o kubernetes)
+  services_ext_url: http://localhost # if web_app_profile==custom, this is the base EXTERNAL URL where microservices APIs can be found by the web app

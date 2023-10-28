@@ -13,33 +13,30 @@ ENV OTEL_TOKEN_SHELL=$TENANT_TOKEN_SHELL
 ENV DOCKER_VER=1.0.0
 
 # set bash instrumentation
-COPY ../agents/scripts/set_bash_instrumentation.sh /opt/
-RUN chmod +x /opt/*.sh
-# install unzip and otel bash agent
-RUN apt-get update && \
-    apt-get install -y vim jq && \
-    wget -O - https://raw.githubusercontent.com/plengauer/opentelemetry-bash/main/INSTALL.sh | sh -E && \
-    . /opt/set_bash_instrumentation.sh && \
-    rm -rf /var/lib/apt/lists/*
+#COPY scripts/*.sh /opt/
+#RUN chmod +x /opt/*.sh
+# install otel bash agent
+#RUN apk --no-cache add curl jq && \
+#    wget -O - https://raw.githubusercontent.com/plengauer/opentelemetry-bash/main/INSTALL.sh | sh -E && \
+#    . /opt/set_bash_instrumentation.sh
 
 # set the current working directory for all commands
 WORKDIR /usr/src/app
 
-ARG DT_ACTIVE_WEB_ENV
-ENV DT_ACTIVE_WEB_ENV=$DT_ACTIVE_WEB_ENV
-
-# copy these over first and run 'npm install' so the node_modules will be cached
-# until the package.json / lock changes
-COPY package.json .
-COPY package-lock.json .
-RUN npm install
-
 # copy over all code files
 COPY . .
-RUN ng build
+RUN npm install && /usr/src/app/node_modules/.bin/ng build
 
 # expose internal docker container port to external environment
 EXPOSE 4200
 
 # specify default command to run when we run the image
-ENTRYPOINT /usr/src/app/node_modules/.bin/ng serve --host 0.0.0.0 --disable-host-check -c ${DT_ACTIVE_WEB_ENV}
+ENTRYPOINT if [ -z ${BOOKSTORE_BASE_SRV_URL+x} ] || [ "$DT_ACTIVE_WEB_ENV" != custom ] ; then \
+               /usr/src/app/node_modules/.bin/ng serve --host 0.0.0.0 --disable-host-check -c ${DT_ACTIVE_WEB_ENV}; \
+           else \
+               sed -i "s|http://kubernetes.docker.internal/api|$BOOKSTORE_BASE_SRV_URL|g" ./src/environments/* ; \
+               sed -i "s|http://localhost|$BOOKSTORE_BASE_SRV_URL|g" ./src/environments/* ; \
+               /usr/src/app/node_modules/.bin/ng build ; \
+               export DT_ACTIVE_WEB_ENV=production; \
+               /usr/src/app/node_modules/.bin/ng serve --host 0.0.0.0 --disable-host-check -c ${DT_ACTIVE_WEB_ENV}; \
+           fi

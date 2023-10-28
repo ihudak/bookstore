@@ -32,91 +32,11 @@ spec:
                 configMapKeyRef:
                   name: bookstore-configmap
                   key: web_app_profile
-            - name: DT_BOOKSTORE_PROFILE
+            - name:   BOOKSTORE_BASE_SRV_URL
               valueFrom:
                 configMapKeyRef:
                   name: bookstore-configmap
-                  key: bookstore_profile
-            - name: DT_SERVER_PORT
-              value: "8080"
-            - name: DT_MYSQL_SERVER
-              valueFrom:
-                configMapKeyRef:
-                  name: bookstore-configmap
-                  key: mysql_server
-            - name: DT_MYSQL_PORT
-              value: "3306"
-            - name: DT_MYSQL_DBNAME
-              value: none # DB NAME HERE
-            - name: DT_MYSQL_USER
-              valueFrom:
-                secretKeyRef:
-                  name: bookstore-secret
-                  key: mysql-user-name
-            - name: DT_MYSQL_PASS
-              valueFrom:
-                secretKeyRef:
-                  name: bookstore-secret
-                  key: mysql-user-pass
-            - name: DT_PG_SERVER
-              valueFrom:
-                configMapKeyRef:
-                  name: bookstore-configmap
-                  key: pgdb_server
-            - name: DT_PG_PORT
-              value: "5432"
-            - name: DT_PG_DBNAME
-              value: none # DB NAME HERE
-            - name: DT_PG_USER
-              valueFrom:
-                secretKeyRef:
-                  name: bookstore-secret
-                  key: pgdb-user-name
-            - name: DT_PG_PASS
-              valueFrom:
-                secretKeyRef:
-                  name: bookstore-secret
-                  key: pgdb-user-pass
-            - name:   DT_CLIENTS_SERVER
-              valueFrom:
-                configMapKeyRef:
-                  name: bookstore-configmap
-                  key: clients_svc
-            - name:   DT_BOOKS_SERVER
-              valueFrom:
-                configMapKeyRef:
-                  name: bookstore-configmap
-                  key: books_svc
-            - name:   DT_CART_SERVER
-              valueFrom:
-                configMapKeyRef:
-                  name: bookstore-configmap
-                  key: carts_svc
-            - name:   DT_STORAGE_SERVER
-              valueFrom:
-                configMapKeyRef:
-                  name: bookstore-configmap
-                  key: storage_svc
-            - name:   DT_ORDERS_SERVER
-              valueFrom:
-                configMapKeyRef:
-                  name: bookstore-configmap
-                  key: orders_svc
-            - name:   DT_PAYMENT_SERVER
-              valueFrom:
-                configMapKeyRef:
-                  name: bookstore-configmap
-                  key: payments_svc
-            - name:   DT_DYNAPAY_SERVER
-              valueFrom:
-                configMapKeyRef:
-                  name: bookstore-configmap
-                  key: dynapay_svc
-            - name:   DT_RATINGS_SERVER
-              valueFrom:
-                configMapKeyRef:
-                  name: bookstore-configmap
-                  key: ratings_svc
+                  key: services_ext_url
             - name:   AGENT
               valueFrom:
                 configMapKeyRef:
@@ -160,9 +80,9 @@ metadata:
 spec:
   selector:
     app: bookstore
-  type: LoadBalancer
+  type: LoadBalancer # ClusterIP # LoadBalancer
   ports:
     - port: 90
       protocol: TCP
       targetPort: 4200
-      nodePort: 30000
+      nodePort: 30000 # comment if ClusterIP
