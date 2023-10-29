@@ -28,7 +28,13 @@ public interface ConfigRepository {
     default Config[] getConfigsForService() {
         getLogger().info("Getting all configs for service. URL: " + getBaseURL());
         try {
-            return getRestTemplate().getForObject(getBaseURL(), Config[].class);
+            Config[] configs = getRestTemplate().getForObject(getBaseURL(), Config[].class);
+            if (configs != null) {
+                for (Config config: configs) {
+                    config.setServiceId(this.getServiceName());
+                }
+            }
+            return configs;
         } catch (Exception exception) {
             getLogger().error(exception.getMessage());
             throw new BadRequestException(exception.getMessage());
@@ -39,7 +45,11 @@ public interface ConfigRepository {
         String urlBuilder = getBaseURL();
         getLogger().info("Creating/Updating config " + config.getId() + " for service. URL: " + urlBuilder);
         try {
-            return getRestTemplate().postForObject(urlBuilder, config, Config.class);
+            Config resultConfig = getRestTemplate().postForObject(urlBuilder, config, Config.class);
+            if (resultConfig != null) {
+                resultConfig.setServiceId(this.getServiceName());
+            }
+            return resultConfig;
         } catch (Exception exception) {
             getLogger().error(exception.getMessage());
             throw new BadRequestException(exception.getMessage());
