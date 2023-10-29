@@ -80,7 +80,7 @@ metadata:
 spec:
   selector:
     app: bookstore
-  type: LoadBalancer # ClusterIP # LoadBalancer
+  type: LoadBalancer # ClusterIP
   ports:
     - port: 90
       protocol: TCP
