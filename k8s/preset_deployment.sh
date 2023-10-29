@@ -3,12 +3,13 @@
 display_usage() {
   echo "Sets agent instrumentation and architecture in the deployment yaml files"
   echo "Usage:";
-  echo "   ${0} -gyes -ax64 -pmin -n bookstore  # takes docker image with OA and OTel agents";
+  echo "   ${0} -gyes -ax64 -pmin -n bookstore  # installs agents on deploy; x64 architecture; minimizes external port usage; bookstore namespace";
+  echo "   ${0} -gpre -aarm -pall -n bookstore  # takes agents prebuilt in the docker image; arm (apple) architecture; every service will be open (callable from outside of the k8s)";
   echo "   ${0} -reset              # resets yamls";
   echo "Flags:";
   echo " -g - agent: yes/no/pre. default = yes - preloads otel and dynatrace java agents. pre - use preinstrumented images";
   echo " -a - architecture: arm/x64. default = x64 - sets architecture";
-  echo " -p - ports for k8s services: all/min. default = all - defines whether all k8s should get an external IP. Min - only ingest";
+  echo " -p - ports for k8s services: all/min. default = min - defines whether all k8s should get an external IP. Min - only ingest";
   echo " -n - namespace. default bookstore";
   echo;
   echo "Please supply at least one flag";
@@ -41,7 +42,7 @@ reset_settings() {
 get_params() {
   ag="yes"       # default - with agents
   ar="x64"       # default - x64
-  po="all"       # default - all k8s have their public IPs
+  po="min"       # default - all k8s have their public IPs
   ns="bookstore" # default namespace
   rs="no"        # no reset by default
   hl="no"        # help
