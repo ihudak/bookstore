@@ -26,6 +26,9 @@ import {UpdateRatingComponent} from "./ratings/update-rating/update-rating.compo
 import {CartDetailsComponent} from "./carts/cart-details/cart-details.component";
 import {StorageDetailsComponent} from "./storage/storage-details/storage-details.component";
 import {UpdateStorageComponent} from "./storage/update-storage/update-storage.component";
+import {VersionListComponent} from "./ingest/versions/version-list/version-list.component";
+import {ConfigListComponent} from "./ingest/configs/config-list/config-list.component";
+import {CreateConfigComponent} from "./ingest/configs/create-config/create-config.component";
 
 const routes: Routes = [
   { path: 'clients', component: ClientListComponent },
@@ -54,6 +57,9 @@ const routes: Routes = [
   { path: 'create-rating', component: CreateRatingComponent },
   { path: 'update-rating/:id', component: UpdateRatingComponent },
   { path: 'rating-details/:id', component: RatingDetailsComponent },
+  { path: 'versions', component: VersionListComponent },
+  { path: 'configs', component: ConfigListComponent },
+  { path: 'create-config', component: CreateConfigComponent },
   { path: '', redirectTo: 'clients', pathMatch: 'full' }
 ];
 

@@ -1,0 +1,55 @@
+<div class="col-md-6 offset-md-3">
+  <h3>Create Config</h3>
+  <form (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label>Service ID</label>
+      <select class="form-control" id="serviceId" [(ngModel)] = "config.serviceId" name="serviceId">
+        <option value="all">All Services</option>
+        <option value="clients">Clients</option>
+        <option value="books">Books</option>
+        <option value="carts">Carts</option>
+        <option value="storage">Storage</option>
+        <option value="ratings">Ratings</option>
+        <option value="orders">Orders</option>
+        <option value="payments">Payments</option>
+        <option value="dynapay">DynaPay</option>
+      </select>
+    </div>
+    <br>
+    <div class="form-group">
+      <label>Config ID</label>
+      <select class="form-control" id="id" [(ngModel)] = "config.id" name="id">
+        <option value="dt.work.hard">Hard Work</option>
+        <option value="dt.simulate.crash">Crash Simulator</option>
+        <option value="dt.failure.payment.percent">Payment Failure</option>
+      </select>
+    </div>
+    <br>
+    <div class="form-group">
+      <label>CPU Load (hard work)</label>
+      <input type="number" class="form-control" id="loadCPU" [(ngModel)] = "config.loadCPU" name="loadCPU">
+    </div>
+    <br>
+    <div class="form-group">
+      <label>RAM Load, MB (hard work)</label>
+      <input type="number" class="form-control" id="loadRAM" [(ngModel)] = "config.loadRAM" name="loadRAM">
+    </div>
+    <br>
+    <div class="form-group">
+      <label>% to Fail (crash simulation or payment failure)</label>
+      <input type="number" class="form-control" id="probabilityFailure" [(ngModel)] = "config.probabilityFailure" name="probabilityFailure">
+    </div>
+    <br>
+    <div class="form-group">
+      <label>When to Crash (crash sim, e.g. 15/25/6 - from 15th to 25th min every 6th hour)</label>
+      <input type="text" class="form-control" id="propertyStr" [(ngModel)] = "config.propertyStr" name="propertyStr">
+    </div>
+    <br>
+    <div class="form-check form-switch">
+      <input class="form-check-input" type="checkbox" id="turnedOn" [(ngModel)]="config.turnedOn"/>
+      <label class="form-check-label" for="turnedOn">Turn ON</label>
+    </div>
+    <br>
+    <button class="btn btn-success" type="submit">Submit</button>
+  </form>
+</div>

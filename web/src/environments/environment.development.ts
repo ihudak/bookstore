@@ -8,15 +8,15 @@
 const baseSrvUrl = 'http://localhost';
 export const environment = {
   production: false,
-  clientsSrvUrl: `${baseSrvUrl}:8081`,
-  booksSrvUrl: `${baseSrvUrl}:8082`,
-  cartsSrvUrl: `${baseSrvUrl}:8083`,
-  storageSrvUrl: `${baseSrvUrl}:8084`,
-  ordersSrvUrl: `${baseSrvUrl}:8085`,
-  ratingsSrvUrl: `${baseSrvUrl}:8088`,
-  paymentsSrvUrl: `${baseSrvUrl}:8086`,
-  dynapatSrvUrl: `${baseSrvUrl}:8087`,
-  ingestSrvUrl: `${baseSrvUrl}:8089`,
+  clientsSrvUrl: `${baseSrvUrl}/clients`,
+  booksSrvUrl: `${baseSrvUrl}/books`,
+  cartsSrvUrl: `${baseSrvUrl}/carts`,
+  storageSrvUrl: `${baseSrvUrl}/storage`,
+  ordersSrvUrl: `${baseSrvUrl}/orders`,
+  ratingsSrvUrl: `${baseSrvUrl}/ratings`,
+  paymentsSrvUrl: `${baseSrvUrl}/payments`,
+  dynapatSrvUrl: `${baseSrvUrl}/dynapay`,
+  ingestSrvUrl: `${baseSrvUrl}/ingest`,
   verGUI: '1.0.2.dev',
   dateGUI: 'Oct-28-2023'
 };

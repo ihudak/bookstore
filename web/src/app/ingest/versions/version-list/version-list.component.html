@@ -1,0 +1,23 @@
+<h2>Services Versions</h2>
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <th>Service ID</th>
+    <th>Version</th>
+    <th>Build Date</th>
+    <th>Docker Ver</th>
+    <th>Status</th>
+    <th>Message</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let version of versions">
+    <td>{{version.serviceId}}</td>
+    <td>{{version.ver}}</td>
+    <td>{{version.date}}</td>
+    <td>{{version.verDocker}}</td>
+    <td>{{version.status}}</td>
+    <td>{{version.message}}</td>
+  </tr>
+  </tbody>
+</table>

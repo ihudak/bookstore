@@ -31,6 +31,9 @@ import { UpdateRatingComponent } from './ratings/update-rating/update-rating.com
 import { CartDetailsComponent } from './carts/cart-details/cart-details.component';
 import { StorageDetailsComponent } from './storage/storage-details/storage-details.component';
 import { UpdateStorageComponent } from './storage/update-storage/update-storage.component';
+import { ConfigListComponent } from './ingest/configs/config-list/config-list.component';
+import { VersionListComponent } from './ingest/versions/version-list/version-list.component';
+import { CreateConfigComponent } from './ingest/configs/create-config/create-config.component';
 
 @NgModule({
   declarations: [
@@ -60,7 +63,10 @@ import { UpdateStorageComponent } from './storage/update-storage/update-storage.
     UpdateRatingComponent,
     CartDetailsComponent,
     StorageDetailsComponent,
-    UpdateStorageComponent
+    UpdateStorageComponent,
+    ConfigListComponent,
+    VersionListComponent,
+    CreateConfigComponent
   ],
   imports: [
     BrowserModule,
