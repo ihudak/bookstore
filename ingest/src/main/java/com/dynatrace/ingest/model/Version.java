@@ -15,6 +15,10 @@ public class Version implements Model {
     private String status;
     @Schema(name = "message", example = "I am fine! :)", requiredMode = Schema.RequiredMode.AUTO, description = "message from the service")
     private String message;
+    @Schema(name = "agent", example = "OneAgent", requiredMode = Schema.RequiredMode.AUTO, description = "OneAgent | Otel | NONE - which instrumentation used")
+    private String agent;
+    @Schema(name = "agentPreload", example = "OnDeploy", requiredMode = Schema.RequiredMode.AUTO, description = "InImage|OnDeploy|NONE - InImage - embedded into docker image; OnDeploy - installed on pod deploy")
+    private String agentPreload;
 
     public Version() {
     }
@@ -35,13 +39,15 @@ public class Version implements Model {
         this.status = status;
     }
 
-    public Version(String serviceId, String ver, String verDocker, String date, String status, String message) {
+    public Version(String serviceId, String ver, String verDocker, String date, String status, String message, String agent, String agentPreload) {
         this.serviceId = serviceId;
         this.ver = ver;
         this.verDocker = verDocker;
         this.date = date;
         this.status = status;
         this.message = message;
+        this.agent = agent;
+        this.agentPreload = agentPreload;
     }
 
     public Version(String serviceId, String message) {
@@ -92,5 +98,26 @@ public class Version implements Model {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getAgent() {
+        return agent;
+    }
+
+    public void setAgent(String agent) {
+        this.agent = agent;
+    }
+
+    public String getAgentPreload() {
+        return switch (agentPreload) {
+            case "true" -> "InImage";
+            case "false" -> "OnDeploy";
+            case "NONE" -> "NotInstrumented";
+            default -> agentPreload;
+        };
+    }
+
+    public void setAgentPreload(String agentPreload) {
+        this.agentPreload = agentPreload;
     }
 }

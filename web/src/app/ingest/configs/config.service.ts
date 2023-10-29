@@ -20,4 +20,13 @@ export class ConfigService {
         let url: string = config.serviceId == 'all' ? `${this.baseURL}` : `${this.baseURL}/${config.serviceId}`;
         return this.httpClient.post(url, config);
     }
+
+    getConfigByServiceAndID(serviceId: string, id: string): Observable<Config> {
+        return this.httpClient.get<Config>(`${this.baseURL}/${serviceId}/${id}`);
+    }
+
+    toggleConfig(config: Config): Observable<Object> {
+        config.turnedOn = !config.turnedOn;
+        return this.httpClient.post(`${this.baseURL}/${config.serviceId}`, config);
+    }
 }

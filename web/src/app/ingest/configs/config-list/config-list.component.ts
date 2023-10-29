@@ -31,4 +31,14 @@ export class ConfigListComponent {
       }
     });
   }
+
+  updateConfig(service: string, id: string) {
+    this.router.navigate(['update-config', service, id]);
+  }
+
+  toggleConfig(config: Config) {
+    this.configService.toggleConfig(config).subscribe(data => {
+      this.getConfigs();
+    })
+  }
 }

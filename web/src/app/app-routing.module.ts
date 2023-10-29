@@ -29,6 +29,7 @@ import {UpdateStorageComponent} from "./storage/update-storage/update-storage.co
 import {VersionListComponent} from "./ingest/versions/version-list/version-list.component";
 import {ConfigListComponent} from "./ingest/configs/config-list/config-list.component";
 import {CreateConfigComponent} from "./ingest/configs/create-config/create-config.component";
+import {UpdateConfigComponent} from "./ingest/configs/update-config/update-config.component";
 
 const routes: Routes = [
   { path: 'clients', component: ClientListComponent },
@@ -60,6 +61,7 @@ const routes: Routes = [
   { path: 'versions', component: VersionListComponent },
   { path: 'configs', component: ConfigListComponent },
   { path: 'create-config', component: CreateConfigComponent },
+  { path: 'update-config/:service/:id', component: UpdateConfigComponent },
   { path: '', redirectTo: 'clients', pathMatch: 'full' }
 ];
 

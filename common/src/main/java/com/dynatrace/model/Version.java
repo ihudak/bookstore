@@ -7,6 +7,8 @@ public class Version implements Model {
     private String date;
     private String status;
     private String message;
+    private String agent;
+    private String agentPreload;
 
     public Version() {
     }
@@ -27,13 +29,15 @@ public class Version implements Model {
         this.status = status;
     }
 
-    public Version(String serviceId, String ver, String verDocker, String date, String status, String message) {
+    public Version(String serviceId, String ver, String verDocker, String date, String status, String message, String agent, String agentPreload) {
         this.serviceId = serviceId;
         this.ver = ver;
         this.verDocker = verDocker;
         this.date = date;
         this.status = status;
         this.message = message;
+        this.agent = agent;
+        this.agentPreload = agentPreload;
     }
 
     @Override
@@ -71,5 +75,26 @@ public class Version implements Model {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getAgent() {
+        return agent;
+    }
+
+    public void setAgent(String agent) {
+        this.agent = agent;
+    }
+
+    public String getAgentPreload() {
+        return switch (agentPreload) {
+            case "true" -> "InImage";
+            case "false" -> "OnDeploy";
+            case "NONE" -> "NotInstrumented";
+            default -> agentPreload;
+        };
+    }
+
+    public void setAgentPreload(String agentPreload) {
+        this.agentPreload = agentPreload;
     }
 }

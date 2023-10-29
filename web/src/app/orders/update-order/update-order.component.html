@@ -21,9 +21,9 @@
       <input type="number" class="form-control" id="price" [(ngModel)] = "order.price" name="price" readonly="readonly">
     </div>
     <br>
-    <div class="form-group">
-      <label>Completed</label>
-      <input type="text" class="form-control" id="completed" [(ngModel)] = "order.completed" name="completed" readonly="readonly">
+    <div class="form-check form-switch">
+      <input class="form-check-input" type="checkbox" id="completed" [(ngModel)]="order.completed" name="completed" readonly="readonly" disabled="true"/>
+      <label class="form-check-label" for="completed">Completed</label>
     </div>
     <br>
 

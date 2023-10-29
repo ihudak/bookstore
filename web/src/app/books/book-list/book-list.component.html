@@ -18,9 +18,8 @@
     <td>{{book.author}}</td>
     <td>{{book.price}}</td>
     <td>{{book.language}}</td>
-    <td>{{book.published}}</td>
+    <td><button (click) = "vendBook(book)" class="btn btn-secondary" style="margin-left: 10px">{{book.published ? 'Vended' : 'NotVended'}}</button></td>
     <td>
-      <button (click) = "vendBook(book)" class="btn btn-secondary" style="margin-left: 10px">Vend</button>
       <button (click) = "updateBook(book.id)" class="btn btn-info" style="margin-left: 10px">Update</button>
       <button (click) = "deleteBook(book.id)" class="btn btn-danger" style="margin-left: 10px">Delete</button>
       <button (click) = "bookDetails(book.isbn)" class="btn btn-info" style="margin-left: 10px">Details</button>

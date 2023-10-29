@@ -26,9 +26,9 @@
       <input type="text" class="form-control" id="language" [(ngModel)] = "book.language" name="language">
     </div>
     <br>
-    <div class="form-group">
-      <label>OnVend</label>
-      <input type="text" class="form-control" id="published" [(ngModel)] = "book.published" name="published">
+    <div class="form-check form-switch">
+      <input class="form-check-input" type="checkbox" id="published" [(ngModel)]="book.published" name="published"/>
+      <label class="form-check-label" for="published">OnVend</label>
     </div>
 
     <br>

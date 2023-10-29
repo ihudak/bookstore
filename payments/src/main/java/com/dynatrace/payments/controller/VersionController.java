@@ -17,10 +17,14 @@ public class VersionController {
     private String svcDate;
     @Value("${docker.version}")
     private String svcVerDocker;
+    @Value("${docker.agent}")
+    private String dockerAgent;
+    @Value("${docker.agent.preload}")
+    private String dockerAgentPreload;
 
     @GetMapping("")
     @Operation(summary = "Get version, release date")
     public Version getVersion() {
-        return new Version("payments", svcVer, svcVerDocker, svcDate, "OK", "Healthy");
+        return new Version("payments", svcVer, svcVerDocker, svcDate, "OK", "Healthy", dockerAgent, dockerAgentPreload);
     }
 }

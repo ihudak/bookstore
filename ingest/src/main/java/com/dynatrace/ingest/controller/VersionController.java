@@ -24,6 +24,10 @@ public class VersionController {
     private String svcDate;
     @Value("${docker.version}")
     private String svcVerDocker;
+    @Value("${docker.agent}")
+    private String dockerAgent;
+    @Value("${docker.agent.preload}")
+    private String dockerAgentPreload;
 
     @Autowired
     ClientVersionRepository clientVersionRepository;
@@ -55,7 +59,7 @@ public class VersionController {
             ingestStatus = exception.getMessage();
         }
 
-        versions.add(new Version("ingest", svcVer, svcVerDocker, svcDate, ingestStatus, "Healthy"));
+        versions.add(new Version("ingest", svcVer, svcVerDocker, svcDate, ingestStatus, "Healthy", dockerAgent, dockerAgentPreload));
 
         versions.add(clientVersionRepository.getVersion());
         versions.add(bookVersionRepository.getVersion());

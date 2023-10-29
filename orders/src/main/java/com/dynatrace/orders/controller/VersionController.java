@@ -21,10 +21,14 @@ public class VersionController {
     private String svcDate;
     @Value("${docker.version}")
     private String svcVerDocker;
+    @Value("${docker.agent}")
+    private String dockerAgent;
+    @Value("${docker.agent.preload}")
+    private String dockerAgentPreload;
 
     @GetMapping("")
     @Operation(summary = "Get version, release date and number of records in the DB")
     public Version getVersion() {
-        return new Version("orders", svcVer, svcVerDocker, svcDate, "OK", "Count: " + orderRepository.count());
+        return new Version("orders", svcVer, svcVerDocker, svcDate, "OK", "Count: " + orderRepository.count(), dockerAgent, dockerAgentPreload);
     }
 }
