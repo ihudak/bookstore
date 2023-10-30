@@ -41,7 +41,7 @@ export class CreateIngestComponent {
   startIngest(serviceId: string) {
     this.ingestService.createIngest(this.ingest, serviceId).subscribe(data => {
         console.log(data);
-        this.goToVersionList();
+        this.goToIngest();
       },
       error => { console.log(error); alert(error.error.message); }
     );
