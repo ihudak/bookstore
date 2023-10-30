@@ -35,6 +35,7 @@ import { ConfigListComponent } from './ingest/configs/config-list/config-list.co
 import { VersionListComponent } from './ingest/versions/version-list/version-list.component';
 import { CreateConfigComponent } from './ingest/configs/create-config/create-config.component';
 import { UpdateConfigComponent } from './ingest/configs/update-config/update-config.component';
+import { CreateIngestComponent } from './ingest/data-generator/create-ingest/create-ingest.component';
 
 @NgModule({
   declarations: [
@@ -68,7 +69,8 @@ import { UpdateConfigComponent } from './ingest/configs/update-config/update-con
     ConfigListComponent,
     VersionListComponent,
     CreateConfigComponent,
-    UpdateConfigComponent
+    UpdateConfigComponent,
+    CreateIngestComponent
   ],
   imports: [
     BrowserModule,

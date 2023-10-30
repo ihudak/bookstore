@@ -1,0 +1,9 @@
+.status-string-off {
+  color: lightcyan;
+  background-color: green;
+}
+
+.status-string-on {
+  color: yellow;
+  background-color: red;
+}

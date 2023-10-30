@@ -24,7 +24,7 @@ public class VersionController {
     private String svcDate;
     @Value("${docker.version}")
     private String svcVerDocker;
-    @Value("${docker.agent}")
+    @Value("${docker.agent.vendor}")
     private String dockerAgent;
     @Value("${docker.agent.preload}")
     private String dockerAgentPreload;
@@ -52,14 +52,8 @@ public class VersionController {
     @Operation(summary = "Get versions of all services, their release dates and numbers of records in the DBs")
     public List<Version> getVersion() {
         List<Version> versions = new ArrayList<>();
-        String ingestStatus = IngestController.isIsWorking() ? "generation in progress" : "generation is off";
-        try {
-            ingestStatus = ingestSelfRepository.getStatus();
-        } catch (RestClientException exception) {
-            ingestStatus = exception.getMessage();
-        }
 
-        versions.add(new Version("ingest", svcVer, svcVerDocker, svcDate, ingestStatus, "Healthy", dockerAgent, dockerAgentPreload));
+        versions.add(new Version("ingest", svcVer, svcVerDocker, svcDate, getIngestStatus(), "Healthy", dockerAgent, dockerAgentPreload));
 
         versions.add(clientVersionRepository.getVersion());
         versions.add(bookVersionRepository.getVersion());
@@ -71,5 +65,21 @@ public class VersionController {
         versions.add(ratingsVersionRepository.getVersion());
 
         return versions;
+    }
+
+    @GetMapping("/ingest")
+    @Operation(summary = "Get version the Ingest Service only + Data Generation status")
+    public Version getIngestVersion() {
+        return new Version("ingest", svcVer, svcVerDocker, svcDate, getIngestStatus(), "Healthy", dockerAgent, dockerAgentPreload);
+    }
+
+    private String getIngestStatus() {
+        String ingestStatus = IngestController.isIsWorking() ? "generation in progress" : "generation is off";
+        try {
+            ingestStatus = ingestSelfRepository.getStatus();
+        } catch (RestClientException exception) {
+            ingestStatus = exception.getMessage();
+        }
+        return ingestStatus;
     }
 }

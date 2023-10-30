@@ -17,7 +17,7 @@ public class VersionController {
     private String svcDate;
     @Value("${docker.version}")
     private String svcVerDocker;
-    @Value("${docker.agent}")
+    @Value("${docker.agent.vendor}")
     private String dockerAgent;
     @Value("${docker.agent.preload}")
     private String dockerAgentPreload;

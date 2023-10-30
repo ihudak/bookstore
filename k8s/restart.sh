@@ -9,6 +9,7 @@ kubectl apply -f secret.yaml
 if [ $# -eq 0 ] || [ $1 != "-nodb" ]; then
   kubectl apply -f databases.yaml;
   read -t 15 -p "Wait till the databases get up and running...";
+  echo
 fi
 
 #kubectl delete deployment clients -n $NS
@@ -32,7 +33,7 @@ kubectl apply -f payments.yaml
 kubectl apply -f dynapay.yaml
 kubectl apply -f ingest.yaml
 
-if [ $1 == "-web" ] || [ $2 == "-web" ]; then
+if [ "$1" = "-web" ] || [ "$2" = "-web" ]; then
   kubectl apply -f bookstore.yaml;
 fi
 

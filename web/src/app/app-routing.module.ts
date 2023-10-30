@@ -30,6 +30,7 @@ import {VersionListComponent} from "./ingest/versions/version-list/version-list.
 import {ConfigListComponent} from "./ingest/configs/config-list/config-list.component";
 import {CreateConfigComponent} from "./ingest/configs/create-config/create-config.component";
 import {UpdateConfigComponent} from "./ingest/configs/update-config/update-config.component";
+import {CreateIngestComponent} from "./ingest/data-generator/create-ingest/create-ingest.component";
 
 const routes: Routes = [
   { path: 'clients', component: ClientListComponent },
@@ -59,6 +60,7 @@ const routes: Routes = [
   { path: 'update-rating/:id', component: UpdateRatingComponent },
   { path: 'rating-details/:id', component: RatingDetailsComponent },
   { path: 'versions', component: VersionListComponent },
+  { path: 'ingest', component: CreateIngestComponent },
   { path: 'configs', component: ConfigListComponent },
   { path: 'create-config', component: CreateConfigComponent },
   { path: 'update-config/:service/:id', component: UpdateConfigComponent },

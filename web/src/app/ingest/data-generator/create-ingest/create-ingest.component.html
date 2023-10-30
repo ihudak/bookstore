@@ -1,0 +1,132 @@
+<div class="col-md-6 offset-md-3">
+  <h3>Data Generator</h3>
+  <form (ngSubmit)="onSubmit()">
+    <hr>
+    <br>
+
+    <h5 class="text-center status-string-{{genInProgress ? 'on' : 'off'}}">{{status}}</h5>
+    <br>
+    <hr>
+    <div class="row">
+      <div class="col-md-6">
+        <button class="btn btn-{{genInProgress ? 'danger' : 'success'}}" type="submit">{{genInProgress ? 'Stop Generating' : 'Generate Data'}}</button>
+      </div>
+      <div class="form-check form-switch col-md-6">
+        <input class="form-check-input" type="checkbox" id="continuousLoad" [(ngModel)]="ingest.continuousLoad"/>
+        <label class="form-check-label" for="continuousLoad">Endless Generation</label>
+      </div>
+    </div>
+    <br>
+    <hr>
+
+    <div class="row">
+      <h4>Books</h4>
+      <div class="form-group col-md-6">
+        <label>Vendible Books</label>
+        <input type="number" class="form-control" id="numBooksVend" [(ngModel)] = "ingest.numBooksVend" name="numBooksVend">
+      </div>
+      <div class="form-group col-md-6">
+        <label>Non-Vendible Books</label>
+        <input type="number" class="form-control" id="numBooksNotvend" [(ngModel)] = "ingest.numBooksNotvend" name="numBooksNotvend">
+      </div>
+      <div class="form-group col-md-6">
+        <br>
+        <label>Randomly Vended (50%/50%) Books</label>
+        <input type="number" class="form-control" id="numBooksRandVend" [(ngModel)] = "ingest.numBooksRandVend" name="numBooksRandVend">
+      </div>
+      <div class="col-md-6 offset-md-1">
+        <br>
+        <button (click) = "onSubmitService('books')" class="btn btn-secondary" style="margin-left: 10px">Generate Books Only</button>
+      </div>
+    </div>
+    <hr>
+    <br>
+
+    <div class="row">
+      <h4>Clients</h4>
+      <div class="form-group col-md-6">
+        <label>Clients</label>
+        <input type="number" class="form-control" id="numClients" [(ngModel)] = "ingest.numClients" name="numClients">
+      </div>
+      <div class="col-md-6 offset-md-1">
+        <br>
+        <button (click) = "onSubmitService('clients')" class="btn btn-secondary" style="margin-left: 10px">Generate Clients Only</button>
+      </div>
+    </div>
+    <hr>
+    <br>
+
+    <div class="row">
+      <h4>Storage</h4>
+      <div class="form-group col-md-6">
+        <label>ISBNs in Storage</label>
+        <input type="number" class="form-control" id="numStorage" [(ngModel)] = "ingest.numStorage" name="numStorage">
+      </div>
+      <div class="form-group col-md-6">
+        <label>Books / ISBN (0 - random)</label>
+        <input type="number" class="form-control" id="numBooksPerStorage" [(ngModel)] = "ingest.numBooksPerStorage" name="numBooksPerStorage">
+      </div>
+      <div class="col-md-6 offset-md-1 visually-hidden">
+        <br>
+        <button (click) = "onSubmitService('storage')" class="btn btn-secondary" style="margin-left: 10px">Generate Storage Only</button>
+      </div>
+    </div>
+    <hr>
+    <br>
+
+    <div class="row">
+      <h4>Carts</h4>
+      <div class="form-group col-md-6">
+        <label>Carts</label>
+        <input type="number" class="form-control" id="numCarts" [(ngModel)] = "ingest.numCarts" name="numCarts">
+      </div>
+      <div class="col-md-6 offset-md-1 visually-hidden">
+        <br>
+        <button (click) = "onSubmitService('carts')" class="btn btn-secondary" style="margin-left: 10px">Generate Carts Only</button>
+      </div>
+    </div>
+    <hr>
+
+    <div class="row">
+      <h4>Orders</h4>
+      <div class="form-group col-md-6">
+        <label>Not Submitted Orders</label>
+        <input type="number" class="form-control" id="numOrders" [(ngModel)] = "ingest.numOrders" name="numOrders">
+      </div>
+      <div class="form-group col-md-6">
+        <label>Orders to Submit</label>
+        <input type="number" class="form-control" id="numSubmitOrders" [(ngModel)] = "ingest.numSubmitOrders" name="numSubmitOrders">
+      </div>
+      <div class="form-group col-md-6">
+        <br>
+        <label>Books per ISBN (0 - random)</label>
+        <input type="number" class="form-control" id="numBooksPerOrder" [(ngModel)] = "ingest.numBooksPerOrder" name="numBooksPerOrder">
+      </div>
+      <div class="form-check form-switch col-md-6">
+        <br>
+        <br>
+        <input class="form-check-input" type="checkbox" id="randomPrice" [(ngModel)]="ingest.randomPrice"/>
+        <label class="form-check-label" for="randomPrice">Random Price ($12 if false)</label>
+      </div>
+      <div class="col-md-6 offset-md-1 visually-hidden">
+        <br>
+        <button (click) = "onSubmitService('orders')" class="btn btn-secondary" style="margin-left: 10px">Generate Orders Only</button>
+      </div>
+    </div>
+    <hr>
+
+    <div class="row">
+      <h4>Ratings</h4>
+      <div class="form-group col-md-6">
+        <label>Ratings</label>
+        <input type="number" class="form-control" id="numRatings" [(ngModel)] = "ingest.numRatings" name="numRatings">
+      </div>
+      <div class="col-md-6 offset-md-1 visually-hidden">
+        <br>
+        <button (click) = "onSubmitService('ratings')" class="btn btn-secondary" style="margin-left: 10px">Generate Ratings Only</button>
+      </div>
+    </div>
+    <hr>
+
+  </form>
+</div>

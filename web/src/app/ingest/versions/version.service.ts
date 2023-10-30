@@ -15,4 +15,8 @@ export class VersionService {
     getVersionsList(): Observable<Version[]> {
         return this.httpClient.get<Version[]>(`${this.baseURL}`);
     }
+
+    getIngestVersion(): Observable<Version> {
+        return this.httpClient.get<Version>(`${this.baseURL}/ingest`);
+    }
 }
