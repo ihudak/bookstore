@@ -79,6 +79,20 @@ Install Ingress controller to enable WebApp access all microservices in your dep
     # note1: on MacOS -w 0 is not needed
     # note2: although the scope looks weird, there's no mistake.
 
+.. Entities Read token (needed to send deployment events)
+... Open Dynatrace UI > Manage > Access tokens
+... click on *Generate new token*
+... select *Read entities* in the scope
+... click *Generate*
+... convert the token to base64 (here is a Linux command):
+
+.. Events Ingest token (needed to setd deployment events)
+... Open Dynatrace UI > Manage > Access tokens
+... click on *Generate new token*
+... select *Ingest events* in the scope
+... click *Generate*
+... convert the token to base64 (here is a Linux command):
+
 . Put tokens in the secrets, *secret.yaml* file
 
     oneagent-token: <base64-ed OneAgent token (make sure you concatenated if it's multiline)>
