@@ -51,7 +51,7 @@ spec:
             - name: DT_MYSQL_PORT
               value: "3306"
             - name: DT_MYSQL_DBNAME
-              value: dt_books_cart # DB NAME HERE
+              value: dt_books_carts # DB NAME HERE
             - name: DT_MYSQL_USER
               valueFrom:
                 secretKeyRef:
