@@ -9,7 +9,7 @@ kubectl delete -f dynapay.yaml
 kubectl delete -f ingest.yaml
 kubectl delete -f bookstore.yaml
 
-if [ $# -gt 0 ] && [ $1 = "-all" ]; then
+if [ $# -gt 0 ] && [ "$1" = "-all" ]; then
   kubectl delete -f ingress.yaml
   kubectl delete -f databases.yaml;
   kubectl delete -f secret.yaml;

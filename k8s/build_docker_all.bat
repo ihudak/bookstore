@@ -47,7 +47,7 @@ ECHO ============= Building GUI ===================
 IF [%4]==[] (
   CALL push_docker.bat
 ) ELSE (
-  push_docker.bat %1 %2 %3
+  CALL push_docker.bat %1 %2 %3
 )
 timeout 3
 
