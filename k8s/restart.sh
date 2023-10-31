@@ -1,3 +1,4 @@
+#!/bin/bash
 #export NS=boostrore
 
 kubectl apply -f namespace.yaml

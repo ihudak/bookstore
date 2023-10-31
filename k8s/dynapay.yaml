@@ -20,6 +20,8 @@ spec:
       namespace: bookstore
       labels:
         app: superpay
+        app.kubernetes.io/version: 1.0.5
+        app.kubernetes.io/part-of: BookStore
     spec:
       containers:
         - name: superpay
@@ -28,6 +30,12 @@ spec:
             - containerPort: 8080
             - containerPort: 5005
           env:
+            - name: DT_RELEASE_VERSION
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['app.kubernetes.io/version']
+            - name: DT_RELEASE_BUILD_VERSION
+              value: "2023-10-31-03:40:50"
             - name: DT_BOOKSTORE_PROFILE
               valueFrom:
                 configMapKeyRef:
@@ -135,6 +143,16 @@ spec:
                 secretKeyRef:
                   name: bookstore-secret
                   key: oneagent-token
+            - name: ENTITIES_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: bookstore-secret
+                  key: entities-read-token
+            - name: EVENTS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: bookstore-secret
+                  key: event-ingest-token
             - name: OTEL_TOKEN
               valueFrom:
                 secretKeyRef:

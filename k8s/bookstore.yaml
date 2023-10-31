@@ -5,6 +5,8 @@ metadata:
   namespace: bookstore
   labels:
     app: bookstore
+    app.kubernetes.io/version: 1.2.0
+    app.kubernetes.io/part-of: BookStore
 spec:
   replicas: 1
   selector:
@@ -27,6 +29,12 @@ spec:
           ports:
             - containerPort: 4200
           env:
+            - name: DT_RELEASE_VERSION
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['app.kubernetes.io/version']
+            - name: DT_RELEASE_BUILD_VERSION
+              value: "2023-10-31-03:40:50"
             - name: DT_ACTIVE_WEB_ENV
               valueFrom:
                 configMapKeyRef:
@@ -59,6 +67,16 @@ spec:
                 secretKeyRef:
                   name: bookstore-secret
                   key: oneagent-token
+            - name: ENTITIES_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: bookstore-secret
+                  key: entities-read-token
+            - name: EVENTS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: bookstore-secret
+                  key: event-ingest-token
             - name: OTEL_TOKEN
               valueFrom:
                 secretKeyRef:
