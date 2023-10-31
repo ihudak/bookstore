@@ -21,7 +21,7 @@ else
   export TENANT_URL_SHELL;
 
   # check if the token is base64-ed. If yes, unbase
-  if [ "$(echo OTEL_TOKEN_SHELL | cut -c 1-7)" != "dt0c01." ]; then
+  if [ "$(echo $OTEL_TOKEN_SHELL | cut -c 1-7)" != "dt0c01." ]; then
     OTEL_TOKEN_SHELL=$(echo "$OTEL_TOKEN_SHELL" | base64 -d);
     export OTEL_TOKEN_SHELL;
   fi
