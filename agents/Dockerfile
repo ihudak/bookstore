@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-focal
+FROM eclipse-temurin:17
 MAINTAINER dynatrace.com
 
 ARG PLATFORM=x86
@@ -68,11 +68,13 @@ ENTRYPOINT if [ -z ${AGENT+x} ]; then \
                 else \
                     [ -f /opt/config_oa.sh ] && { /opt/config_oa.sh; rm /opt/config_oa.sh; } || echo "config_oa.sh gone"; \
                 fi; \
+                unset OTEL_SERVICE_NAME; \
                 exec java -jar -agentpath:/var/lib/dynatrace/oneagent/agent/lib64/liboneagentloader.so -Xshare:off /opt/app/app.jar -nofork; \
            elif [ $AGENT = $OTEL_AGENT ] && [ -n "${TENANT_URL+x}" ] && [ -n "${OTEL_TOKEN+x}" ]; then \
                 . /opt/set_bash_instrumentation.sh; \
                 if [ "$AGENTS_PRELOAD" = false ]; then . /opt/get_otel.sh; fi; \
                 . /opt/config_otel.sh; \
+                unset OTEL_SERVICE_NAME; \
                 exec java -javaagent:/opt/opentelemetry-javaagent.jar -Dotel.service.name=$SVC_NAME -jar /opt/app/app.jar; \
            else \
                 java -jar /opt/app/app.jar; \
