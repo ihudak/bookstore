@@ -68,6 +68,7 @@ ENTRYPOINT if [ -z ${AGENT+x} ]; then \
                 else \
                     [ -f /opt/config_oa.sh ] && { /opt/config_oa.sh; rm /opt/config_oa.sh; } || echo "config_oa.sh gone"; \
                 fi; \
+                /opt/deployment_event.sh; \
                 export OTEL_SERVICE_NAME="$SVC_NAME"; \
                 exec java -Dotel.service.name=$SVC_NAME -jar -agentpath:/var/lib/dynatrace/oneagent/agent/lib64/liboneagentloader.so -Xshare:off /opt/app/app.jar -nofork; \
            elif [ $AGENT = $OTEL_AGENT ] && [ -n "${TENANT_URL+x}" ] && [ -n "${OTEL_TOKEN+x}" ]; then \
@@ -75,6 +76,7 @@ ENTRYPOINT if [ -z ${AGENT+x} ]; then \
                 if [ "$AGENTS_PRELOAD" = false ]; then . /opt/get_otel.sh; fi; \
                 . /opt/config_otel.sh; \
                 export OTEL_SERVICE_NAME="$SVC_NAME"; \
+                /opt/deployment_event.sh; \
                 exec java -javaagent:/opt/opentelemetry-javaagent.jar -Dotel.service.name=$SVC_NAME -jar /opt/app/app.jar; \
            else \
                 java -jar /opt/app/app.jar; \
