@@ -1,17 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: bookstore
+  name: web
   namespace: bookstore
   labels:
-    app: bookstore
-    app.kubernetes.io/version: 1.2.0
-    app.kubernetes.io/part-of: BookStore
+    app: web
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: bookstore
+      app: web
   template:
     metadata:
       annotations:
@@ -21,10 +19,12 @@ spec:
         metrics.dynatrace.com/secure: "false"
       namespace: bookstore
       labels:
-        app: bookstore
+        app: web
+        app.kubernetes.io/version: 1.2.0
+        app.kubernetes.io/part-of: BookStore
     spec:
       containers:
-        - name: bookstore
+        - name: web
           image: ivangudak096/web-{AGENT}-{ARCH}:latest
           ports:
             - containerPort: 4200
@@ -97,7 +97,7 @@ metadata:
   namespace: bookstore
 spec:
   selector:
-    app: bookstore
+    app: web
   type: LoadBalancer # ClusterIP
   ports:
     - port: 90

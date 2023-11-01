@@ -26,11 +26,11 @@ SET DT_PROJECTS[9]=web
 
 ECHO ============ Building Agents =================
 cd %BATCH_DIR%\..\%DT_JAVA_AGENT%
-IF [%4]==[] ( CALL push_docker.bat agents ) ELSE ( CALL push_docker.bat agents %1 %2 %3 )
+IF [%3]==[] ( CALL push_docker.bat agents ) ELSE ( CALL push_docker.bat agents %1 %2 %3 )
 
 ECHO ============ Building PreAgent ================
 cd %BATCH_DIR%\..\%DT_JAVA_AGENT%
-IF [%4]==[] ( CALL push_docker.bat preinstrument ) ELSE ( CALL push_docker.bat preinstrument %1 %2 %3 )
+IF [%3]==[] ( CALL push_docker.bat preinstrument ) ELSE ( CALL push_docker.bat preinstrument %1 %2 %3 )
 
 ECHO ============ Building NoAgent ================
 cd %BATCH_DIR%\..\%DT_NO_AGENT%
@@ -38,8 +38,8 @@ CALL push_docker.bat
 
 ECHO =========== Building Angular =================
 cd %BATCH_DIR%\..\%DT_GUI%
-npm install
-ng build
+CALL npm install
+CALL ng build
 
 ECHO ========= Building GUI NoAgent ===============
 cd %BATCH_DIR%\..\%DT_GUI%\base\noagent
@@ -47,7 +47,7 @@ CALL push_docker.bat
 
 ECHO ========= Building GUI OneAgent ===============
 cd %BATCH_DIR%\..\%DT_GUI%\base\oneagent
-IF [%4]==[] ( CALL push_docker.bat ) ELSE ( CALL push_docker.bat %1 %2 %3 )
+IF [%3]==[] ( CALL push_docker.bat ) ELSE ( CALL push_docker.bat %1 %2 %3 )
 
 ECHO ============= Building Java Projects ===================
 cd %BATCH_DIR%\..
