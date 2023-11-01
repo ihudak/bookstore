@@ -35,7 +35,7 @@ kubectl apply -f dynapay.yaml
 kubectl apply -f ingest.yaml
 
 if [ "$1" = "-web" ] || [ "$2" = "-web" ]; then
-  kubectl apply -f bookstore.yaml;
+  kubectl apply -f web.yaml;
 fi
 
 kubectl apply -f ingress.yaml

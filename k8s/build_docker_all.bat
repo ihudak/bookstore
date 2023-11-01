@@ -22,39 +22,36 @@ SET DT_PROJECTS[5]=ratings
 SET DT_PROJECTS[6]=payments
 SET DT_PROJECTS[7]=dynapay
 SET DT_PROJECTS[8]=ingest
+SET DT_PROJECTS[9]=web
 
-cd %BATCH_DIR%\..\%DT_JAVA_AGENT%
 ECHO ============ Building Agents =================
-IF [%4]==[] (
-  CALL push_docker.bat agents
-) ELSE (
-  CALL push_docker.bat agents %1 %2 %3
-)
-timeout 3
+cd %BATCH_DIR%\..\%DT_JAVA_AGENT%
+IF [%4]==[] ( CALL push_docker.bat agents ) ELSE ( CALL push_docker.bat agents %1 %2 %3 )
+
 ECHO ============ Building PreAgent ================
-IF [%4]==[] (
-  CALL push_docker.bat preinstrument
-) ELSE (
-  CALL push_docker.bat preinstrument %1 %2 %3
-)
-timeout 3
-cd %BATCH_DIR%\..\%DT_NO_AGENT%
+cd %BATCH_DIR%\..\%DT_JAVA_AGENT%
+IF [%4]==[] ( CALL push_docker.bat preinstrument ) ELSE ( CALL push_docker.bat preinstrument %1 %2 %3 )
+
 ECHO ============ Building NoAgent ================
+cd %BATCH_DIR%\..\%DT_NO_AGENT%
 CALL push_docker.bat
-timeout 3
+
+ECHO =========== Building Angular =================
 cd %BATCH_DIR%\..\%DT_GUI%
-ECHO ============= Building GUI ===================
-IF [%4]==[] (
-  CALL push_docker.bat
-) ELSE (
-  CALL push_docker.bat %1 %2 %3
-)
-timeout 3
+npm install
+ng build
+
+ECHO ========= Building GUI NoAgent ===============
+cd %BATCH_DIR%\..\%DT_GUI%\base\noagent
+CALL push_docker.bat
+
+ECHO ========= Building GUI OneAgent ===============
+cd %BATCH_DIR%\..\%DT_GUI%\base\oneagent
+IF [%4]==[] ( CALL push_docker.bat ) ELSE ( CALL push_docker.bat %1 %2 %3 )
 
 ECHO ============= Building Java Projects ===================
 cd %BATCH_DIR%\..
 CALL .\gradlew.bat clean build -x test
-timeout 3
 
 setlocal ENABLEDELAYEDEXPANSION
 SET "x=0"
@@ -65,17 +62,11 @@ if defined DT_PROJECTS[%x%] (
 
     CD %BATCH_DIR%\!PROJ_DIR!
     CALL %BATCH_DIR%\push_docker.bat !PROJ! -noagent
-    timeout 3
     CALL %BATCH_DIR%\push_docker.bat !PROJ! -agents
-    timeout 3
     CALL %BATCH_DIR%\push_docker.bat !PROJ! -preinstrument
-    timeout 3
     CALL %BATCH_DIR%\push_docker.bat !PROJ! -noagent -arm
-    timeout 3
     CALL %BATCH_DIR%\push_docker.bat !PROJ! -agents -arm
-    timeout 3
     CALL %BATCH_DIR%\push_docker.bat !PROJ! -preinstrument -arm
-    timeout 3
     SET /a "x+=1"
     GOTO :SymLoop
 )

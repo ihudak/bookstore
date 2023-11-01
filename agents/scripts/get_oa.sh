@@ -36,10 +36,10 @@ fi
 FILESIZE=$(stat -c%s "$AGENT_ZIP")
 export FILESIZE
 if [ $FILESIZE -lt $MINSIZE ]; then
-  echo "OneAgent.zip is too small. Please check it for errors";
+  echo "$AGENT_ZIP is too small. Please check it for errors";
   exit 1;
 else
-  echo "OneAgent.zip download is ok";
+  echo "$AGENT_ZIP download is ok";
   stat -c%s "$AGENT_ZIP";
 fi
 

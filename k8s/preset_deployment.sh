@@ -28,8 +28,8 @@ reset_settings() {
   sed -i.bak "s/-preinstrument-arm64:latest/-{AGENT}-{ARCH}:latest/g" *.yaml
   sed -i.bak "s/-x64:latest/-{ARCH}:latest/g" databases.yaml
   sed -i.bak "s/-arm64:latest/-{ARCH}:latest/g" databases.yaml
-  sed -i.bak "s/bookstore-webapp-x64:latest/bookstore-webapp-{ARCH}:latest/g" bookstore.yaml
-  sed -i.bak "s/bookstore-webapp-arm64:latest/bookstore-webapp-{ARCH}:latest/g" bookstore.yaml
+#  sed -i.bak "s/bookstore-webapp-x64:latest/bookstore-webapp-{ARCH}:latest/g" bookstore.yaml
+#  sed -i.bak "s/bookstore-webapp-arm64:latest/bookstore-webapp-{ARCH}:latest/g" bookstore.yaml
   # setting LoadBalancer back
   sed -i.bak "s/type: ClusterIP # LoadBalancer/type: LoadBalancer # ClusterIP/g" *.yaml
   sed -i.bak -E "/^#.+nodePort: / s/^#//g" *.yaml
@@ -97,7 +97,7 @@ else
 fi
 sed -i.bak "s/-{AGENT}-{ARCH}:latest/-$ag-$ar:latest/g" *.yaml
 sed -i.bak "s/-{ARCH}:latest/-$ar:latest/g" databases.yaml
-sed -i.bak "s/bookstore-webapp-{ARCH}:latest/bookstore-webapp-$ar:latest/g" bookstore.yaml
+#sed -i.bak "s/bookstore-webapp-{ARCH}:latest/bookstore-webapp-$ar:latest/g" bookstore.yaml
 
 # set namespace
 sed -i.bak -E "/name:.*$/ s/name:.*$/name: ${ns}/g" namespace.yaml

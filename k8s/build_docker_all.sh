@@ -12,34 +12,32 @@ DT_NO_AGENT=noagent
 DT_PRE_AGENT=preinstrument
 DT_GUI=web
 
-dt_projects="clients books carts storage orders ratings payments dynapay ingest"
+dt_projects="clients books carts storage orders ratings payments dynapay ingest web"
 
-cd $SCRIPT_DIR/../$DT_JAVA_AGENT
 echo "============ Building Agents ================="
-if [ $# -lt 3 ]; then
-  ./push_docker.sh agents;
-else
-  ./push_docker.sh agents "$1" "$2" "$3";
-fi
+cd $SCRIPT_DIR/../$DT_JAVA_AGENT
+if [ $# -lt 3 ]; then ./push_docker.sh agents; else ./push_docker.sh agents "$1" "$2" "$3"; fi
 
 echo "============ Building PreAgent ================="
-if [ $# -lt 3 ]; then
-  ./push_docker.sh preinstrument;
-else
-  ./push_docker.sh preinstrument "$1" "$2" "$3";
-fi
+cd $SCRIPT_DIR/../$DT_JAVA_AGENT
+if [ $# -lt 3 ]; then ./push_docker.sh preinstrument; else ./push_docker.sh preinstrument "$1" "$2" "$3"; fi
 
-cd $SCRIPT_DIR/../$DT_NO_AGENT
 echo "============ Building NoAgent ================="
+cd $SCRIPT_DIR/../$DT_NO_AGENT
 ./push_docker.sh
 
+echo "============ Building Angular ================="
 cd $SCRIPT_DIR/../$DT_GUI
-echo "============ Building GUI ================="
-if [ $# -lt 3 ]; then
-  ./push_docker.sh;
-else
-  ./push_docker.sh "$1" "$2" "$3";
-fi
+npm install
+ng build
+
+echo "============ Building GUI NoAgent ================="
+cd $SCRIPT_DIR/../$DT_GUI/base/noagent
+./push_docker.sh
+
+cd $SCRIPT_DIR/../$DT_GUI/base/oneagent
+echo "============ Building GUI OneAgent ================="
+if [ $# -lt 3 ]; then ./push_docker.sh; else ./push_docker.sh "$1" "$2" "$3"; fi
 
 echo "============ Building Projects ================="
 cd $SCRIPT_DIR/..
