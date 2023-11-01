@@ -181,7 +181,7 @@ Use preset_deployment.sh for that:
 
 5. Create web app:
 
-    kubectl apply -f bookstore.yaml
+    kubectl apply -f web.yaml
 
 6. Setup Ingress:
 
@@ -189,7 +189,7 @@ Use preset_deployment.sh for that:
 
 7. Delete the app:
 
-    kubectl delete -f bookstore.yaml
+    kubectl delete -f web.yaml
     kubectl delete -f clients.yaml
     kubectl delete -f books.yaml
     kubectl delete -f carts.yaml
