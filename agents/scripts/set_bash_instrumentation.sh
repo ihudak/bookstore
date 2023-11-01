@@ -44,7 +44,6 @@ export OTEL_SERVICE_NAME="BookStoreAppDocker $SVC_NAME"
 # turn on instrumenting
 . /usr/bin/opentelemetry_shell.sh
 otel_instrument echo
-otel_instrument log
 # the first echo will give trace a name
 echo "Otel-bash instrumentation complete"
-echo  "BookStoreAppDocker: $SVC_NAME:$(uname -p)"
+echo "BookStoreAppDocker: $SVC_NAME:$(uname -p)"
