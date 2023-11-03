@@ -15,7 +15,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     Book findByIsbn(String isbn);
     List<Book> findByPublished(boolean isPublished);
 
-    @Query(value = "UPDATE Book SET published = :vend")
+    @Query(value = "UPDATE books SET published = :vend")
     @Modifying
     int bulkBookVending(boolean vend);
 
