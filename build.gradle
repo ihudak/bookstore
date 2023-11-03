@@ -110,6 +110,8 @@ project("dynapay") {
 
 project("ingest") {
     dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+        runtimeOnly 'org.postgresql:postgresql'
         implementation 'org.yaml:snakeyaml:1.33'
         implementation 'com.github.javafaker:javafaker:1.0.2'
         implementation project(':exceptions')

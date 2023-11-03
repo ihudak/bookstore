@@ -65,7 +65,7 @@ public class ConfigController {
     @DeleteMapping("/delete-all")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Delete all configs for the service (reset to defaults)")
-    public void deleteAllBooks() {
+    public void deleteAllConfigs() {
         configRepository.deleteAll();
     }
 }
