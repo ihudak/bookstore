@@ -18,6 +18,14 @@ public class Setting {
     @Schema(name = "env", nullable = false, example = "dev", requiredMode = Schema.RequiredMode.REQUIRED, description = "dev|sprint")
     private String env;
 
+    @Column(name="custom_url", nullable = false)
+    @Schema(name = "customUrl", nullable = false, example = "bookstore.dynatracelabs.internal", requiredMode = Schema.RequiredMode.REQUIRED, description = "root url for the cluster")
+    private String customUrl;
+
+    @Column(name="active", nullable = false)
+    @Schema(name = "active", nullable = false, example = "true", requiredMode = Schema.RequiredMode.REQUIRED, description = "true if the configuration is active. only one or zero must be active. If none is active, preconfigured URL will be used")
+    private boolean active;
+
     public Setting() {
     }
 
@@ -59,12 +67,4 @@ public class Setting {
     public void setActive(boolean active) {
         this.active = active;
     }
-
-    @Column(name="custom_url", nullable = false)
-    @Schema(name = "customUrl", nullable = false, example = "bookstore.dynatracelabs.internal", requiredMode = Schema.RequiredMode.REQUIRED, description = "root url for the cluster")
-    private String customUrl;
-
-    @Column(name="active", nullable = false)
-    @Schema(name = "active", nullable = false, example = "true", requiredMode = Schema.RequiredMode.REQUIRED, description = "true if the configuration is active. only one or zero must be active. If none is active, preconfigured URL will be used")
-    private boolean active;
 }
