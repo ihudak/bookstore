@@ -36,6 +36,19 @@ public class SettingController {
         return settingRepository.save(setting);
     }
 
+    @PostMapping("/{id}")
+    @Operation(summary = "Activate setting to the UI (previously active setting shall be deactivated")
+    public Setting activateSetting(@Parameter(name="id", description = "tenantId") @PathVariable String id) {
+        Optional<Setting> settingDb = settingRepository.findById(id);
+        if (settingDb.isEmpty()) {
+            throw new ResourceNotFoundException("Setting does not exist");
+        }
+        settingRepository.deactivateAllSettings();
+        Setting setting = settingDb.get();
+        setting.setActive(true);
+        return setting;
+    }
+
     @PutMapping("/{id}")
     @Operation(summary = "Update a Setting for the UI app")
     public Setting updateSetting(@Parameter(name="id", description = "tenantId") @PathVariable String id, @RequestBody Setting setting) {
