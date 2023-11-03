@@ -18,9 +18,51 @@ public class Setting {
     @Schema(name = "env", nullable = false, example = "dev", requiredMode = Schema.RequiredMode.REQUIRED, description = "dev|sprint")
     private String env;
 
+    public Setting() {
+    }
+
+    public Setting(String id, String env, String customUrl, boolean active) {
+        this.id = id;
+        this.env = env;
+        this.customUrl = customUrl;
+        this.active = active;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getEnv() {
+        return env;
+    }
+
+    public void setEnv(String env) {
+        this.env = env;
+    }
+
+    public String getCustomUrl() {
+        return customUrl;
+    }
+
+    public void setCustomUrl(String customUrl) {
+        this.customUrl = customUrl;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     @Column(name="custom_url", nullable = false)
-    @Schema(name = "custom_url", nullable = false, example = "bookstore.dynatracelabs.internal", requiredMode = Schema.RequiredMode.REQUIRED, description = "root url for the cluster")
-    private String propertyStr;
+    @Schema(name = "customUrl", nullable = false, example = "bookstore.dynatracelabs.internal", requiredMode = Schema.RequiredMode.REQUIRED, description = "root url for the cluster")
+    private String customUrl;
 
     @Column(name="active", nullable = false)
     @Schema(name = "active", nullable = false, example = "true", requiredMode = Schema.RequiredMode.REQUIRED, description = "true if the configuration is active. only one or zero must be active. If none is active, preconfigured URL will be used")
