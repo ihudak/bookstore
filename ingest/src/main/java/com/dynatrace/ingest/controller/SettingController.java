@@ -30,6 +30,13 @@ public class SettingController {
         return settingRepository.findOneByActive(true);
     }
 
+    @GetMapping("/tenant/{id}")
+    @Operation(summary = "Get Setting by TenantID")
+    public Setting getSettingByTenantID(@PathVariable String id) {
+        Setting setting = settingRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Setting does not exist"));
+        return setting;
+    }
+
     @PostMapping("")
     @Operation(summary = "Create a new Setting for the UI app")
     public Setting createSetting(@RequestBody Setting setting) {
