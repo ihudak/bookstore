@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,9 +33,9 @@ public class SettingController {
 
     @GetMapping("/tenant/{id}")
     @Operation(summary = "Get Setting by TenantID")
-    public Setting getSettingByTenantID(@PathVariable String id) {
+    public ResponseEntity<Setting> getSettingByTenantID(@PathVariable String id) {
         Setting setting = settingRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Setting does not exist"));
-        return setting;
+        return ResponseEntity.ok(setting);
     }
 
     @PostMapping("")
