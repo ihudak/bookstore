@@ -1,6 +1,6 @@
 @ECHO OFF
 REM do not build this yet
-EXIT 0
+
 REM if the script gets a param, it will be considered as tenant-token
 REM can be either open of base64-ed
 
