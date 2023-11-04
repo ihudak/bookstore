@@ -67,7 +67,13 @@ public class SettingController {
         return settingRepository.save(setting);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/deactivate-all")
+    @Operation(summary = "Deactivate all custom settings")
+    public void deactivateAllSettings() {
+        settingRepository.deactivateAllSettings();
+    }
+
+    @DeleteMapping("/tenant/{id}")
     @Operation(summary = "Delete a Setting for the UI app")
     public void deleteSetting(@Parameter(name="id", description = "tenantId") @PathVariable String id) {
         settingRepository.deleteById(id);
