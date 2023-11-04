@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {Config} from "../config";
 import {ConfigService} from "../config.service";
@@ -8,7 +8,7 @@ import {ConfigService} from "../config.service";
   templateUrl: './update-config.component.html',
   styleUrls: ['./update-config.component.css']
 })
-export class UpdateConfigComponent {
+export class UpdateConfigComponent implements OnInit {
   serviceId = '';
   id = '';
   config: Config = new Config();

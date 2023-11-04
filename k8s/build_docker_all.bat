@@ -51,7 +51,7 @@ IF [%3]==[] ( CALL push_docker.bat ) ELSE ( CALL push_docker.bat %1 %2 %3 )
 
 ECHO ============= Building Java Projects ===================
 cd %BATCH_DIR%\..
-CALL .\gradlew.bat clean build -x test
+CALL .\gradlew.bat clean build
 
 setlocal ENABLEDELAYEDEXPANSION
 SET "x=0"

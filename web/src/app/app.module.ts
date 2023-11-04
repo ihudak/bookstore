@@ -36,6 +36,9 @@ import { VersionListComponent } from './ingest/versions/version-list/version-lis
 import { CreateConfigComponent } from './ingest/configs/create-config/create-config.component';
 import { UpdateConfigComponent } from './ingest/configs/update-config/update-config.component';
 import { CreateIngestComponent } from './ingest/data-generator/create-ingest/create-ingest.component';
+import { SettingListComponent } from './ingest/settings/setting-list/setting-list.component';
+import { CreateSettingComponent } from './ingest/settings/create-setting/create-setting.component';
+import { UpdateSettingComponent } from './ingest/settings/update-setting/update-setting.component';
 
 @NgModule({
   declarations: [
@@ -70,7 +73,10 @@ import { CreateIngestComponent } from './ingest/data-generator/create-ingest/cre
     VersionListComponent,
     CreateConfigComponent,
     UpdateConfigComponent,
-    CreateIngestComponent
+    CreateIngestComponent,
+    SettingListComponent,
+    CreateSettingComponent,
+    UpdateSettingComponent
   ],
   imports: [
     BrowserModule,

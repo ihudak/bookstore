@@ -70,7 +70,7 @@ spec:
             - name: DT_PG_PORT
               value: "5432"
             - name: DT_PG_DBNAME
-              value: none # DB NAME HERE
+              value: dt_books_ingest # DB NAME HERE
             - name: DT_PG_USER
               valueFrom:
                 secretKeyRef:

@@ -11,10 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 public interface SettingRepository extends JpaRepository<Setting, String> {
     Setting findOneByActive(boolean isActive);
 
-    @Query(value = "UPDATE Setting SET active = false")
-    @Modifying
-    int deactivateAllSettings();
-
     @Modifying
     @Transactional
     @Query(value = "TRUNCATE TABLE settings", nativeQuery = true)

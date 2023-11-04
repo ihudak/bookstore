@@ -31,6 +31,9 @@ import {ConfigListComponent} from "./ingest/configs/config-list/config-list.comp
 import {CreateConfigComponent} from "./ingest/configs/create-config/create-config.component";
 import {UpdateConfigComponent} from "./ingest/configs/update-config/update-config.component";
 import {CreateIngestComponent} from "./ingest/data-generator/create-ingest/create-ingest.component";
+import {SettingListComponent} from "./ingest/settings/setting-list/setting-list.component";
+import {CreateSettingComponent} from "./ingest/settings/create-setting/create-setting.component";
+import {UpdateSettingComponent} from "./ingest/settings/update-setting/update-setting.component";
 
 const routes: Routes = [
   { path: 'clients', component: ClientListComponent },
@@ -64,6 +67,9 @@ const routes: Routes = [
   { path: 'configs', component: ConfigListComponent },
   { path: 'create-config', component: CreateConfigComponent },
   { path: 'update-config/:service/:id', component: UpdateConfigComponent },
+  { path: 'settings', component: SettingListComponent },
+  { path: 'create-setting', component: CreateSettingComponent },
+  { path: 'update-setting/:id', component: UpdateSettingComponent },
   { path: '', redirectTo: 'clients', pathMatch: 'full' }
 ];
 

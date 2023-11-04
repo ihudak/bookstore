@@ -31,6 +31,6 @@ export class ClientService {
   }
 
   deleteAllClients(): Observable<Object> {
-    return this.httpClient.delete(`${this.baseURL}/delete-all`)
+    return this.httpClient.delete(`${this.baseURL}/delete-all`);
   }
 }

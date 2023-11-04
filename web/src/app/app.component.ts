@@ -8,6 +8,7 @@ import {environment} from "../environments/environment";
 })
 export class AppComponent {
   title = 'Book Store';
-  buildVer = environment.verGUI;
+  buildVer = environment.verGUI + environment.selectedTenant == '' ? '' : `: ${environment.selectedTenant}`;
   buildDate = environment.dateGUI;
+  tenantId = environment.selectedTenant;
 }

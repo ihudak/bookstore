@@ -16,6 +16,7 @@ export const environment = {
   paymentsSrvUrl: `${baseSrvUrl}/payments`,
   dynapatSrvUrl: `${baseSrvUrl}/dynapay`,
   ingestSrvUrl: `${baseSrvUrl}/ingest`,
-  verGUI: '1.2.0.prod',
-  dateGUI: 'Oct-30-2023'
+  selectedTenant: '',
+  verGUI: '1.3.0.prod',
+  dateGUI: 'Nov-02-2023'
 };

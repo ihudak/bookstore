@@ -1,0 +1,27 @@
+<div class="col-md-6 offset-md-3">
+  <h3>Update Config</h3>
+  <form (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label>Tenant ID</label>
+      <input type="text" class="form-control" id="tenantId" [(ngModel)] = "setting.id" name="tenantId">
+    </div>
+    <br>
+
+    <div class="form-group">
+      <label>Env Type</label>
+      <select class="form-control" id="env" [(ngModel)] = "setting.env" name="env">
+        <option value="dev">dev</option>
+        <option value="sprint">sprint</option>
+      </select>
+    </div>
+    <br>
+
+    <div class="form-group">
+      <label>Custom URL</label>
+      <input type="text" class="form-control" id="customUrl" [(ngModel)] = "setting.customUrl" name="customUrl">
+    </div>
+    <br>
+
+    <button class="btn btn-success" type="submit">Submit</button>
+  </form>
+</div>

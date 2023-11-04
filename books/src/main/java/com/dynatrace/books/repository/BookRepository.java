@@ -17,6 +17,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     @Query(value = "UPDATE Book SET published = :vend")
     @Modifying
+    @Transactional
     int bulkBookVending(boolean vend);
 
     @Modifying

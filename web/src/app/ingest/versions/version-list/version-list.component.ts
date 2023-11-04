@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Version} from "../version";
 import {VersionService} from "../version.service";
 import {Router} from "@angular/router";
@@ -8,7 +8,7 @@ import {Router} from "@angular/router";
   templateUrl: './version-list.component.html',
   styleUrls: ['./version-list.component.css']
 })
-export class VersionListComponent {
+export class VersionListComponent implements OnInit {
   versions: Version[] = [];
 
   constructor(private versionService: VersionService, private router: Router) {

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Ingest} from "../ingest";
 import {IngestService} from "../ingest.service";
 import {Router} from "@angular/router";
@@ -10,7 +10,7 @@ import {VersionService} from "../../versions/version.service";
   templateUrl: './create-ingest.component.html',
   styleUrls: ['./create-ingest.component.css']
 })
-export class CreateIngestComponent {
+export class CreateIngestComponent implements OnInit {
 
   ingest: Ingest = new Ingest();
   genInProgress: boolean = false;
