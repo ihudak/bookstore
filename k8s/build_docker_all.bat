@@ -45,9 +45,9 @@ ECHO ========= Building GUI NoAgent ===============
 cd %BATCH_DIR%\..\%DT_GUI%\base\noagent
 CALL push_docker.bat
 
-ECHO ========= Building GUI OneAgent ===============
-cd %BATCH_DIR%\..\%DT_GUI%\base\oneagent
-IF [%3]==[] ( CALL push_docker.bat ) ELSE ( CALL push_docker.bat %1 %2 %3 )
+REM ECHO ========= Building GUI OneAgent ===============
+REM cd %BATCH_DIR%\..\%DT_GUI%\base\oneagent
+REM IF [%3]==[] ( CALL push_docker.bat ) ELSE ( CALL push_docker.bat %1 %2 %3 )
 
 ECHO ============= Building Java Projects ===================
 cd %BATCH_DIR%\..

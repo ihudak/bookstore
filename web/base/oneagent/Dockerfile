@@ -67,7 +67,7 @@ ENTRYPOINT . /opt/set_bash_instrumentation.sh && \
            else \
                sed -i "s|http://kubernetes.docker.internal/api|$BOOKSTORE_BASE_SRV_URL|g" ./src/environments/* ; \
                sed -i "s|http://localhost|$BOOKSTORE_BASE_SRV_URL|g" ./src/environments/* ; \
-               sed -i "s|no-custom-tenant|$TENANT_ID.$TENANT_LAYER|g" ./src/environments/* ; \
+               sed -i "s|selectedTenant: \'\',|selectedTenant: \'$TENANT_ID.$TENANT_LAYER\',|g" ./src/environments/* ; \
                /usr/src/app/node_modules/.bin/ng build ; \
                export DT_ACTIVE_WEB_ENV=production; \
                /usr/src/app/node_modules/.bin/ng serve --host 0.0.0.0 --disable-host-check -c ${DT_ACTIVE_WEB_ENV}; \
