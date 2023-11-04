@@ -224,3 +224,8 @@ Use preset_deployment.sh for that:
     .\restart.bat -nodb &REM won't touch the DB (restart of the DB causes data reset)
     .\delete.bat        &REM undeploys microservices and the web app (DBs stay)
     .\delete.bat -all   &REM undeploys everything, including the DBs, configs
+
+==== Connect to pod
+
+    kubectl exec -it <Pod_Name> -c <Container_Name> -- /bin/bash
+
