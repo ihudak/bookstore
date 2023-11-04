@@ -22,10 +22,11 @@
       <td class="text-end">{{config.loadRAM}}</td>
       <td class="text-end">{{config.probabilityFailure}}</td>
       <td class="text-end">{{config.propertyStr}}</td>
-      <td class="text-center">{{config.turnedOn ? 'ON' : 'OFF'}}</td>
+      <td class="text-center">
+        <button (click) = "toggleConfig(config)" class="btn btn-{{config.turnedOn ? 'danger' : 'secondary'}}" style="margin-left: 10px">{{config.turnedOn ? 'ON' : 'OFF'}}</button>
+      </td>
       <td>
         <button (click) = "updateConfig(config.serviceId, config.id)" class="btn btn-info">Update</button>
-        <button (click) = "toggleConfig(config)" class="btn btn-secondary" style="margin-left: 10px">{{config.turnedOn ? 'ON' : 'OFF'}}</button>
       </td>
     </tr>
     </tbody>
