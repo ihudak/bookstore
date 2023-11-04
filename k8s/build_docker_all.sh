@@ -35,9 +35,9 @@ echo "============ Building GUI NoAgent ================="
 cd $SCRIPT_DIR/../$DT_GUI/base/noagent
 ./push_docker.sh
 
-cd $SCRIPT_DIR/../$DT_GUI/base/oneagent
-echo "============ Building GUI OneAgent ================="
-if [ $# -lt 3 ]; then ./push_docker.sh; else ./push_docker.sh "$1" "$2" "$3"; fi
+#cd $SCRIPT_DIR/../$DT_GUI/base/oneagent
+#echo "============ Building GUI OneAgent ================="
+#if [ $# -lt 3 ]; then ./push_docker.sh; else ./push_docker.sh "$1" "$2" "$3"; fi
 
 echo "============ Building Projects ================="
 cd $SCRIPT_DIR/..
