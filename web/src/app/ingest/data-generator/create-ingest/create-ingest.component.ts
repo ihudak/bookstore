@@ -41,7 +41,7 @@ export class CreateIngestComponent implements OnInit {
   startIngest(serviceId: string) {
     this.ingestService.createIngest(this.ingest, serviceId).subscribe(data => {
         console.log(data);
-        this.goToIngest();
+        this.goToVersionList();
       },
       error => { console.log(error); alert(error.error.message); }
     );
