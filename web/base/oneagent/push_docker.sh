@@ -1,4 +1,5 @@
 #!/bin/bash
+exit 0 # do not build this yet
 
 if [ $# -lt 4 ]; then
   docker image build --platform linux/amd64 -t ivangudak096/node-angular-agents-x64:latest --build-arg AGENTS_PRELOAD=false .;
