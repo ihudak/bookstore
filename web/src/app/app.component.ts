@@ -7,7 +7,7 @@ import {environment} from "../environments/environment";
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'Book Store' + environment.selectedTenant == '' ? '' : `: ${environment.selectedTenant}`;
+  title = 'Book Store';
   buildVer = environment.verGUI;
   buildDate = environment.dateGUI;
   tenantId = environment.selectedTenant;
