@@ -5,6 +5,8 @@ import com.dynatrace.clients.model.Config;
 import com.dynatrace.clients.repository.ConfigRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +19,7 @@ import java.util.Optional;
 public class ConfigController {
     @Autowired
     private ConfigRepository configRepository;
+    private Logger logger = LoggerFactory.getLogger(ConfigController.class);
 
     // get all settings
     @GetMapping("")
@@ -31,7 +34,9 @@ public class ConfigController {
     public Config getConfigById(@Parameter(name="id", description = "setting identifier: dt.work.hard; dt.simulate.crash", example = "dt.work.hard") @PathVariable String id) {
         Optional<Config> config = configRepository.findById(id);
         if (config.isEmpty()) {
-            throw new ResourceNotFoundException("Config does not exist");
+            String message = "Config does not exist: " + id;
+            logger.error(message);
+            throw new ResourceNotFoundException(message);
         }
         return config.get();
     }
@@ -49,7 +54,9 @@ public class ConfigController {
     public Config updateConfig(@Parameter(name="id", description = "setting identifier: dt.work.hard; dt.simulate.crash", example = "dt.work.hard") @PathVariable String id, @RequestBody Config config) {
         Optional<Config> configDb = configRepository.findById(id);
         if (configDb.isEmpty()) {
-            throw new ResourceNotFoundException("Config does not exist");
+            String message = "Config does not exist: " + id;
+            logger.error(message);
+            throw new ResourceNotFoundException(message);
         }
         return configRepository.save(config);
     }
