@@ -37,7 +37,11 @@ public interface ConfigRepository {
             return configs;
         } catch (Exception exception) {
             getLogger().error(exception.getMessage());
-            throw new BadRequestException(exception.getMessage());
+            // make a config that tells about error
+            Config[] configs = new Config[1];
+            configs[0].setServiceId(this.getServiceName());
+            configs[0].setPropertyStr("Not Available");
+            return configs;
         }
     }
 
