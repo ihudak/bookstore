@@ -15,7 +15,7 @@ ENV TENANT_ID_SHELL=$TENANT_ID_SHELL
 ENV TENANT_URL_SHELL="https://$TENANT_ID_SHELL.$TENANT_LAYER_SHELL.dynatracelabs.com"
 ENV OTEL_TOKEN_SHELL=$TENANT_TOKEN_SHELL
 
-ENV DOCKER_VER=1.2.0
+ENV DOCKER_VER=1.3.0
 
 # Prepare OA config
 ENV OA_INSTALL_DIR=/var/lib/dynatrace/oneagent
@@ -58,8 +58,9 @@ RUN if [ "$AGENTS_PRELOAD" = true ]; then \
 RUN rm /opt/env
 ENV AGENTS_PRELOAD=$AGENTS_PRELOAD
 
-ENTRYPOINT if [ -z ${AGENT+x} ]; then \
-                java -jar /opt/app/app.jar; \
+ENTRYPOINT export OTEL_SERVICE_NAME="$SERVICE_FULL_NAME" && \
+           if [ -z ${AGENT+x} ]; then \
+                java -Dotel.service.name=$SERVICE_FULL_NAME -jar /opt/app/app.jar; \
            elif [ $AGENT = $ONE_AGENT ] && [ -n "${TENANT_URL+x}" ] && [ -n "${OA_TOKEN+x}" ]; then \
                 . /opt/set_bash_instrumentation.sh; \
                 if [ "$AGENTS_PRELOAD" = false ]; then \
@@ -69,17 +70,15 @@ ENTRYPOINT if [ -z ${AGENT+x} ]; then \
                     [ -f /opt/config_oa.sh ] && { /opt/config_oa.sh; rm /opt/config_oa.sh; } || echo "config_oa.sh gone"; \
                 fi; \
                 /opt/deployment_event.sh; \
-                export OTEL_SERVICE_NAME="$SVC_NAME"; \
-                exec java -Dotel.service.name=$SVC_NAME -jar -agentpath:/var/lib/dynatrace/oneagent/agent/lib64/liboneagentloader.so -Xshare:off /opt/app/app.jar -nofork; \
+                exec java -Dotel.service.name=$SERVICE_FULL_NAME -jar -agentpath:/var/lib/dynatrace/oneagent/agent/lib64/liboneagentloader.so -Xshare:off /opt/app/app.jar -nofork; \
            elif [ $AGENT = $OTEL_AGENT ] && [ -n "${TENANT_URL+x}" ] && [ -n "${OTEL_TOKEN+x}" ]; then \
                 . /opt/set_bash_instrumentation.sh; \
                 if [ "$AGENTS_PRELOAD" = false ]; then . /opt/get_otel.sh; fi; \
                 . /opt/config_otel.sh; \
-                export OTEL_SERVICE_NAME="$SVC_NAME"; \
                 /opt/deployment_event.sh; \
-                exec java -javaagent:/opt/opentelemetry-javaagent.jar -Dotel.service.name=$SVC_NAME -jar /opt/app/app.jar; \
+                exec java -javaagent:/opt/opentelemetry-javaagent.jar -Dotel.service.name=$SERVICE_FULL_NAME -jar /opt/app/app.jar; \
            else \
-                java -jar /opt/app/app.jar; \
+                java -Dotel.service.name=$SERVICE_FULL_NAME -jar /opt/app/app.jar; \
            fi
 
 EXPOSE 8080

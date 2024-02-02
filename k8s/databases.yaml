@@ -33,19 +33,19 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: bookstore-secret
-                  key: mysql-user-name
+                  key: DT_MYSQL_USER
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: bookstore-secret
-                  key: mysql-user-pass
+                  key: DT_MYSQL_PASS
           resources:
             limits:
               cpu: 500m
               memory: 1Gi
             requests:
-              cpu: 200m
-              memory: 256Mi
+              cpu: 500m
+              memory: 1Gi
 ---
 apiVersion: v1
 kind: Service
@@ -97,19 +97,19 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: bookstore-secret
-                  key: pgdb-user-name
+                  key: DT_PG_USER
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: bookstore-secret
-                  key: pgdb-user-pass
+                  key: DT_PG_PASS
           resources:
             limits:
               cpu: 500m
               memory: 1Gi
             requests:
-              cpu: 200m
-              memory: 256Mi
+              cpu: 500m
+              memory: 1Gi
 ---
 apiVersion: v1
 kind: Service

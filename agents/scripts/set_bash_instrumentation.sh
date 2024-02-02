@@ -38,7 +38,7 @@ OTEL_EXPORTER_OTLP_LOGS_HEADERS=Authorization=$(echo "Api-Token $OTEL_TOKEN_SHEL
 export OTEL_EXPORTER_OTLP_LOGS_HEADERS
 
 # set service name for the deployment procedure
-export OTEL_SERVICE_NAME="BookStoreAppDocker $SVC_NAME"
+export OTEL_SERVICE_NAME="BookStoreAppDocker $SERVICE_FULL_NAME"
 
 # Configure service
 # turn on instrumenting
@@ -46,4 +46,4 @@ export OTEL_SERVICE_NAME="BookStoreAppDocker $SVC_NAME"
 otel_instrument echo
 # the first echo will give trace a name
 echo "Otel-bash instrumentation complete"
-echo "BookStoreAppDocker: $SVC_NAME:$(uname -p)"
+echo "BookStoreAppDocker: $SERVICE_FULL_NAME:$(uname -p)"

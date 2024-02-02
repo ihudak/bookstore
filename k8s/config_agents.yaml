@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bookstore-agents-configmap
+  namespace: bookstore
+data:
+  clients_agent: otelAgent
+  books_agent: oneAgent
+  carts_agent: otelAgent
+  storage_agent: otelAgent
+  orders_agent: oneAgent
+  payments_agent: otelAgent
+  dynapay_agent: oneAgent
+  ratings_agent: otelAgent
+  ingest_agent: oneAgent
+  web_agent: oneAgent

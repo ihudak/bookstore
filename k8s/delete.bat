@@ -13,6 +13,7 @@ IF "%1"=="-all" (
   kubectl delete -f ingress.yaml
   kubectl delete -f databases.yaml
   kubectl delete -f secret.yaml
-  kubectl delete -f config.yaml
+  kubectl delete -f config_agents.yaml
+  kubectl delete -f configmap.yaml
   kubectl delete -f namespace.yaml
 )

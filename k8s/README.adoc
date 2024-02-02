@@ -48,12 +48,12 @@ Install Ingress controller to enable WebApp access all microservices in your dep
 
 == Configuration
 === configmap
-. Set your tenant's id and URL in *config.yaml*
+. Set your tenant's id and URL in *configmap.yaml*
 
-    tenant_id: <tenant-id> ## for instance, fdg3423
-    tenant_layer: <layer> ## e.g. sprint or dev
+    TENANT_ID: <tenant-id> ## for instance, fdg3423
+    TENANT_LAYER: <layer> ## e.g. sprint or dev
 
-. Define instrumentation (OneAgent or Otel) for the microservices in *config.yaml*
+. Define instrumentation (OneAgent or Otel) for the microservices in *config_agents.yaml*
 
     <microservice>_agent: [oneAgent|otelAgent|none] # set for all *_agent records
 
@@ -151,9 +151,10 @@ Use preset_deployment.sh for that:
 
     kubectl apply -f namespace.yaml
 
-1. Create configmap:
+1. Create configmaps:
 
-    kubectl apply -f config.yaml
+    kubectl apply -f configmap.yaml
+    kubectl apply -f config_agents.yaml
 
 
 2. Create secrets:
@@ -202,7 +203,8 @@ Use preset_deployment.sh for that:
     kubectl delete -f ingress.yaml
     kubectl delete -f databases.yaml
     kubectl delete -f secret.yaml
-    kubectl delete -f config.yaml
+    kubectl delete -f config_agents.yaml
+    kubectl delete -f configmap.yaml
     kubectl delete -f namespace.yaml
 
 === Automated deployment

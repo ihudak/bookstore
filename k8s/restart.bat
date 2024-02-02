@@ -1,5 +1,6 @@
 kubectl apply -f namespace.yaml
-kubectl apply -f config.yaml
+kubectl apply -f config_agents.yaml
+kubectl apply -f configmap.yaml
 kubectl apply -f secret.yaml
 
 # does not have to be a part of restart as all data would be lost

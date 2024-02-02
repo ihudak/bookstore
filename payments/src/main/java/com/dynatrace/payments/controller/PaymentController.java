@@ -27,7 +27,7 @@ public class PaymentController extends HardworkingController {
 
     // make a payment
     @PostMapping("")
-    @Operation(summary = "Fordard the payment to the gateway (dynapay service)")
+    @Operation(summary = "Forward the payment to the gateway (dynapay service)")
     public Payment createPayment(@RequestBody Payment payment) {
         DynaPay dynaPay = dynaPayRepository.submitPayment(payment);
         payment.setSucceeded(dynaPay.isSucceeded());

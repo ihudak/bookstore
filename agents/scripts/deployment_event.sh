@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export ENTITIES_URL="$TENANT_URL/api/v2/entities?pageSize=500&entitySelector=type(SERVICE),entityName($SVC_NAME)"
+export ENTITIES_URL="$TENANT_URL/api/v2/entities?pageSize=500&entitySelector=type(SERVICE),entityName($SERVICE_FULL_NAME)"
 export EVENTS_URL="$TENANT_URL/api/v2/events/ingest"
 
 if [ "$(echo $ENTITIES_TOKEN | cut -c 1-7)" != "dt0c01." ] || [ "$(echo $EVENTS_TOKEN | cut -c 1-7)" != "dt0c01." ]; then
@@ -19,7 +19,7 @@ EVENT_BODY=$(jq --null-input \
   --arg startTime "$(date +%s%N | cut -b1-11)00" \
   --arg endTime "$(date +%s%N | cut -b1-11)99" \
   --arg service "entityId($DT_SERVICE_ID)" \
-  --arg serviceName "$SVC_NAME" \
+  --arg serviceName "$SERVICE_FULL_NAME" \
   '{
      "eventType": "CUSTOM_DEPLOYMENT",
      "title": $deploymentTitle,

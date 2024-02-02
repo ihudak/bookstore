@@ -20,7 +20,7 @@ spec:
       namespace: bookstore
       labels:
         app: storage
-        app.kubernetes.io/version: 1.0.7
+        app.kubernetes.io/version: 1.0.8
         app.kubernetes.io/part-of: BookStore
     spec:
       containers:
@@ -29,142 +29,40 @@ spec:
           ports:
             - containerPort: 8080
             - containerPort: 5005
+          envFrom:
+            - configMapRef:
+                name: bookstore-configmap
+            - secretRef:
+                name: bookstore-secret
           env:
             - name: DT_RELEASE_VERSION
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.labels['app.kubernetes.io/version']
             - name: DT_RELEASE_BUILD_VERSION
-              value: "2023-10-31-03:40:50"
-            - name: DT_BOOKSTORE_PROFILE
-              valueFrom:
-                configMapKeyRef:
-                  name: bookstore-configmap
-                  key: bookstore_profile
-            - name: DT_SERVER_PORT
-              value: "8080"
-            - name: DT_MYSQL_SERVER
-              valueFrom:
-                configMapKeyRef:
-                  name: bookstore-configmap
-                  key: mysql_server
-            - name: DT_MYSQL_PORT
-              value: "3306"
+              value: "2024-02-01-14:52:11"
             - name: DT_MYSQL_DBNAME
               value: none # DB NAME HERE
-            - name: DT_MYSQL_USER
-              valueFrom:
-                secretKeyRef:
-                  name: bookstore-secret
-                  key: mysql-user-name
-            - name: DT_MYSQL_PASS
-              valueFrom:
-                secretKeyRef:
-                  name: bookstore-secret
-                  key: mysql-user-pass
-            - name: DT_PG_SERVER
-              valueFrom:
-                configMapKeyRef:
-                  name: bookstore-configmap
-                  key: pgdb_server
-            - name: DT_PG_PORT
-              value: "5432"
             - name: DT_PG_DBNAME
               value: dt_books_storage # DB NAME HERE
-            - name: DT_PG_USER
-              valueFrom:
-                secretKeyRef:
-                  name: bookstore-secret
-                  key: pgdb-user-name
-            - name: DT_PG_PASS
-              valueFrom:
-                secretKeyRef:
-                  name: bookstore-secret
-                  key: pgdb-user-pass
-            - name:   DT_CLIENTS_SERVER
-              valueFrom:
-                configMapKeyRef:
-                  name: bookstore-configmap
-                  key: clients_svc
-            - name:   DT_BOOKS_SERVER
-              valueFrom:
-                configMapKeyRef:
-                  name: bookstore-configmap
-                  key: books_svc
-            - name:   DT_CART_SERVER
-              valueFrom:
-                configMapKeyRef:
-                  name: bookstore-configmap
-                  key: carts_svc
-            - name:   DT_STORAGE_SERVER
-              valueFrom:
-                configMapKeyRef:
-                  name: bookstore-configmap
-                  key: storage_svc
-            - name:   DT_ORDERS_SERVER
-              valueFrom:
-                configMapKeyRef:
-                  name: bookstore-configmap
-                  key: orders_svc
-            - name:   DT_PAYMENT_SERVER
-              valueFrom:
-                configMapKeyRef:
-                  name: bookstore-configmap
-                  key: payments_svc
-            - name:   DT_DYNAPAY_SERVER
-              valueFrom:
-                configMapKeyRef:
-                  name: bookstore-configmap
-                  key: dynapay_svc
-            - name:   DT_RATINGS_SERVER
-              valueFrom:
-                configMapKeyRef:
-                  name: bookstore-configmap
-                  key: ratings_svc
             - name:   AGENT
               valueFrom:
                 configMapKeyRef:
-                  name: bookstore-configmap
+                  name: bookstore-agents-configmap
                   key: storage_agent
-            - name:   TENANT_ID
-              valueFrom:
-                configMapKeyRef:
-                  name: bookstore-configmap
-                  key: tenant_id
-            - name: TENANT_LAYER
-              valueFrom:
-                configMapKeyRef:
-                  name: bookstore-configmap
-                  key: tenant_layer
             - name: TENANT_URL
               value: "https://$(TENANT_ID).$(TENANT_LAYER).dynatracelabs.com"
-            - name: OA_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: bookstore-secret
-                  key: oneagent-token
-            - name: ENTITIES_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: bookstore-secret
-                  key: entities-read-token
-            - name: EVENTS_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: bookstore-secret
-                  key: event-ingest-token
-            - name: OTEL_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: bookstore-secret
-                  key: otel-token
+            - name: SERVICE_NAME
+              value: Storage
+            - name: SERVICE_FULL_NAME
+              value: "$(APP_NAME).$(SERVICE_NAME).$(SVC_SUFFIX)"
           resources:
             limits:
-              cpu: 200m
-              memory: 640Mi
+              cpu: 300m
+              memory: 768Mi
             requests:
-              cpu: 200m
-              memory: 512Mi
+              cpu: 300m
+              memory: 768Mi
 ---
 apiVersion: v1
 kind: Service

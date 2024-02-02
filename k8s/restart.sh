@@ -2,8 +2,8 @@
 #export NS=boostrore
 
 kubectl apply -f namespace.yaml
-kubectl apply -f config.yaml
-kubectl apply -f secret.yaml
+kubectl apply -f config_agents.yaml
+kubectl apply -f configmap.yaml
 
 # does not have to be a part of restart as all data would be lost
 # but must be a part of a new deployment

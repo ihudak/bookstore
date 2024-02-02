@@ -141,7 +141,7 @@ public class CartController extends HardworkingController {
     }
 
 
-    private void verifyClient(String email) {
+    private void verifyClient(String email) throws ResourceNotFoundException {
         Client client = clientRepository.getClientByEmail(email);
         if (null == client) {
             ResourceNotFoundException ex = new ResourceNotFoundException("Client is not found by email " + email);
@@ -152,7 +152,7 @@ public class CartController extends HardworkingController {
         logger.debug(clients.toString());
     }
 
-    private void verifyBook(String isbn) {
+    private void verifyBook(String isbn) throws ResourceNotFoundException {
         Book book = bookRepository.getBookByISBN(isbn);
         if (null == book) {
             ResourceNotFoundException ex = new ResourceNotFoundException("Book not found by isbn " + isbn);

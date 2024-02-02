@@ -20,7 +20,7 @@ spec:
       namespace: bookstore
       labels:
         app: web
-        app.kubernetes.io/version: 1.2.0
+        app.kubernetes.io/version: 1.2.1
         app.kubernetes.io/part-of: BookStore
     spec:
       containers:
@@ -34,60 +34,20 @@ spec:
                 fieldRef:
                   fieldPath: metadata.labels['app.kubernetes.io/version']
             - name: DT_RELEASE_BUILD_VERSION
-              value: "2023-10-31-03:40:50"
-            - name: DT_ACTIVE_WEB_ENV
-              valueFrom:
-                configMapKeyRef:
-                  name: bookstore-configmap
-                  key: web_app_profile
-            - name:   BOOKSTORE_BASE_SRV_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: bookstore-configmap
-                  key: services_ext_url
+              value: "2024-02-01-14:52:11"
             - name:   AGENT
               valueFrom:
                 configMapKeyRef:
-                  name: bookstore-configmap
+                  name: bookstore-agents-configmap
                   key: web_agent
-            - name:   TENANT_ID
-              valueFrom:
-                configMapKeyRef:
-                  name: bookstore-configmap
-                  key: tenant_id
-            - name: TENANT_LAYER
-              valueFrom:
-                configMapKeyRef:
-                  name: bookstore-configmap
-                  key: tenant_layer
             - name: TENANT_URL
               value: "https://$(TENANT_ID).$(TENANT_LAYER).dynatracelabs.com"
-            - name: OA_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: bookstore-secret
-                  key: oneagent-token
-            - name: ENTITIES_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: bookstore-secret
-                  key: entities-read-token
-            - name: EVENTS_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: bookstore-secret
-                  key: event-ingest-token
-            - name: OTEL_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: bookstore-secret
-                  key: otel-token
           resources:
             limits:
-              cpu: 250m
+              cpu: 500m
               memory: 1Gi
             requests:
-              cpu: 250m
+              cpu: 500m
               memory: 1Gi
 ---
 apiVersion: v1

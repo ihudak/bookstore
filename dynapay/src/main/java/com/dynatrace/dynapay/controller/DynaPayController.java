@@ -17,6 +17,8 @@ public class DynaPayController extends HardworkingController {
     @Autowired
     private ConfigRepository configRepository;
     private Logger logger = LoggerFactory.getLogger(DynaPayController.class);
+    @Autowired
+    private BankInfoController bankInfoController;
 
 
     // make a payment
@@ -26,18 +28,37 @@ public class DynaPayController extends HardworkingController {
         simulateHardWork();
         simulateCrash();
 
-        double rand = Math.random();
-        logger.info("Processing Payment... Rand = " + rand + " probability to fail = " + getPercentFailure() + "%");
+        LambdaValidator bankValid = bankInfoController.validateBankInformation();
+        final String paymentSucceed = "Payment succeeded";
+        final String paymentFailed  = "Payment failed";
 
-        if (rand >= getPercentFailure() / 100.0) {
-            // successful payment
-            dynaPay.setSucceeded(true);
-            dynaPay.setMessage("Payment succeeded");
-            logger.info("Payment succeeded");
-        } else {
-            dynaPay.setSucceeded(false);
-            dynaPay.setMessage("Payment failed");
-            logger.error("Payment failed");
+
+        switch (bankValid) {
+            case OK:
+                dynaPay.setSucceeded(true);
+                dynaPay.setMessage(paymentSucceed);
+                logger.info(paymentSucceed);
+                break;
+            case FAIL:
+                dynaPay.setSucceeded(false);
+                dynaPay.setMessage(paymentFailed);
+                logger.error(paymentFailed);
+                break;
+            case NONE:
+                double rand = Math.random();
+                logger.info("Processing Payment... Rand = " + rand + " probability to fail = " + getPercentFailure() + "%");
+
+                if (rand >= getPercentFailure() / 100.0) {
+                    // successful payment
+                    dynaPay.setSucceeded(true);
+                    dynaPay.setMessage(paymentSucceed);
+                    logger.info(paymentSucceed);
+                } else {
+                    dynaPay.setSucceeded(false);
+                    dynaPay.setMessage(paymentFailed);
+                    logger.error(paymentFailed);
+                }
+                break;
         }
 
         return dynaPay;

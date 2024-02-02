@@ -5,7 +5,7 @@ display_usage() {
   echo "Usage:";
   echo "   ${0} -gyes -ax64 -pmin -n bookstore  # installs agents on deploy; x64 architecture; minimizes external port usage; bookstore namespace";
   echo "   ${0} -gpre -aarm -pall -n bookstore  # takes agents prebuilt in the docker image; arm (apple) architecture; every service will be open (callable from outside of the k8s)";
-  echo "   ${0} -reset              # resets yamls";
+  echo "   ${0} -r                   # resets yamls";
   echo "Flags:";
   echo " -g - agent: yes/no/pre. default = yes - preloads otel and dynatrace java agents. pre - use preinstrumented images";
   echo " -a - architecture: arm/x64. default = x64 - sets architecture";
