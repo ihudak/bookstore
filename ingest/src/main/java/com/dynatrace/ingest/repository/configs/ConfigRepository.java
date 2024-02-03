@@ -38,10 +38,11 @@ public interface ConfigRepository {
         } catch (Exception exception) {
             getLogger().error(exception.getMessage());
             // make a config that tells about error
-            Config[] configs = new Config[1];
-            configs[0].setServiceId(this.getServiceName());
-            configs[0].setPropertyStr("Not Available");
-            return configs;
+            Config config = new Config();
+            config.setId("N/A");
+            config.setServiceId(this.getServiceName());
+            config.setPropertyStr("Not Available");
+            return new Config[] {config};
         }
     }
 

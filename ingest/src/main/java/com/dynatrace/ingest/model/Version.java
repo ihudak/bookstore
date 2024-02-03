@@ -57,6 +57,8 @@ public class Version implements Model {
         this.verDocker = "N/A";
         this.date = "N/A";
         this.status = "N/A";
+        this.agent = "N/A";
+        this.agentPreload = "N/A";
     }
 
     @Override
