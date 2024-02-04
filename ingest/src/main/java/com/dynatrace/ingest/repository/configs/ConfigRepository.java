@@ -4,7 +4,12 @@ import com.dynatrace.exception.BadRequestException;
 import com.dynatrace.ingest.model.Config;
 import org.slf4j.Logger;
 import org.springframework.lang.NonNull;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public interface ConfigRepository {
     String getBaseURL();
@@ -17,6 +22,7 @@ public interface ConfigRepository {
         getLogger().info("Getting config " + id + " for service. URL: " + urlBuilder);
         try {
             Config config = getRestTemplate().getForObject(urlBuilder, Config.class);
+            assert config != null;
             config.setServiceId(getServiceName());
             return config;
         } catch (Exception exception) {
@@ -25,7 +31,8 @@ public interface ConfigRepository {
         }
     }
 
-    default Config[] getConfigsForService() {
+    @Async
+    default CompletableFuture<List<Config>> getConfigsForService() {
         getLogger().info("Getting all configs for service. URL: " + getBaseURL());
         try {
             Config[] configs = getRestTemplate().getForObject(getBaseURL(), Config[].class);
@@ -34,7 +41,8 @@ public interface ConfigRepository {
                     config.setServiceId(this.getServiceName());
                 }
             }
-            return configs;
+            assert configs != null;
+            return CompletableFuture.completedFuture(Arrays.asList(configs));
         } catch (Exception exception) {
             getLogger().error(exception.getMessage());
             // make a config that tells about error
@@ -42,11 +50,12 @@ public interface ConfigRepository {
             config.setId("N/A");
             config.setServiceId(this.getServiceName());
             config.setPropertyStr("Not Available");
-            return new Config[] {config};
+            return CompletableFuture.completedFuture(List.of(config));
         }
     }
 
-    default Config createOrUpdate(@NonNull Config config) {
+    @Async
+    default CompletableFuture<Config> createOrUpdate(@NonNull Config config) {
         String urlBuilder = getBaseURL();
         getLogger().info("Creating/Updating config " + config.getId() + " for service. URL: " + urlBuilder);
         try {
@@ -54,13 +63,14 @@ public interface ConfigRepository {
             if (resultConfig != null) {
                 resultConfig.setServiceId(this.getServiceName());
             }
-            return resultConfig;
+            return CompletableFuture.completedFuture(resultConfig);
         } catch (Exception exception) {
             getLogger().error(exception.getMessage());
             throw new BadRequestException(exception.getMessage());
         }
     }
 
+    @Async
     default void delete(String id) {
         String urlBuilder = getBaseURL() + "/" + id;
         getLogger().info("Deleting config for service. URL: " + urlBuilder);
@@ -72,6 +82,7 @@ public interface ConfigRepository {
         }
     }
 
+    @Async
     default void delete_all() {
         String urlBuilder = getBaseURL() + "/delete-all";
         getLogger().info("Deleting all configs for service. URL: " + urlBuilder);

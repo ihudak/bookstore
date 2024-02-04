@@ -102,6 +102,11 @@ public class Version implements Model {
         this.message = message;
     }
 
+    public void setMessageIfEmpty(String message) {
+        if (this.isMessageEmpty()) {
+            this.setMessage(message);
+        }
+    }
     public String getAgent() {
         return agent;
     }
@@ -121,5 +126,13 @@ public class Version implements Model {
 
     public void setAgentPreload(String agentPreload) {
         this.agentPreload = agentPreload;
+    }
+
+    @Override
+    public String toString() {
+        return "ID: " + this.serviceId +
+                " message: " + this.message +
+                " status: "  + this.status +
+                " ver: "     + this.ver;
     }
 }

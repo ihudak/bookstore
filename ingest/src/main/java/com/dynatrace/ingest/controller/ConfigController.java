@@ -14,26 +14,31 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 @RestController
 @RequestMapping("/api/v1/config")
 public class ConfigController {
+    private final long defaultTimeOut = 2500;
+
     @Autowired
-    private ClientConfigRepository clientConfigRepository;
+    private ConfigRepository clientConfigRepository;
     @Autowired
-    private BookConfigRepository bookConfigRepository;
+    private ConfigRepository bookConfigRepository;
     @Autowired
-    private CartConfigRepository cartConfigRepository;
+    private ConfigRepository cartConfigRepository;
     @Autowired
-    private StorageConfigRepository storageConfigRepository;
+    private ConfigRepository storageConfigRepository;
     @Autowired
-    private OrderConfigRepository orderConfigRepository;
+    private ConfigRepository orderConfigRepository;
     @Autowired
-    private PaymentConfigRepository paymentConfigRepository;
+    private ConfigRepository paymentConfigRepository;
     @Autowired
-    private DynapayConfigRepository dynapayConfigRepository;
+    private ConfigRepository dynapayConfigRepository;
     @Autowired
-    private RatingConfigRepository ratingConfigRepository;
+    private ConfigRepository ratingConfigRepository;
 
     private final Logger logger = LoggerFactory.getLogger(ConfigController.class);
 
@@ -64,7 +69,14 @@ public class ConfigController {
             logger.error(badRequestException.getMessage());
             throw badRequestException;
         }
-        return List.of(configRepository.getConfigsForService());
+
+        try {
+            return configRepository.getConfigsForService().get(defaultTimeOut, TimeUnit.MILLISECONDS);
+        } catch (ExecutionException | InterruptedException | TimeoutException e) {
+            String exStr = e.getMessage() == null ? e.getClass().getName() : e.getMessage();
+            logger.error(exStr);
+            throw new BadRequestException(exStr);
+        }
     }
 
     // get a setting
@@ -94,7 +106,13 @@ public class ConfigController {
             logger.error(badRequestException.getMessage());
             throw badRequestException;
         }
-        return configRepository.createOrUpdate(config);
+        try {
+            return configRepository.createOrUpdate(config).get(defaultTimeOut, TimeUnit.MILLISECONDS);
+        } catch (ExecutionException | InterruptedException | TimeoutException e) {
+            String exStr = e.getMessage() == null ? e.getClass().getName() : e.getMessage();
+            logger.error(exStr);
+            throw new BadRequestException(exStr);
+        }
     }
 
     @PostMapping("")
@@ -106,7 +124,11 @@ public class ConfigController {
         for(String service: services) {
             ConfigRepository configRepository = getConfigRepoByServiceId(service);
             if (configRepository != null) {
-                allConfigs.put(service, configRepository.createOrUpdate(config));
+                try {
+                    allConfigs.put(service, configRepository.createOrUpdate(config).get(defaultTimeOut, TimeUnit.MILLISECONDS));
+                } catch (ExecutionException | InterruptedException | TimeoutException e) {
+                    logger.error(e.getMessage() == null ? e.getClass().getName() : e.getMessage());
+                }
             }
         }
         return allConfigs;
@@ -130,7 +152,13 @@ public class ConfigController {
             logger.error(badRequestException.getMessage());
             throw badRequestException;
         }
-        return configRepository.createOrUpdate(config);
+        try {
+            return configRepository.createOrUpdate(config).get(defaultTimeOut, TimeUnit.MILLISECONDS);
+        } catch (ExecutionException | InterruptedException | TimeoutException e) {
+            String exStr = e.getMessage() == null ? e.getClass().getName() : e.getMessage();
+            logger.error(exStr);
+            throw new BadRequestException(exStr);
+        }
     }
 
     // delete a config
