@@ -21,7 +21,7 @@ import java.util.concurrent.TimeoutException;
 @RestController
 @RequestMapping("/api/v1/config")
 public class ConfigController {
-    private final long defaultTimeOut = 2500;
+    private final long defaultTimeOut = 3500;
 
     @Autowired
     private ConfigRepository clientConfigRepository;

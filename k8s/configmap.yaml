@@ -25,7 +25,6 @@ data:
   SECURITY_CONTEXT: "Buch"
   COST_CENTER: "BuchSales"
   COST_PROJECT: "BookStore"
-  OTEL_RESOURCE_ATTRIBUTES: "dt.security_context=$(SECURITY_CONTEXT),dt.cost.costcenter=$(COST_CENTER),dt.cost.project=$(COST_PROJECT)"
   DT_BOOKSTORE_PROFILE: prod # prod | stage | dev -- logging levels -- prod:ERROR; stage:INFO; dev:DEBUG
   DT_ACTIVE_WEB_ENV: production # production|staging|development|custom -- production (k8s docker desktop w Ingress) | staging (k8s docker desktop w/o Ingress) | development (w/o kubernetes)
   BOOKSTORE_BASE_SRV_URL: http://localhost # if web_app_profile==custom, this is the base EXTERNAL URL where microservices APIs can be found by the web app

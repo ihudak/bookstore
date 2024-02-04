@@ -28,6 +28,9 @@ spec:
           image: ivangudak096/web-{AGENT}-{ARCH}:latest
           ports:
             - containerPort: 4200
+          envFrom:
+            - configMapRef:
+                name: bookstore-configmap
           env:
             - name: DT_RELEASE_VERSION
               valueFrom:

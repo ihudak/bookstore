@@ -56,6 +56,8 @@ spec:
               value: DynaPay
             - name: SERVICE_FULL_NAME
               value: "$(APP_NAME).$(SERVICE_NAME).$(SVC_SUFFIX)"
+            - name: OTEL_RESOURCE_ATTRIBUTES
+              value: "dt.security_context=$(SECURITY_CONTEXT),dt.cost.costcenter=$(COST_CENTER),dt.cost.project=$(COST_PROJECT),my.resource.attribute=$(MY_ATTR)"
           resources:
             limits:
               cpu: 300m

@@ -33,7 +33,7 @@ public class VersionController {
     @Value("${docker.agent.preload}")
     private String dockerAgentPreload;
 
-    private final long defaultTimeOut = 2500;
+    private final long defaultTimeOut = 3500;
 
     @Autowired
     VersionRepository clientVersionRepository;
