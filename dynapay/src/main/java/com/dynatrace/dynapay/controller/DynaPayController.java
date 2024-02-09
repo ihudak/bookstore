@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/dynapay")
 public class DynaPayController extends HardworkingController {
+    @Value("${dynapay.bankcheck}")
+    private String lambdaCall;
+    private final String lambdaExpr = "lambda";
+
     @Autowired
     private ConfigRepository configRepository;
     private Logger logger = LoggerFactory.getLogger(DynaPayController.class);
@@ -28,7 +33,7 @@ public class DynaPayController extends HardworkingController {
         simulateHardWork();
         simulateCrash();
 
-        LambdaValidator bankValid = bankInfoController.validateBankInformation();
+        LambdaValidator bankValid = this.callLambda() ? bankInfoController.validateBankInformation() : LambdaValidator.NONE;
         final String paymentSucceed = "Payment succeeded";
         final String paymentFailed  = "Payment failed";
 
@@ -67,5 +72,9 @@ public class DynaPayController extends HardworkingController {
     @Override
     public ConfigRepository getConfigRepository() {
         return configRepository;
+    }
+
+    private boolean callLambda() {
+        return this.lambdaCall != null && this.lambdaCall.equals(lambdaExpr);
     }
 }

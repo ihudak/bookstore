@@ -47,14 +47,8 @@ public class BankInfoController {
                 .postForEntity(lambdaURL,request, String.class);
 
             logger.info("AWS Lambda function response: {}", response);
-            
-            if(response.getStatusCode()==HttpStatus.OK) {
-                return LambdaValidator.OK;
-            }
-            else {
-                return LambdaValidator.FAIL;
-            }
 
+            return response.getStatusCode()==HttpStatus.OK ? LambdaValidator.OK : LambdaValidator.FAIL;
         } catch (Exception e) {
             logger.info("error occurred in lambda: {}",e.getMessage() );
             return LambdaValidator.NONE;
