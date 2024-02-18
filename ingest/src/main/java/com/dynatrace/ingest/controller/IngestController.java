@@ -49,7 +49,7 @@ public class IngestController {
             }
             ingest.setMessage("Stopping the Data Generator...");
         } else {
-            if (bookstoreDataGenerator.isInterrupted()) {
+            if (bookstoreDataGenerator.isInterrupted() || bookstoreDataGenerator.wasUsed()) {
                 bookstoreDataGenerator = new BookstoreDataGenerator();
             }
             IngestController.isWorking = true;
@@ -225,6 +225,7 @@ public class IngestController {
     private class BookstoreDataGenerator extends Thread {
         private Ingest ingest;
         private boolean loop;
+        private boolean wasUsed = false;
 
         private void booksGenerator(@RequestBody Ingest ingest) {
             logger.info("Generate Books");
@@ -279,6 +280,7 @@ public class IngestController {
             }
             this.ingest = ingest;
             this.loop = inLoop;
+            this.wasUsed = true;
             this.start();
         }
 
@@ -291,6 +293,7 @@ public class IngestController {
 
                 if (!this.loop) {
                     IngestController.isWorking = false;
+                    this.interrupt();
                     break;
                 }
             }
@@ -336,6 +339,10 @@ public class IngestController {
                 logger.info("ratings");
                 ratingRepository.create();
             }
+        }
+
+        public boolean wasUsed() {
+            return this.wasUsed;
         }
     }
 }
