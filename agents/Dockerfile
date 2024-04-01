@@ -27,8 +27,8 @@ ENV OTEL_RESOURCE_ATTRIBUTES="service.name=java-quickstart,service.version=1.0.1
 ENV OTEL_METRICS_EXPORTER=none
 ENV OTEL_EXPORTER_OTLP_TRACES_PROTOCOL=http/protobuf
 
-COPY scripts/*.sh /opt/
-COPY scripts/standalone.conf /opt/
+COPY --chown=1001 scripts/*.sh /opt/
+COPY --chown=1001 scripts/standalone.conf /opt/
 RUN chmod +x /opt/*.sh
 
 # install unzip and otel bash agent
