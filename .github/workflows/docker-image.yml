@@ -28,8 +28,9 @@ jobs:
       run: ./gradlew build
 
     - name: Login to docker repo
-      run: echo $GH_TOKEN | docker login ghcr.io -u ihudak --password-stdin
+      run: echo $GH_TOKEN | docker login ghcr.io -u $GH_USER --password-stdin
       env:
+        GH_USER: ${{ secrets.CR_USER }}
         GH_TOKEN: ${{ secrets.CR_PAT }}
 
     - name: Build MySQL database
