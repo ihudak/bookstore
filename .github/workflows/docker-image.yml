@@ -25,20 +25,18 @@ jobs:
       uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
 
     - name: Build with Gradle Wrapper
-      run: ./gradlew build
-
-    - name: Login to docker repo
-      run: echo $GH_TOKEN | docker login ghcr.io -u ihudak --password-stdin
-      env:
-        GH_TOKEN: ${{ secrets.CR_PAT }}
+      run: ./gradlew build      
       
     - name: Build MySQL database
       working-directory: ./database/mysql
-      run: | 
+      run: |
+        echo $GH_TOKEN | docker login ghcr.io -u ihudak --password-stdin
         docker build . --file Dockerfile --platform linux/amd64 --tag ghcr.io/ihudak/dt-mysql-x64:latest
 #        docker build . --file Dockerfile --platform linux/arm64/v8 --tag ghcr.io/ihudak/dt-mysql-arm64:latest
         docker push ghcr.io/ihudak/dt-mysql-x64:latest
 #        docker push ghcr.io/ihudak/dt-mysql-arm64:latest
+      env:
+        GH_TOKEN: ${{ secrets.CR_PAT }}
 
     - name: Build Postgresql database
       working-directory: ./database/pg
