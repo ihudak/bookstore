@@ -30,8 +30,8 @@ ENV OTEL_EXPORTER_OTLP_TRACES_PROTOCOL=http/protobuf
 USER root
 COPY scripts/*.sh /opt/
 COPY scripts/standalone.conf /opt/
-USER 1001
 RUN chmod +x /opt/*.sh
+USER 1001
 
 # install unzip and otel bash agent
 RUN apt-get update && \
