@@ -33,7 +33,7 @@ jobs:
         docker build . --file Dockerfile --platform linux/amd64 --tag ghcr.io/ihudak/java-noagent-x64:latest
         docker push ghcr.io/ihudak/java-noagent-x64:latest
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ secrets.CR_PAT }}
 
     - name: Build clients docker image
       working-directory: ./clients
@@ -41,7 +41,7 @@ jobs:
         docker build . --file Dockerfile --platform linux/amd64 --tag ghcr.io/ihudak/clients-noagent-x64:latest --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=latest
         docker push ghcr.io/ihudak/clients-noagent-x64:latest
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ secrets.CR_PAT }}
 
     - name: Build books docker image
       working-directory: ./books
@@ -49,7 +49,7 @@ jobs:
         docker build . --file Dockerfile --platform linux/amd64 --tag ghcr.io/ihudak/books-noagent-x64:latest --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=latest
         docker push ghcr.io/ihudak/books-noagent-x64:latest
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ secrets.CR_PAT }}
 
     - name: Build carts docker image
       working-directory: ./carts
@@ -57,7 +57,7 @@ jobs:
         docker build . --file Dockerfile --platform linux/amd64 --tag ghcr.io/ihudak/carts-noagent-x64:latest --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=latest
         docker push ghcr.io/ihudak/carts-noagent-x64:latest
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ secrets.CR_PAT }}
 
     - name: Build storage docker image
       working-directory: ./storage
@@ -65,7 +65,7 @@ jobs:
         docker build . --file Dockerfile --platform linux/amd64 --tag ghcr.io/ihudak/storage-noagent-x64:latest --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=latest
         docker push ghcr.io/ihudak/storage-noagent-x64:latest
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ secrets.CR_PAT }}
 
     - name: Build ratings docker image
       working-directory: ./ratings
@@ -73,7 +73,7 @@ jobs:
         docker build . --file Dockerfile --platform linux/amd64 --tag ghcr.io/ihudak/ratings-noagent-x64:latest --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=latest
         docker push ghcr.io/ihudak/ratings-noagent-x64:latest
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ secrets.CR_PAT }}
 
     - name: Build orders docker image
       working-directory: ./orders
@@ -81,7 +81,7 @@ jobs:
         docker build . --file Dockerfile --platform linux/amd64 --tag ghcr.io/ihudak/orders-noagent-x64:latest --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=latest
         docker push ghcr.io/ihudak/orders-noagent-x64:latest
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ secrets.CR_PAT }}
 
     - name: Build payments docker image
       working-directory: ./payments
@@ -89,7 +89,7 @@ jobs:
         docker build . --file Dockerfile --platform linux/amd64 --tag ghcr.io/ihudak/payments-noagent-x64:latest --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=latest
         docker push ghcr.io/ihudak/payments-noagent-x64:latest
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ secrets.CR_PAT }}
 
     - name: Build dynapay docker image
       working-directory: ./dynapay
@@ -97,7 +97,7 @@ jobs:
         docker build . --file Dockerfile --platform linux/amd64 --tag ghcr.io/ihudak/dynapay-noagent-x64:latest --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=latest
         docker push ghcr.io/ihudak/dynapay-noagent-x64:latest
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ secrets.CR_PAT }}
 
     - name: Build ingest docker image
       working-directory: ./ingest
@@ -105,7 +105,7 @@ jobs:
         docker build . --file Dockerfile --platform linux/amd64 --tag ghcr.io/ihudak/ingest-noagent-x64:latest --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=latest
         docker push ghcr.io/ihudak/ingest-noagent-x64:latest
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ secrets.CR_PAT }}
 
     - name: Build WebApp Base docker image
       working-directory: ./web/base/noagent
@@ -113,7 +113,7 @@ jobs:
         docker build . --file Dockerfile --platform linux/amd64 --tag ghcr.io/ihudak/node-angular-noagent-x64:latest
         docker push ghcr.io/ihudak/node-angular-noagent-x64:latest
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ secrets.CR_PAT }}
 
     - name: Build web app image
       working-directory: ./web
@@ -121,5 +121,5 @@ jobs:
         docker build . --file Dockerfile --platform linux/amd64 --tag ghcr.io/ihudak/web-noagent-x64:latest --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=latest
         docker push ghcr.io/ihudak/web-noagent-x64:latest
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ secrets.CR_PAT }}
       
