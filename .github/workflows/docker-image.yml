@@ -29,49 +29,49 @@ jobs:
 
     - name: Build noagent docker image
       working-directory: ./noagent
-      run: docker build . --file Dockerfile --platform linux/amd64 --tag ihudak/java-noagent-x64:$(date +%s)
+      run: docker build . --file Dockerfile --platform linux/amd64 --tag ihudak/java-noagent-x64:tmp
 
     - name: Build clients docker image
       working-directory: ./clients
-      run: docker build . --file Dockerfile --platform linux/amd64 --tag ihudak/clients-noagent-x64:$(date +%s) --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=$(date +%s)
+      run: docker build . --file Dockerfile --platform linux/amd64 --tag ihudak/clients-noagent-x64:$(date +%s) --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=tmp
 
     - name: Build books docker image
       working-directory: ./books
-      run: docker build . --file Dockerfile --platform linux/amd64 --tag ihudak/books-noagent-x64:$(date +%s) --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=$(date +%s)
+      run: docker build . --file Dockerfile --platform linux/amd64 --tag ihudak/books-noagent-x64:$(date +%s) --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=tmp
 
     - name: Build carts docker image
       working-directory: ./carts
-      run: docker build . --file Dockerfile --platform linux/amd64 --tag ihudak/carts-noagent-x64:$(date +%s) --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=$(date +%s)
+      run: docker build . --file Dockerfile --platform linux/amd64 --tag ihudak/carts-noagent-x64:$(date +%s) --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=tmp
 
     - name: Build storage docker image
       working-directory: ./storage
-      run: docker build . --file Dockerfile --platform linux/amd64 --tag ihudak/storage-noagent-x64:$(date +%s) --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=$(date +%s)
+      run: docker build . --file Dockerfile --platform linux/amd64 --tag ihudak/storage-noagent-x64:$(date +%s) --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=tmp
 
     - name: Build ratings docker image
       working-directory: ./ratings
-      run: docker build . --file Dockerfile --platform linux/amd64 --tag ihudak/ratings-noagent-x64:$(date +%s) --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=$(date +%s)
+      run: docker build . --file Dockerfile --platform linux/amd64 --tag ihudak/ratings-noagent-x64:$(date +%s) --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=tmp
 
     - name: Build orders docker image
       working-directory: ./orders
-      run: docker build . --file Dockerfile --platform linux/amd64 --tag ihudak/orders-noagent-x64:$(date +%s) --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=$(date +%s)
+      run: docker build . --file Dockerfile --platform linux/amd64 --tag ihudak/orders-noagent-x64:$(date +%s) --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=tmp
 
     - name: Build payments docker image
       working-directory: ./payments
-      run: docker build . --file Dockerfile --platform linux/amd64 --tag ihudak/payments-noagent-x64:$(date +%s) --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=$(date +%s)
+      run: docker build . --file Dockerfile --platform linux/amd64 --tag ihudak/payments-noagent-x64:$(date +%s) --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=tmp
 
     - name: Build dynapay docker image
       working-directory: ./dynapay
-      run: docker build . --file Dockerfile --platform linux/amd64 --tag ihudak/dynapay-noagent-x64:$(date +%s) --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=$(date +%s)
+      run: docker build . --file Dockerfile --platform linux/amd64 --tag ihudak/dynapay-noagent-x64:$(date +%s) --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=tmp
 
     - name: Build ingest docker image
       working-directory: ./ingest
-      run: docker build . --file Dockerfile --platform linux/amd64 --tag ihudak/ingest-noagent-x64:$(date +%s) --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=$(date +%s)
+      run: docker build . --file Dockerfile --platform linux/amd64 --tag ihudak/ingest-noagent-x64:$(date +%s) --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=tmp
 
     - name: Build WebApp Base docker image
       working-directory: ./web/base/noagent
-      run: docker build . --file Dockerfile --platform linux/amd64 -tag ihudak/node-angular-noagent-x64:$(date +%s)
+      run: docker build . --file Dockerfile --platform linux/amd64 -tag ihudak/node-angular-noagent-x64:tmp
 
     - name: Build web app image
       working-directory: ./web
-      run: docker build . --file Dockerfile --platform linux/amd64 --tag ihudak/web-noagent-x64:$(date +%s) --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=$(date +%s)
+      run: docker build . --file Dockerfile --platform linux/amd64 --tag ihudak/web-noagent-x64:$(date +%s) --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=tmp
       
