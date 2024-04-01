@@ -7,16 +7,14 @@ rm -rf $OA_INSTALL_DIR && mkdir -p $OA_INSTALL_DIR
 export MINSIZE=500000
 
 # define platform param for the Dynatrace API call
-if [ -z ${PLATFORM+x} ]; then
-  PLATFORM=$(uname -p);
-  export PLATFORM;
-  if [ "$PLATFORM" = "arm" ] || [ "$PLATFORM" = "arm64" ] || [ "$PLATFORM" = "aarch64" ]; then
-    export PLATFORM="arm";
-  elif [ $PLATFORM = "x86" ] || [ $PLATFORM = "x86_64" ]; then
-    export PLATFORM="x86";
-  else
-    export PLATFORM="x86";
-  fi;
+PLATFORM=$(uname -p);
+export PLATFORM;
+if [ "$PLATFORM" = "arm" ] || [ "$PLATFORM" = "arm64" ] || [ "$PLATFORM" = "aarch64" ]; then
+  export PLATFORM="arm";
+elif [ $PLATFORM = "x86" ] || [ $PLATFORM = "x86_64" ] || [ $PLATFORM = "x64" ]; then
+  export PLATFORM="x86";
+else
+  export PLATFORM="x86";
 fi
 
 echo "Downloading the latest OneAgent..."
