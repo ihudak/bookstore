@@ -31,8 +31,9 @@ jobs:
       run: echo $GH_TOKEN | docker login ghcr.io -u ihudak --password-stdin
       env:
         GH_TOKEN: ${{ secrets.CR_PAT }}
-        DT_TENANT_URL: ${{ secrets.DT_TENANT_URL }}
         DT_TENANT_TOKEN: ${{ secrets.DT_TENANT_TOKEN }}
+        DT_TENANT_URL: ${{ secrets.DT_TENANT_URL }}
+      
     - name: Build MySQL database
       working-directory: ./database/mysql
       run: | 
