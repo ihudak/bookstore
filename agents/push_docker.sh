@@ -16,7 +16,7 @@ fi
 if [ $# -lt 5 ]; then
   docker image build --platform linux/amd64 -t ghcr.io/ihudak/java-$IMG_NAME-x64:latest \
       --build-arg AGENTS_PRELOAD=$PRELOAD \
-      --build-arg PLATFORM=x86 \
+      --build-arg PLATFORM=x64 \
       .;
   docker image build --platform linux/arm64/v8 -t ghcr.io/ihudak/java-$IMG_NAME-arm64:latest \
       --build-arg AGENTS_PRELOAD=$PRELOAD \
@@ -25,7 +25,7 @@ if [ $# -lt 5 ]; then
 else
   docker image build --platform linux/amd64 -t ghcr.io/ihudak/java-$IMG_NAME-x64:latest \
       --build-arg AGENTS_PRELOAD=$PRELOAD \
-      --build-arg PLATFORM=x86 \
+      --build-arg PLATFORM=x64 \
       --build-arg TENANT_ID_SHELL="$2" \
       --build-arg TENANT_LAYER_SHELL="$3" \
       --build-arg TENANT_TOKEN_SHELL="$4" \
@@ -39,7 +39,7 @@ else
       .;
 fi
 
-docker push ivghcr.io/ihudakangudak096/java-$IMG_NAME-x64:latest
+docker push ghcr.io/ihudak/java-$IMG_NAME-x64:latest
 docker push ghcr.io/ihudak/java-$IMG_NAME-arm64:latest
 
 # ./push_dicker.sh preinstrument pae32231 dev <token>

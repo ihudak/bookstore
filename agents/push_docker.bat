@@ -20,7 +20,7 @@ IF NOT [%4]==[] (
 
 IF %BASH_INSTRUMENT%==false (
     docker image build --platform linux/amd64 -t ghcr.io/ihudak/java-%IMG_NAME%-x64:latest ^
-        --build-arg PLATFORM=x86 ^
+        --build-arg PLATFORM=x64 ^
         --build-arg AGENTS_PRELOAD=%PRELOAD% ^
         .
     docker image build --platform linux/arm64/v8 -t ghcr.io/ihudak/java-%IMG_NAME%-arm64:latest ^
@@ -30,7 +30,7 @@ IF %BASH_INSTRUMENT%==false (
 ) ELSE (
     docker image build --platform linux/amd64 -t ghcr.io/ihudak/java-%IMG_NAME%-x64:latest ^
         --build-arg AGENTS_PRELOAD=%PRELOAD% ^
-        --build-arg PLATFORM=x86 ^
+        --build-arg PLATFORM=x64 ^
         --build-arg TENANT_ID_SHELL=%2 ^
         --build-arg TENANT_LAYER_SHELL=%3 ^
         --build-arg TENANT_TOKEN_SHELL=%4 ^
