@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 export ENTITIES_URL="$TENANT_URL/api/v2/entities?pageSize=500&entitySelector=type(SERVICE),entityName($SERVICE_FULL_NAME)"
 export EVENTS_URL="$TENANT_URL/api/v2/events/ingest"
