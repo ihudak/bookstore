@@ -51,9 +51,9 @@ jobs:
     - name: Build agents docker images
       working-directory: ./agents
       run: |
-        rm env
-        echo "DT_AGENT_DOWNLOAD_TENANT_URL=$DT_TENANT_URL" >> env
-        echo "DT_AGENT_DOWNLOAD_TOKEN=$DT_TENANT_TOKEN" >> env
+        rm ./env
+        echo "DT_AGENT_DOWNLOAD_TENANT_URL=$DT_TENANT_URL" >> ./env
+        echo "DT_AGENT_DOWNLOAD_TOKEN=$DT_TENANT_TOKEN" >> ./env
         docker build . --file Dockerfile --platform linux/amd64 --tag ghcr.io/ihudak/java-agents-x64:latest --build-arg AGENTS_PRELOAD=false --build-arg PLATFORM=x64
         docker build . --file Dockerfile --platform linux/amd64 --tag ghcr.io/ihudak/java-preinstrument-x64:latest --build-arg AGENTS_PRELOAD=true --build-arg PLATFORM=x64
 #        docker build . --file Dockerfile --platform linux/arm64/v8 --tag ghcr.io/ihudak/java-agents-arm64:latest --build-arg AGENTS_PRELOAD=false --build-arg PLATFORM=arm64
