@@ -29,6 +29,8 @@ jobs:
 
     - name: Login to docker repo
       run: echo $GH_TOKEN | docker login ghcr.io -u ihudak --password-stdin
+      env:
+        GH_TOKEN: ${{ secrets.CR_PAT }}
 
     - name: Build MySQL database
       working-directory: ./database/mysql
@@ -60,6 +62,9 @@ jobs:
         docker push ghcr.io/ihudak/java-preinstrument-x64:latest
 #        docker push ghcr.io/ihudak/java-agents-arm64:latest
 #        docker push ghcr.io/ihudak/java-preinstrument-arm64:latest
+      env:
+        DT_TENANT_URL: ${{ secrets.DT_TENANT_URL }}
+        DT_TENANT_TOKEN: ${{ secrets.DT_TENANT_TOKEN }}
 
     - name: Build noagent docker image
       working-directory: ./noagent
@@ -68,8 +73,6 @@ jobs:
 #        docker build . --file Dockerfile --platform linux/arm64/v8 --tag ghcr.io/ihudak/java-noagent-arm64:latest
         docker push ghcr.io/ihudak/java-noagent-x64:latest
 #        docker push ghcr.io/ihudak/java-noagent-arm64:latest
-      env:
-        GH_TOKEN: ${{ secrets.CR_PAT }}
 
     - name: Build clients docker image
       working-directory: ./clients
