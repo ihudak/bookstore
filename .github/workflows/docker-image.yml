@@ -69,7 +69,7 @@ jobs:
 
     - name: Build WebApp Base docker image
       working-directory: ./web/base/noagent
-      run: docker build . --file Dockerfile --platform linux/amd64 -tag ihudak/node-angular-noagent-x64:tmp
+      run: docker build . --file Dockerfile --platform linux/amd64 --tag ihudak/node-angular-noagent-x64:tmp
 
     - name: Build web app image
       working-directory: ./web
