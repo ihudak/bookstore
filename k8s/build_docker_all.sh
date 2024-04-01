@@ -12,8 +12,7 @@ DT_NO_AGENT=noagent
 DT_PRE_AGENT=preinstrument
 DT_GUI=web
 
-dt_projects="clients books carts storage orders ratings payments dynapay ingest"
-#dt_projects="clients books carts storage orders ratings payments dynapay ingest web"
+dt_projects="clients books carts storage orders ratings payments dynapay ingest web"
 
 echo "============ Building Agents ================="
 cd $SCRIPT_DIR/../$DT_JAVA_AGENT

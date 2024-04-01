@@ -22,7 +22,7 @@ SET DT_PROJECTS[5]=ratings
 SET DT_PROJECTS[6]=payments
 SET DT_PROJECTS[7]=dynapay
 SET DT_PROJECTS[8]=ingest
-@REM SET DT_PROJECTS[9]=web
+SET DT_PROJECTS[9]=web
 
 ECHO ============ Building Agents =================
 cd %BATCH_DIR%\..\%DT_JAVA_AGENT%
