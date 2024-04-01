@@ -1,0 +1,19 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the noagent Docker image
+      working-directory: ./noagent
+      run: docker build . --file Dockerfile --platform linux/amd64 --tag java-noagent-x64:$(date +%s)
