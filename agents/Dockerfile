@@ -31,7 +31,6 @@ USER root
 COPY scripts/*.sh /opt/
 COPY scripts/standalone.conf /opt/
 RUN chmod +x /opt/*.sh
-USER 1001
 
 # install unzip and otel bash agent
 RUN apt-get update && \
