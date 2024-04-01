@@ -12,7 +12,8 @@ DT_NO_AGENT=noagent
 DT_PRE_AGENT=preinstrument
 DT_GUI=web
 
-dt_projects="clients books carts storage orders ratings payments dynapay ingest web"
+dt_projects="clients books carts storage orders ratings payments dynapay ingest"
+#dt_projects="clients books carts storage orders ratings payments dynapay ingest web"
 
 echo "============ Building Agents ================="
 cd $SCRIPT_DIR/../$DT_JAVA_AGENT
@@ -47,10 +48,10 @@ for i in $dt_projects; do
   PROJ_DIR=$i
 
   cd $SCRIPT_DIR/../$PROJ_DIR
-  $SCRIPT_DIR/push_docker.sh -p $i
+  $SCRIPT_DIR/push_docker.sh -p $i -gno
   $SCRIPT_DIR/push_docker.sh -p $i -gyes
   $SCRIPT_DIR/push_docker.sh -p $i -gpre
-  $SCRIPT_DIR/push_docker.sh -p $i -arm
+  $SCRIPT_DIR/push_docker.sh -p $i -gno -arm
   $SCRIPT_DIR/push_docker.sh -p $i -gyes -arm
   $SCRIPT_DIR/push_docker.sh -p $i -gpre -arm
 done

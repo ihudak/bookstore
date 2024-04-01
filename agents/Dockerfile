@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17
+FROM eclipse-temurin:21
 MAINTAINER dynatrace.com
 
 ARG PLATFORM=x86
@@ -15,7 +15,7 @@ ENV TENANT_ID_SHELL=$TENANT_ID_SHELL
 ENV TENANT_URL_SHELL="https://$TENANT_ID_SHELL.$TENANT_LAYER_SHELL.dynatracelabs.com"
 ENV OTEL_TOKEN_SHELL=$TENANT_TOKEN_SHELL
 
-ENV DOCKER_VER=1.3.0
+ENV DOCKER_VER=1.4.0
 
 # Prepare OA config
 ENV OA_INSTALL_DIR=/var/lib/dynatrace/oneagent
