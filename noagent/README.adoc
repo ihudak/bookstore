@@ -13,5 +13,5 @@ _normally you don't need to change this. the image will automatically download a
 .. replace <agent_download_token> with the token generated earlier
 . Build and deploy the docker image
 
-    docker image build --platform linux/amd64 -t ghcr.io/ihudak/dt-java-agents:latest .
+    docker image build --platform=linux/amd64 -t ghcr.io/ihudak/dt-java-agents:latest .
     docker push ghcr.io/ihudak/dt-java-agents:latest

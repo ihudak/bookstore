@@ -29,8 +29,8 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 ng s -c staging
 ### BUILD
-docker image build --platform linux/amd64 -t ghcr.io/ihudak/dt-bookstore-webapp:latest .
+docker image build --platform=linux/amd64 -t ghcr.io/ihudak/dt-bookstore-webapp:latest .
 docker push ghcr.io/ihudak/dt-bookstore-webapp:latest
 
-docker image build --platform linux/arm64 -t ghcr.io/ihudak/dt-bookstore-webapp:arm64 .
+docker image build --platform=linux/arm64 -t ghcr.io/ihudak/dt-bookstore-webapp:arm64 .
 docker push ghcr.io/ihudak/dt-bookstore-webapp:arm64

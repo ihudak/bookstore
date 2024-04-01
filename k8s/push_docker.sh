@@ -66,7 +66,7 @@ fi
 
 if [ $ar = "arm64" ]; then
   PLATFORM="arm64";
-  PLATFORM_FULL="arm64/v8";
+  PLATFORM_FULL="arm64";
 else
   PLATFORM="x64";
   PLATFORM_FULL="amd64";
@@ -79,7 +79,7 @@ echo "### Building $PROJECT -=- $PLATFORM -=- $AGENT..."
 
 # ./gradlew clean build
 docker image build \
-  --platform linux/$PLATFORM_FULL \
+  --platform=linux/$PLATFORM_FULL \
   -t "$IMG_NAME" \
   --build-arg BASE_REPO=$BASE_REPO \
   --build-arg AGENT=$AGENT \

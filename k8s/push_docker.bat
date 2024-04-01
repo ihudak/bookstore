@@ -20,7 +20,7 @@ IF "%2"=="-noagent" (
 
 IF "%~3"=="-arm" (
     SET PLATFORM=arm64
-    SET PLATFORM_FULL=arm64/v8
+    SET PLATFORM_FULL=arm64
 ) ELSE (
     SET PLATFORM=x64
     SET PLATFORM_FULL=amd64
@@ -32,7 +32,7 @@ SET IMG_NAME=%BASE_REPO%/%PROJECT%-%AGENT%-%PLATFORM%:%TAG%
 ECHO ### Building %PROJECT% -=- %PLATFORM% -=- %AGENT%...
 
 docker image build ^
-    --platform linux/%PLATFORM_FULL% ^
+    --platform=linux/%PLATFORM_FULL% ^
     -t %IMG_NAME% ^
     --build-arg BASE_REPO=%BASE_REPO% ^
     --build-arg AGENT=%AGENT% ^
