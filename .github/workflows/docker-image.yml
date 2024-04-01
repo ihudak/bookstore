@@ -31,6 +31,7 @@ jobs:
       working-directory: ./noagent
       run: |
         docker build . --file Dockerfile --platform linux/amd64 --tag ghcr.io/ihudak/java-noagent-x64:latest
+        echo $GH_TOKEN | docker login ghcr.io -u ihudak --password-stdin
         docker push ghcr.io/ihudak/java-noagent-x64:latest
       env:
         GH_TOKEN: ${{ secrets.CR_PAT }}
