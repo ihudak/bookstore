@@ -36,7 +36,7 @@ jobs:
       working-directory: ./database/mysql
       run: |
         docker build . --file Dockerfile --platform linux/amd64 --tag ghcr.io/ihudak/dt-mysql-x64:latest
-        docker build . --file Dockerfile --platform linux/arm64/v8 --tag ghcr.io/ihudak/dt-mysql-arm64:latest
+        docker build . --file Dockerfile --platform linux/arm64 --tag ghcr.io/ihudak/dt-mysql-arm64:latest
         docker push ghcr.io/ihudak/dt-mysql-x64:latest
         docker push ghcr.io/ihudak/dt-mysql-arm64:latest
 
@@ -44,7 +44,7 @@ jobs:
       working-directory: ./database/pg
       run: |
         docker build . --file Dockerfile --platform linux/amd64 --tag ghcr.io/ihudak/dt-postgres-x64:latest
-        docker build . --file Dockerfile --platform linux/arm64/v8 --tag ghcr.io/ihudak/dt-postgres-arm64:latest
+        docker build . --file Dockerfile --platform linux/arm64 --tag ghcr.io/ihudak/dt-postgres-arm64:latest
         docker push ghcr.io/ihudak/dt-postgres-x64:latest
         docker push ghcr.io/ihudak/dt-postgres-arm64:latest
 
@@ -56,8 +56,8 @@ jobs:
         echo "DT_AGENT_DOWNLOAD_TOKEN=$DT_TENANT_TOKEN" >> ./env
         docker build . --file Dockerfile --platform linux/amd64 --tag ghcr.io/ihudak/java-agents-x64:latest --build-arg AGENTS_PRELOAD=false --build-arg PLATFORM=x64
         docker build . --file Dockerfile --platform linux/amd64 --tag ghcr.io/ihudak/java-preinstrument-x64:latest --build-arg AGENTS_PRELOAD=true --build-arg PLATFORM=x64
-        docker build . --file Dockerfile --platform linux/arm64/v8 --tag ghcr.io/ihudak/java-agents-arm64:latest --build-arg AGENTS_PRELOAD=false --build-arg PLATFORM=arm64
-        docker build . --file Dockerfile --platform linux/arm64/v8 --tag ghcr.io/ihudak/java-preinstrument-arm64:latest --build-arg AGENTS_PRELOAD=true --build-arg PLATFORM=arm64
+        docker build . --file Dockerfile --platform linux/arm64 --tag ghcr.io/ihudak/java-agents-arm64:latest --build-arg AGENTS_PRELOAD=false --build-arg PLATFORM=arm64
+        docker build . --file Dockerfile --platform linux/arm64 --tag ghcr.io/ihudak/java-preinstrument-arm64:latest --build-arg AGENTS_PRELOAD=true --build-arg PLATFORM=arm64
         docker push ghcr.io/ihudak/java-agents-x64:latest
         docker push ghcr.io/ihudak/java-preinstrument-x64:latest
         docker push ghcr.io/ihudak/java-agents-arm64:latest
@@ -71,7 +71,7 @@ jobs:
       working-directory: ./noagent
       run: |
         docker build . --file Dockerfile --platform linux/amd64 --tag ghcr.io/ihudak/java-noagent-x64:latest
-        docker build . --file Dockerfile --platform linux/arm64/v8 --tag ghcr.io/ihudak/java-noagent-arm64:latest
+        docker build . --file Dockerfile --platform linux/arm64 --tag ghcr.io/ihudak/java-noagent-arm64:latest
         docker push ghcr.io/ihudak/java-noagent-x64:latest
         docker push ghcr.io/ihudak/java-noagent-arm64:latest
 
@@ -79,7 +79,7 @@ jobs:
       working-directory: ./clients
       run: |
         docker build . --file Dockerfile --platform linux/amd64 --tag ghcr.io/ihudak/clients-noagent-x64:latest --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=latest
-        docker build . --file Dockerfile --platform linux/arm64/v8 --tag ghcr.io/ihudak/clients-noagent-arm64:latest --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=latest
+        docker build . --file Dockerfile --platform linux/arm64 --tag ghcr.io/ihudak/clients-noagent-arm64:latest --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=latest
         docker push ghcr.io/ihudak/clients-noagent-x64:latest
         docker push ghcr.io/ihudak/clients-noagent-arm64:latest
 
@@ -87,7 +87,7 @@ jobs:
       working-directory: ./books
       run: |
         docker build . --file Dockerfile --platform linux/amd64 --tag ghcr.io/ihudak/books-noagent-x64:latest --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=latest
-        docker build . --file Dockerfile --platform linux/arm64/v8 --tag ghcr.io/ihudak/books-noagent-arm64:latest --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=latest
+        docker build . --file Dockerfile --platform linux/arm64 --tag ghcr.io/ihudak/books-noagent-arm64:latest --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=latest
         docker push ghcr.io/ihudak/books-noagent-x64:latest
         docker push ghcr.io/ihudak/books-noagent-arm64:latest
 
@@ -95,7 +95,7 @@ jobs:
       working-directory: ./carts
       run: |
         docker build . --file Dockerfile --platform linux/amd64 --tag ghcr.io/ihudak/carts-noagent-x64:latest --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=latest
-        docker build . --file Dockerfile --platform linux/arm64/v8 --tag ghcr.io/ihudak/carts-noagent-arm64:latest --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=latest
+        docker build . --file Dockerfile --platform linux/arm64 --tag ghcr.io/ihudak/carts-noagent-arm64:latest --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=latest
         docker push ghcr.io/ihudak/carts-noagent-x64:latest
         docker push ghcr.io/ihudak/carts-noagent-arm64:latest
 
@@ -103,7 +103,7 @@ jobs:
       working-directory: ./storage
       run: |
         docker build . --file Dockerfile --platform linux/amd64 --tag ghcr.io/ihudak/storage-noagent-x64:latest --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=latest
-        docker build . --file Dockerfile --platform linux/arm64/v8 --tag ghcr.io/ihudak/storage-noagent-arm64:latest --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=latest
+        docker build . --file Dockerfile --platform linux/arm64 --tag ghcr.io/ihudak/storage-noagent-arm64:latest --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=latest
         docker push ghcr.io/ihudak/storage-noagent-x64:latest
         docker push ghcr.io/ihudak/storage-noagent-arm64:latest
 
@@ -111,7 +111,7 @@ jobs:
       working-directory: ./ratings
       run: |
         docker build . --file Dockerfile --platform linux/amd64 --tag ghcr.io/ihudak/ratings-noagent-x64:latest --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=latest
-        docker build . --file Dockerfile --platform linux/arm64/v8 --tag ghcr.io/ihudak/ratings-noagent-arm64:latest --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=latest
+        docker build . --file Dockerfile --platform linux/arm64 --tag ghcr.io/ihudak/ratings-noagent-arm64:latest --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=latest
         docker push ghcr.io/ihudak/ratings-noagent-x64:latest
         docker push ghcr.io/ihudak/ratings-noagent-arm64:latest
 
@@ -119,7 +119,7 @@ jobs:
       working-directory: ./orders
       run: | 
         docker build . --file Dockerfile --platform linux/amd64 --tag ghcr.io/ihudak/orders-noagent-x64:latest --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=latest
-        docker build . --file Dockerfile --platform linux/arm64/v8 --tag ghcr.io/ihudak/orders-noagent-arm64:latest --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=latest
+        docker build . --file Dockerfile --platform linux/arm64 --tag ghcr.io/ihudak/orders-noagent-arm64:latest --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=latest
         docker push ghcr.io/ihudak/orders-noagent-x64:latest
         docker push ghcr.io/ihudak/orders-noagent-arm64:latest
 
@@ -127,7 +127,7 @@ jobs:
       working-directory: ./payments
       run: |
         docker build . --file Dockerfile --platform linux/amd64 --tag ghcr.io/ihudak/payments-noagent-x64:latest --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=latest
-        docker build . --file Dockerfile --platform linux/arm64/v8 --tag ghcr.io/ihudak/payments-noagent-arm64:latest --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=latest
+        docker build . --file Dockerfile --platform linux/arm64 --tag ghcr.io/ihudak/payments-noagent-arm64:latest --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=latest
         docker push ghcr.io/ihudak/payments-noagent-x64:latest
         docker push ghcr.io/ihudak/payments-noagent-arm64:latest
 
@@ -135,7 +135,7 @@ jobs:
       working-directory: ./dynapay
       run: |
         docker build . --file Dockerfile --platform linux/amd64 --tag ghcr.io/ihudak/dynapay-noagent-x64:latest --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=latest
-        docker build . --file Dockerfile --platform linux/arm64/v8 --tag ghcr.io/ihudak/dynapay-noagent-arm64:latest --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=latest
+        docker build . --file Dockerfile --platform linux/arm64 --tag ghcr.io/ihudak/dynapay-noagent-arm64:latest --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=latest
         docker push ghcr.io/ihudak/dynapay-noagent-x64:latest
         docker push ghcr.io/ihudak/dynapay-noagent-arm64:latest
 
@@ -143,7 +143,7 @@ jobs:
       working-directory: ./ingest
       run: |
         docker build . --file Dockerfile --platform linux/amd64 --tag ghcr.io/ihudak/ingest-noagent-x64:latest --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=latest
-        docker build . --file Dockerfile --platform linux/arm64/v8 --tag ghcr.io/ihudak/ingest-noagent-arm64:latest --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=latest
+        docker build . --file Dockerfile --platform linux/arm64 --tag ghcr.io/ihudak/ingest-noagent-arm64:latest --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=latest
         docker push ghcr.io/ihudak/ingest-noagent-x64:latest
         docker push ghcr.io/ihudak/ingest-noagent-arm64:latest
 
@@ -151,7 +151,7 @@ jobs:
       working-directory: ./web/base/noagent
       run: |
         docker build . --file Dockerfile --platform linux/amd64 --tag ghcr.io/ihudak/node-angular-noagent-x64:latest
-        docker build . --file Dockerfile --platform linux/arm64/v8 --tag ghcr.io/ihudak/node-angular-noagent-arm64:latest
+        docker build . --file Dockerfile --platform linux/arm64 --tag ghcr.io/ihudak/node-angular-noagent-arm64:latest
         docker push ghcr.io/ihudak/node-angular-noagent-x64:latest
         docker push ghcr.io/ihudak/node-angular-noagent-arm64:latest
 
@@ -159,6 +159,6 @@ jobs:
       working-directory: ./web
       run: |
         docker build . --file Dockerfile --platform linux/amd64 --tag ghcr.io/ihudak/web-noagent-x64:latest --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=latest
-        docker build . --file Dockerfile --platform linux/arm64/v8 --tag ghcr.io/ihudak/web-noagent-arm64:latest --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=latest
+        docker build . --file Dockerfile --platform linux/arm64 --tag ghcr.io/ihudak/web-noagent-arm64:latest --build-arg BASE_REPO=ihudak --build-arg AGENT=noagent --build-arg PLATFORM=x64 --build-arg BASE_IMG_TAG=latest
         docker push ghcr.io/ihudak/web-noagent-x64:latest
         docker push ghcr.io/ihudak/web-noagent-arm64:latest
