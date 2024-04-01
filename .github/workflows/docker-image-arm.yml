@@ -28,11 +28,332 @@ jobs:
       
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
+
+    - name: Build and push MySQL
+      uses: docker/build-push-action@v5
+      with:
+        context: "{{defaultContext}}:database/mysql"
+        push: true
+        tags: ghcr.io/ihudak/dt-mysql-arm64:latest,ghcr.io/ihudak/dt-mysql-arm64:${{ github.run_number }}
+        platforms: linux/arm64/v8
+        
+    - name: Build and push Postgres
+      uses: docker/build-push-action@v5
+      with:
+        context: "{{defaultContext}}:database/pg"
+        push: true
+        tags: ghcr.io/ihudak/dt-postgres-arm64:latest,ghcr.io/ihudak/dt-postgres-arm64:${{ github.run_number }}
+        platforms: linux/arm64/v8
     
-    - name: Build and push
+    - name: Build and push noagent
       uses: docker/build-push-action@v5
       with:
         context: "{{defaultContext}}:noagent"
         push: true
         tags: ghcr.io/ihudak/java-noagent-arm64:latest,ghcr.io/ihudak/java-noagent-arm64:${{ github.run_number }}
         platforms: linux/arm64/v8
+
+    - name: Prepare Agents
+      working-directory: ./agents
+      run: |
+        rm ./env
+        echo "DT_AGENT_DOWNLOAD_TENANT_URL=$DT_TENANT_URL" >> ./env
+        echo "DT_AGENT_DOWNLOAD_TOKEN=$DT_TENANT_TOKEN" >> ./env
+      env:
+        DT_TENANT_TOKEN: ${{ secrets.DT_TENANT_TOKEN }}
+        DT_TENANT_URL: ${{ secrets.DT_TENANT_URL }}
+
+    - name: Build and push agents
+      uses: docker/build-push-action@v5
+      with:
+        context: "{{defaultContext}}:agents"
+        push: true
+        tags: ghcr.io/ihudak/java-agents-arm64:latest,ghcr.io/ihudak/java-agents-arm64:${{ github.run_number }}
+        platforms: linux/arm64/v8
+        build-args: AGENTS_PRELOAD=false,PLATFORM=arm64
+
+    - name: Build and push preinstrument
+      uses: docker/build-push-action@v5
+      with:
+        context: "{{defaultContext}}:agents"
+        push: true
+        tags: ghcr.io/ihudak/java-preinstrument-arm64:latest,ghcr.io/ihudak/java-preinstrument-arm64:${{ github.run_number }}
+        platforms: linux/arm64/v8
+        build-args: AGENTS_PRELOAD=true,PLATFORM=arm64
+
+
+
+    - name: Build and push clients-noagent
+      uses: docker/build-push-action@v5
+      with:
+        context: "{{defaultContext}}:clients"
+        push: true
+        tags: ghcr.io/ihudak/clients-noagent-arm64:latest,ghcr.io/ihudak/clients-noagent-arm64:${{ github.run_number }}
+        platforms: linux/arm64/v8
+        build-args: PLATFORM=arm64,AGENT=noagent
+    
+    - name: Build and push clients-agents
+      uses: docker/build-push-action@v5
+      with:
+        context: "{{defaultContext}}:clients"
+        push: true
+        tags: ghcr.io/ihudak/clients-agents-arm64:latest,ghcr.io/ihudak/clients-agents-arm64:${{ github.run_number }}
+        platforms: linux/arm64/v8
+        build-args: PLATFORM=arm64,AGENT=agents
+
+    - name: Build and push clients-preinstrument
+      uses: docker/build-push-action@v5
+      with:
+        context: "{{defaultContext}}:clients"
+        push: true
+        tags: ghcr.io/ihudak/clients-preinstrument-arm64:latest,ghcr.io/ihudak/clients-preinstrument-arm64:${{ github.run_number }}
+        platforms: linux/arm64/v8
+        build-args: PLATFORM=arm64,AGENT=preinstrument
+
+
+    - name: Build and push books-noagent
+      uses: docker/build-push-action@v5
+      with:
+        context: "{{defaultContext}}:books"
+        push: true
+        tags: ghcr.io/ihudak/books-noagent-arm64:latest,ghcr.io/ihudak/books-noagent-arm64:${{ github.run_number }}
+        platforms: linux/arm64/v8
+        build-args: PLATFORM=arm64,AGENT=noagent
+
+    - name: Build and push books-agents
+      uses: docker/build-push-action@v5
+      with:
+        context: "{{defaultContext}}:books"
+        push: true
+        tags: ghcr.io/ihudak/books-agents-arm64:latest,ghcr.io/ihudak/books-agents-arm64:${{ github.run_number }}
+        platforms: linux/arm64/v8
+        build-args: PLATFORM=arm64,AGENT=agents,AGENT=agents
+
+    - name: Build and push books-preinstrument
+      uses: docker/build-push-action@v5
+      with:
+        context: "{{defaultContext}}:books"
+        push: true
+        tags: ghcr.io/ihudak/books-preinstrument-arm64:latest,ghcr.io/ihudak/books-preinstrument-arm64:${{ github.run_number }}
+        platforms: linux/arm64/v8
+        build-args: PLATFORM=arm64,AGENT=preinstrument
+
+
+
+    - name: Build and push carts-noagent
+      uses: docker/build-push-action@v5
+      with:
+        context: "{{defaultContext}}:carts"
+        push: true
+        tags: ghcr.io/ihudak/carts-noagent-arm64:latest,ghcr.io/ihudak/carts-noagent-arm64:${{ github.run_number }}
+        platforms: linux/arm64/v8
+        build-args: PLATFORM=arm64,AGENT=noagent
+
+    - name: Build and push carts-agents
+      uses: docker/build-push-action@v5
+      with:
+        context: "{{defaultContext}}:carts"
+        push: true
+        tags: ghcr.io/ihudak/carts-agents-arm64:latest,ghcr.io/ihudak/carts-agents-arm64:${{ github.run_number }}
+        platforms: linux/arm64/v8
+        build-args: PLATFORM=arm64,AGENT=agents,AGENT=agents
+
+    - name: Build and push carts-preinstrument
+      uses: docker/build-push-action@v5
+      with:
+        context: "{{defaultContext}}:carts"
+        push: true
+        tags: ghcr.io/ihudak/carts-preinstrument-arm64:latest,ghcr.io/ihudak/carts-preinstrument-arm64:${{ github.run_number }}
+        platforms: linux/arm64/v8
+        build-args: PLATFORM=arm64,AGENT=preinstrument
+
+
+
+    - name: Build and push storage-noagent
+      uses: docker/build-push-action@v5
+      with:
+        context: "{{defaultContext}}:storage"
+        push: true
+        tags: ghcr.io/ihudak/storage-noagent-arm64:latest,ghcr.io/ihudak/storage-noagent-arm64:${{ github.run_number }}
+        platforms: linux/arm64/v8
+        build-args: PLATFORM=arm64,AGENT=noagent
+
+    - name: Build and push storage-agents
+      uses: docker/build-push-action@v5
+      with:
+        context: "{{defaultContext}}:storage"
+        push: true
+        tags: ghcr.io/ihudak/storage-agents-arm64:latest,ghcr.io/ihudak/storage-agents-arm64:${{ github.run_number }}
+        platforms: linux/arm64/v8
+        build-args: PLATFORM=arm64,AGENT=agents,AGENT=agents
+
+    - name: Build and push storage-preinstrument
+      uses: docker/build-push-action@v5
+      with:
+        context: "{{defaultContext}}:storage"
+        push: true
+        tags: ghcr.io/ihudak/storage-preinstrument-arm64:latest,ghcr.io/ihudak/storage-preinstrument-arm64:${{ github.run_number }}
+        platforms: linux/arm64/v8
+        build-args: PLATFORM=arm64,AGENT=preinstrument
+
+
+
+    - name: Build and push ratings-noagent
+      uses: docker/build-push-action@v5
+      with:
+        context: "{{defaultContext}}:ratings"
+        push: true
+        tags: ghcr.io/ihudak/ratings-noagent-arm64:latest,ghcr.io/ihudak/ratings-noagent-arm64:${{ github.run_number }}
+        platforms: linux/arm64/v8
+        build-args: PLATFORM=arm64,AGENT=noagent
+
+    - name: Build and push ratings-agents
+      uses: docker/build-push-action@v5
+      with:
+        context: "{{defaultContext}}:ratings"
+        push: true
+        tags: ghcr.io/ihudak/ratings-agents-arm64:latest,ghcr.io/ihudak/ratings-agents-arm64:${{ github.run_number }}
+        platforms: linux/arm64/v8
+        build-args: PLATFORM=arm64,AGENT=agents,AGENT=agents
+
+    - name: Build and push ratings-preinstrument
+      uses: docker/build-push-action@v5
+      with:
+        context: "{{defaultContext}}:ratings"
+        push: true
+        tags: ghcr.io/ihudak/ratings-preinstrument-arm64:latest,ghcr.io/ihudak/ratings-preinstrument-arm64:${{ github.run_number }}
+        platforms: linux/arm64/v8
+        build-args: PLATFORM=arm64,AGENT=preinstrument
+
+
+
+    - name: Build and push orders-noagent
+      uses: docker/build-push-action@v5
+      with:
+        context: "{{defaultContext}}:orders"
+        push: true
+        tags: ghcr.io/ihudak/orders-noagent-arm64:latest,ghcr.io/ihudak/orders-noagent-arm64:${{ github.run_number }}
+        platforms: linux/arm64/v8
+        build-args: PLATFORM=arm64,AGENT=noagent
+
+    - name: Build and push orders-agents
+      uses: docker/build-push-action@v5
+      with:
+        context: "{{defaultContext}}:orders"
+        push: true
+        tags: ghcr.io/ihudak/orders-agents-arm64:latest,ghcr.io/ihudak/orders-agents-arm64:${{ github.run_number }}
+        platforms: linux/arm64/v8
+        build-args: PLATFORM=arm64,AGENT=agents,AGENT=agents
+
+    - name: Build and push orders-preinstrument
+      uses: docker/build-push-action@v5
+      with:
+        context: "{{defaultContext}}:orders"
+        push: true
+        tags: ghcr.io/ihudak/orders-preinstrument-arm64:latest,ghcr.io/ihudak/orders-preinstrument-arm64:${{ github.run_number }}
+        platforms: linux/arm64/v8
+        build-args: PLATFORM=arm64,AGENT=preinstrument
+
+
+
+    - name: Build and push payments-noagent
+      uses: docker/build-push-action@v5
+      with:
+        context: "{{defaultContext}}:payments"
+        push: true
+        tags: ghcr.io/ihudak/payments-noagent-arm64:latest,ghcr.io/ihudak/payments-noagent-arm64:${{ github.run_number }}
+        platforms: linux/arm64/v8
+        build-args: PLATFORM=arm64,AGENT=noagent
+
+    - name: Build and push payments-agents
+      uses: docker/build-push-action@v5
+      with:
+        context: "{{defaultContext}}:payments"
+        push: true
+        tags: ghcr.io/ihudak/payments-agents-arm64:latest,ghcr.io/ihudak/payments-agents-arm64:${{ github.run_number }}
+        platforms: linux/arm64/v8
+        build-args: PLATFORM=arm64,AGENT=agents,AGENT=agents
+
+    - name: Build and push payments-preinstrument
+      uses: docker/build-push-action@v5
+      with:
+        context: "{{defaultContext}}:payments"
+        push: true
+        tags: ghcr.io/ihudak/payments-preinstrument-arm64:latest,ghcr.io/ihudak/payments-preinstrument-arm64:${{ github.run_number }}
+        platforms: linux/arm64/v8
+        build-args: PLATFORM=arm64,AGENT=preinstrument
+
+
+    - name: Build and push dynapay-noagent
+      uses: docker/build-push-action@v5
+      with:
+        context: "{{defaultContext}}:dynapay"
+        push: true
+        tags: ghcr.io/ihudak/dynapay-noagent-arm64:latest,ghcr.io/ihudak/dynapay-noagent-arm64:${{ github.run_number }}
+        platforms: linux/arm64/v8
+        build-args: PLATFORM=arm64,AGENT=noagent
+
+    - name: Build and push dynapay-agents
+      uses: docker/build-push-action@v5
+      with:
+        context: "{{defaultContext}}:dynapay"
+        push: true
+        tags: ghcr.io/ihudak/dynapay-agents-arm64:latest,ghcr.io/ihudak/dynapay-agents-arm64:${{ github.run_number }}
+        platforms: linux/arm64/v8
+        build-args: PLATFORM=arm64,AGENT=agents,AGENT=agents
+
+    - name: Build and push dynapay-preinstrument
+      uses: docker/build-push-action@v5
+      with:
+        context: "{{defaultContext}}:dynapay"
+        push: true
+        tags: ghcr.io/ihudak/dynapay-preinstrument-arm64:latest,ghcr.io/ihudak/dynapay-preinstrument-arm64:${{ github.run_number }}
+        platforms: linux/arm64/v8
+        build-args: PLATFORM=arm64,AGENT=preinstrument
+
+
+
+    - name: Build and push ingest-noagent
+      uses: docker/build-push-action@v5
+      with:
+        context: "{{defaultContext}}:ingest"
+        push: true
+        tags: ghcr.io/ihudak/ingest-noagent-arm64:latest,ghcr.io/ihudak/ingest-noagent-arm64:${{ github.run_number }}
+        platforms: linux/arm64/v8
+        build-args: PLATFORM=arm64,AGENT=noagent
+
+    - name: Build and push ingest-agents
+      uses: docker/build-push-action@v5
+      with:
+        context: "{{defaultContext}}:ingest"
+        push: true
+        tags: ghcr.io/ihudak/ingest-agents-arm64:latest,ghcr.io/ihudak/ingest-agents-arm64:${{ github.run_number }}
+        platforms: linux/arm64/v8
+        build-args: PLATFORM=arm64,AGENT=agents,AGENT=agents
+
+    - name: Build and push ingest-preinstrument
+      uses: docker/build-push-action@v5
+      with:
+        context: "{{defaultContext}}:ingest"
+        push: true
+        tags: ghcr.io/ihudak/ingest-preinstrument-arm64:latest,ghcr.io/ihudak/ingest-preinstrument-arm64:${{ github.run_number }}
+        platforms: linux/arm64/v8
+        build-args: PLATFORM=arm64,AGENT=preinstrument
+
+
+    - name: Build and push WebApp Base docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: "{{defaultContext}}:web/base/noagent"
+        push: true
+        tags: ghcr.io/ihudak/node-angular-noagent-arm64:latest,ghcr.io/ihudak/node-angular-noagent-arm64:${{ github.run_number }}
+        platforms: linux/arm64/v8
+
+    - name: Build and push web app image
+      uses: docker/build-push-action@v5
+      with:
+        context: "{{defaultContext}}:web"
+        push: true
+        tags: ghcr.io/ihudak/web-noagent-arm64:latest,ghcr.io/ihudak/web-noagent-arm64:${{ github.run_number }}
+        platforms: linux/arm64/v8
+        build-args: PLATFORM=arm64,AGENT=noagent
