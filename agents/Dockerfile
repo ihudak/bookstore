@@ -1,7 +1,7 @@
 FROM eclipse-temurin:21
 MAINTAINER dynatrace.com
 
-ARG PLATFORM=x64
+ARG PLATFORM=all
 ARG OTEL_SERVICE_NAME=BookStoreDeploy
 ENV ONE_AGENT="oneAgent"
 ENV OTEL_AGENT="otelAgent"

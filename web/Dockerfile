@@ -1,6 +1,6 @@
 ARG BASE_REPO=ghcr.io/ihudak
 ARG AGENT=agents
-ARG PLATFORM=x64
+ARG PLATFORM=all
 ARG BASE_IMG_TAG=latest
 #FROM ${BASE_REPO}/node-angular-${AGENT}-${PLATFORM}:${BASE_IMG_TAG}
 FROM ${BASE_REPO}/node-angular-noagent-${PLATFORM}:${BASE_IMG_TAG}
