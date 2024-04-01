@@ -27,7 +27,6 @@ ENV OTEL_RESOURCE_ATTRIBUTES="service.name=java-quickstart,service.version=1.0.1
 ENV OTEL_METRICS_EXPORTER=none
 ENV OTEL_EXPORTER_OTLP_TRACES_PROTOCOL=http/protobuf
 
-USER root
 COPY scripts/*.sh /opt/
 COPY scripts/standalone.conf /opt/
 RUN chmod +x /opt/*.sh
