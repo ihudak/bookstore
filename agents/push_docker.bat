@@ -19,23 +19,23 @@ IF NOT [%4]==[] (
 )
 
 IF %BASH_INSTRUMENT%==false (
-    docker image build --platform linux/amd64 -t ivangudak096/java-%IMG_NAME%-x64:latest ^
+    docker image build --platform linux/amd64 -t ghcr.io/ihudak/java-%IMG_NAME%-x64:latest ^
         --build-arg PLATFORM=x86 ^
         --build-arg AGENTS_PRELOAD=%PRELOAD% ^
         .
-    docker image build --platform linux/arm64/v8 -t ivangudak096/java-%IMG_NAME%-arm64:latest ^
+    docker image build --platform linux/arm64/v8 -t ghcr.io/ihudak/java-%IMG_NAME%-arm64:latest ^
         --build-arg PLATFORM=arm ^
         --build-arg AGENTS_PRELOAD=%PRELOAD% ^
         .
 ) ELSE (
-    docker image build --platform linux/amd64 -t ivangudak096/java-%IMG_NAME%-x64:latest ^
+    docker image build --platform linux/amd64 -t ghcr.io/ihudak/java-%IMG_NAME%-x64:latest ^
         --build-arg AGENTS_PRELOAD=%PRELOAD% ^
         --build-arg PLATFORM=x86 ^
         --build-arg TENANT_ID_SHELL=%2 ^
         --build-arg TENANT_LAYER_SHELL=%3 ^
         --build-arg TENANT_TOKEN_SHELL=%4 ^
         .
-    docker image build --platform linux/arm64/v8 -t ivangudak096/java-%IMG_NAME%-arm64:latest ^
+    docker image build --platform linux/arm64/v8 -t ghcr.io/ihudak/java-%IMG_NAME%-arm64:latest ^
         --build-arg AGENTS_PRELOAD=%PRELOAD% ^
         --build-arg PLATFORM=arm ^
         --build-arg TENANT_ID_SHELL=%2 ^
@@ -44,8 +44,8 @@ IF %BASH_INSTRUMENT%==false (
         .
 )
 
-docker push ivangudak096/java-%IMG_NAME%-x64:latest
-docker push ivangudak096/java-%IMG_NAME%-arm64:latest
+docker push ghcr.io/ihudak/java-%IMG_NAME%-x64:latest
+docker push ghcr.io/ihudak/java-%IMG_NAME%-arm64:latest
 
 
 REM push_docker.bat preinstrument pae32231 dev <token>

@@ -1,4 +1,4 @@
-ARG BASE_REPO=ivangudak096
+ARG BASE_REPO=ghcr.io/ihudak
 ARG AGENT=agents
 ARG PLATFORM=x64
 ARG BASE_IMG_TAG=latest

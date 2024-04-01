@@ -16,8 +16,8 @@ _normally you don't need to change this. the image will automatically download a
 
 . Build and deploy the docker image
 
-    docker image build --platform linux/amd64 -t ivangudak096/dt-java-agents:latest .
-    docker push ivangudak096/dt-java-agents:latest
+    docker image build --platform linux/amd64 -t ghcr.io/ihudak/dt-java-agents:latest .
+    docker push ghcr.io/ihudak/dt-java-agents:latest
 
 . You can also build the images with the bat/sh files:
 

@@ -3,7 +3,7 @@ REM CLS
 ECHO.
 
 REM ######## Project Configuration ##########
-SET BASE_REPO=ivangudak096
+SET BASE_REPO=ghcr.io/ihudak
 SET TAG=latest
 REM ######## Project Configuration ##########
 

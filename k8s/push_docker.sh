@@ -1,6 +1,6 @@
 #!/bin/sh
 ######## Project Configuration ##########
-BASE_REPO=ivangudak096
+BASE_REPO=ghcr.io/ihudak
 TAG=latest
 ######## Project Configuration ##########
 
