@@ -44,18 +44,13 @@ ENV JAVA_TOOL_OPTIONS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,addr
 
 # Prepare OA. Download Java Agent
 # oneAgent.sh will set tenant-specific settings on deploy
-ARG ENV_FILE=env
-COPY ${ENV_FILE} /opt/env
-RUN if [ "$AGENTS_PRELOAD" = true ]  && [ -n "${TENANT_URL+x}" ] && [ -n "${OA_TOKEN+x}" ]; then \
+RUN if [ "$AGENTS_PRELOAD" = true ]; then \
       . /opt/set_bash_instrumentation.sh ; \
-      TENANT_URL=`cat /opt/env | grep DT_AGENT_DOWNLOAD_TENANT_URL | sed s/DT_AGENT_DOWNLOAD_TENANT_URL=// | sed -E 's/[ '$'/'']+$//'` ; \
-      export TENANT_URL ; \
-      OA_TOKEN=`cat /opt/env | grep DT_AGENT_DOWNLOAD_TOKEN | sed s/DT_AGENT_DOWNLOAD_TOKEN=// | base64 -d` ; \
-      export OA_TOKEN ; \
-      /opt/get_otel.sh ; \
-      /opt/get_oa.sh ; \
+      if [ -n "${TENANT_URL+x}" ] && [ -n "${OA_TOKEN+x}" ]; then \
+          /opt/get_otel.sh ; \
+          /opt/get_oa.sh ; \
+      fi; \
     fi
-RUN rm /opt/env
 ENV AGENTS_PRELOAD=$AGENTS_PRELOAD
 
 ENTRYPOINT export OTEL_SERVICE_NAME="$SERVICE_FULL_NAME" && \
