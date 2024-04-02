@@ -23,6 +23,12 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
 
+    - name: Login to docker repo
+      run: echo $GH_TOKEN | docker login ghcr.io -u $GH_USER --password-stdin
+      env:
+        GH_USER: ${{ secrets.CR_USER }}
+        GH_TOKEN: ${{ secrets.CR_PAT }}
+
     - name: Build and push preinstrument
       uses: docker/build-push-action@v5
       with:
@@ -83,12 +89,6 @@ jobs:
 
     - name: Build with Gradle Wrapper
       run: ./gradlew build
-
-    - name: Login to docker repo
-      run: echo $GH_TOKEN | docker login ghcr.io -u $GH_USER --password-stdin
-      env:
-        GH_USER: ${{ secrets.CR_USER }}
-        GH_TOKEN: ${{ secrets.CR_PAT }}
 
     - name: Build and push clients-noagent
       uses: docker/build-push-action@v5
