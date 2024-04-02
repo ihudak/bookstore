@@ -46,7 +46,7 @@ ENV JAVA_TOOL_OPTIONS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,addr
 # oneAgent.sh will set tenant-specific settings on deploy
 ARG ENV_FILE=env
 COPY ${ENV_FILE} /opt/env
-RUN if [ "$AGENTS_PRELOAD" = true ]; then \
+RUN if [ "$AGENTS_PRELOAD" = true ]  && [ -n "${TENANT_URL+x}" ] && [ -n "${OA_TOKEN+x}" ]; then \
       . /opt/set_bash_instrumentation.sh ; \
       TENANT_URL=`cat /opt/env | grep DT_AGENT_DOWNLOAD_TENANT_URL | sed s/DT_AGENT_DOWNLOAD_TENANT_URL=// | sed -E 's/[ '$'/'']+$//'` ; \
       export TENANT_URL ; \
