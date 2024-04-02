@@ -95,7 +95,7 @@ jobs:
     - name: Build and push clients-noagent
       uses: docker/build-push-action@v5
       with:
-        context: "{{defaultContext}}:clients"
+        context: ./clients
         push: true
         tags: ghcr.io/ihudak/clients-noagent-arm64:latest,ghcr.io/ihudak/clients-noagent-arm64:${{ github.run_number }}
         platforms: linux/arm64/v8
