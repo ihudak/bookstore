@@ -48,7 +48,6 @@ ENV JAVA_TOOL_OPTIONS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,addr
 # oneAgent.sh will set tenant-specific settings on deploy
 RUN if [ "$AGENTS_PRELOAD" = true ]; then \
       . /opt/set_bash_instrumentation.sh ; \
-      echo $TENANT_URL; \
       if [ -n "${TENANT_URL+x}" ] && [ -n "${ENC_TOKEN+x}" ]; then \
           OA_TOKEN=$(echo $ENC_TOKEN | base64 -d); \
           export OA_TOKEN; \
