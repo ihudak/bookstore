@@ -51,7 +51,7 @@ RUN if [ "$AGENTS_PRELOAD" = true ]; then \
       echo $TENANT_URL
       if [ -n "${TENANT_URL+x}" ] && [ -n "${ENC_TOKEN+x}" ]; then \
           OA_TOKEN=$(echo $ENC_TOKEN | base64 -d); \
-          export OA_TOKEN
+          export OA_TOKEN; \
           /opt/get_otel.sh ; \
           /opt/get_oa.sh ; \
       fi; \
