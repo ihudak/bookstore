@@ -84,7 +84,7 @@ jobs:
         platforms: linux/arm64/v8
         build-args: |
           AGENTS_PRELOAD=false
-          PLATFORM=arm64
+          PLATFORM=arm
 
     - name: Build and push preinstrument
       uses: docker/build-push-action@v5
@@ -95,7 +95,7 @@ jobs:
         platforms: linux/arm64/v8
         build-args: |
           AGENTS_PRELOAD=true
-          PLATFORM=arm64
+          PLATFORM=arm
 
 
 
