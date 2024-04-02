@@ -40,7 +40,7 @@ jobs:
           AGENTS_PRELOAD=true
           PLATFORM=arm
           TENANT_URL=${{ secrets.DT_TENANT_URL }}
-          OA_TOKEN=${{ secrets.DT_TENANT_TOKEN }}
+          ENC_TOKEN=${{ secrets.DT_TENANT_TOKEN }}
 
     - name: Build and push agents
       uses: docker/build-push-action@v5
