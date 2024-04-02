@@ -18,6 +18,7 @@ else
 fi
 
 echo $PLATFORM
+echo $TENANT_URL
 
 echo "Downloading the latest OneAgent..."
 # Download OA (Java Agent only)
