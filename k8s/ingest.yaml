@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
         - name: ingest
-          image: ghcr.io/ihudak/ingest-{AGENT}-{ARCH}:latest
+          image: ghcr.io/ihudak/ingest-{AGENT}:latest
           ports:
             - containerPort: 8080
             - containerPort: 5005

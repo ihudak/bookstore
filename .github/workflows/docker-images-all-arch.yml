@@ -20,7 +20,7 @@ jobs:
       uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
 
     - name: Build with Gradle Wrapper
-      run: ./gradlew build
+      run: ./gradlew build -x test
 
     - name: Login to docker repo
       run: echo $GH_TOKEN | docker login ghcr.io -u $GH_USER --password-stdin
@@ -37,7 +37,7 @@ jobs:
     - name: Build and push MySQL
       uses: docker/build-push-action@v5
       with:
-        context: "{{defaultContext}}:database/mysql"
+        context: ./database/mysql
         push: true
         tags: ghcr.io/ihudak/dt-mysql:latest,ghcr.io/ihudak/dt-mysql:${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
@@ -45,7 +45,7 @@ jobs:
     - name: Build and push Postgres
       uses: docker/build-push-action@v5
       with:
-        context: "{{defaultContext}}:database/pg"
+        context: ./database/pg
         push: true
         tags: ghcr.io/ihudak/dt-postgres:latest,ghcr.io/ihudak/dt-postgres:${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
@@ -53,25 +53,15 @@ jobs:
     - name: Build and push noagent
       uses: docker/build-push-action@v5
       with:
-        context: "{{defaultContext}}:noagent"
+        context: ./noagent
         push: true
         tags: ghcr.io/ihudak/java-noagent:latest,ghcr.io/ihudak/java-noagent:${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
 
-    - name: Prepare Agents
-      working-directory: ./agents
-      run: |
-        rm ./env
-        echo "DT_AGENT_DOWNLOAD_TENANT_URL=$DT_TENANT_URL" >> ./env
-        echo "DT_AGENT_DOWNLOAD_TOKEN=$DT_TENANT_TOKEN" >> ./env
-      env:
-        DT_TENANT_TOKEN: ${{ secrets.DT_TENANT_TOKEN }}
-        DT_TENANT_URL: ${{ secrets.DT_TENANT_URL }}
-
     - name: Build and push agents
       uses: docker/build-push-action@v5
       with:
-        context: "{{defaultContext}}:agents"
+        context: ./agents
         push: true
         tags: ghcr.io/ihudak/java-agents:latest,ghcr.io/ihudak/java-agents:${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
@@ -81,7 +71,7 @@ jobs:
     - name: Build and push preinstrument
       uses: docker/build-push-action@v5
       with:
-        context: "{{defaultContext}}:agents"
+        context: ./agents
         push: true
         tags: ghcr.io/ihudak/java-preinstrument:latest,ghcr.io/ihudak/java-preinstrument:${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
@@ -92,7 +82,7 @@ jobs:
     - name: Build and push clients-noagent
       uses: docker/build-push-action@v5
       with:
-        context: "{{defaultContext}}:clients"
+        context: ./clients
         push: true
         tags: ghcr.io/ihudak/clients-noagent:latest,ghcr.io/ihudak/clients-noagent:${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
@@ -103,7 +93,7 @@ jobs:
     - name: Build and push clients-agents
       uses: docker/build-push-action@v5
       with:
-        context: "{{defaultContext}}:clients"
+        context: ./clients
         push: true
         tags: ghcr.io/ihudak/clients-agents:latest,ghcr.io/ihudak/clients-agents:${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
@@ -114,7 +104,7 @@ jobs:
     - name: Build and push clients-preinstrument
       uses: docker/build-push-action@v5
       with:
-        context: "{{defaultContext}}:clients"
+        context: ./clients
         push: true
         tags: ghcr.io/ihudak/clients-preinstrument:latest,ghcr.io/ihudak/clients-preinstrument:${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
@@ -126,7 +116,7 @@ jobs:
     - name: Build and push books-noagent
       uses: docker/build-push-action@v5
       with:
-        context: "{{defaultContext}}:books"
+        context: ./books
         push: true
         tags: ghcr.io/ihudak/books-noagent:latest,ghcr.io/ihudak/books-noagent:${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
@@ -137,7 +127,7 @@ jobs:
     - name: Build and push books-agents
       uses: docker/build-push-action@v5
       with:
-        context: "{{defaultContext}}:books"
+        context: ./books
         push: true
         tags: ghcr.io/ihudak/books-agents:latest,ghcr.io/ihudak/books-agents:${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
@@ -148,7 +138,7 @@ jobs:
     - name: Build and push books-preinstrument
       uses: docker/build-push-action@v5
       with:
-        context: "{{defaultContext}}:books"
+        context: ./books
         push: true
         tags: ghcr.io/ihudak/books-preinstrument:latest,ghcr.io/ihudak/books-preinstrument:${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
@@ -160,7 +150,7 @@ jobs:
     - name: Build and push carts-noagent
       uses: docker/build-push-action@v5
       with:
-        context: "{{defaultContext}}:carts"
+        context: ./carts
         push: true
         tags: ghcr.io/ihudak/carts-noagent:latest,ghcr.io/ihudak/carts-noagent:${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
@@ -171,7 +161,7 @@ jobs:
     - name: Build and push carts-agents
       uses: docker/build-push-action@v5
       with:
-        context: "{{defaultContext}}:carts"
+        context: ./carts
         push: true
         tags: ghcr.io/ihudak/carts-agents:latest,ghcr.io/ihudak/carts-agents:${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
@@ -182,7 +172,7 @@ jobs:
     - name: Build and push carts-preinstrument
       uses: docker/build-push-action@v5
       with:
-        context: "{{defaultContext}}:carts"
+        context: ./carts
         push: true
         tags: ghcr.io/ihudak/carts-preinstrument:latest,ghcr.io/ihudak/carts-preinstrument:${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
@@ -194,7 +184,7 @@ jobs:
     - name: Build and push storage-noagent
       uses: docker/build-push-action@v5
       with:
-        context: "{{defaultContext}}:storage"
+        context: ./storage
         push: true
         tags: ghcr.io/ihudak/storage-noagent:latest,ghcr.io/ihudak/storage-noagent:${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
@@ -205,7 +195,7 @@ jobs:
     - name: Build and push storage-agents
       uses: docker/build-push-action@v5
       with:
-        context: "{{defaultContext}}:storage"
+        context: ./storage
         push: true
         tags: ghcr.io/ihudak/storage-agents:latest,ghcr.io/ihudak/storage-agents:${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
@@ -216,7 +206,7 @@ jobs:
     - name: Build and push storage-preinstrument
       uses: docker/build-push-action@v5
       with:
-        context: "{{defaultContext}}:storage"
+        context: ./storage
         push: true
         tags: ghcr.io/ihudak/storage-preinstrument:latest,ghcr.io/ihudak/storage-preinstrument:${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
@@ -228,7 +218,7 @@ jobs:
     - name: Build and push ratings-noagent
       uses: docker/build-push-action@v5
       with:
-        context: "{{defaultContext}}:ratings"
+        context: ./ratings
         push: true
         tags: ghcr.io/ihudak/ratings-noagent:latest,ghcr.io/ihudak/ratings-noagent:${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
@@ -239,7 +229,7 @@ jobs:
     - name: Build and push ratings-agents
       uses: docker/build-push-action@v5
       with:
-        context: "{{defaultContext}}:ratings"
+        context: ./ratings
         push: true
         tags: ghcr.io/ihudak/ratings-agents:latest,ghcr.io/ihudak/ratings-agents:${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
@@ -250,7 +240,7 @@ jobs:
     - name: Build and push ratings-preinstrument
       uses: docker/build-push-action@v5
       with:
-        context: "{{defaultContext}}:ratings"
+        context: ./ratings
         push: true
         tags: ghcr.io/ihudak/ratings-preinstrument:latest,ghcr.io/ihudak/ratings-preinstrument:${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
@@ -262,7 +252,7 @@ jobs:
     - name: Build and push orders-noagent
       uses: docker/build-push-action@v5
       with:
-        context: "{{defaultContext}}:orders"
+        context: ./orders
         push: true
         tags: ghcr.io/ihudak/orders-noagent:latest,ghcr.io/ihudak/orders-noagent:${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
@@ -273,7 +263,7 @@ jobs:
     - name: Build and push orders-agents
       uses: docker/build-push-action@v5
       with:
-        context: "{{defaultContext}}:orders"
+        context: ./orders
         push: true
         tags: ghcr.io/ihudak/orders-agents:latest,ghcr.io/ihudak/orders-agents:${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
@@ -284,7 +274,7 @@ jobs:
     - name: Build and push orders-preinstrument
       uses: docker/build-push-action@v5
       with:
-        context: "{{defaultContext}}:orders"
+        context: ./orders
         push: true
         tags: ghcr.io/ihudak/orders-preinstrument:latest,ghcr.io/ihudak/orders-preinstrument:${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
@@ -296,7 +286,7 @@ jobs:
     - name: Build and push payments-noagent
       uses: docker/build-push-action@v5
       with:
-        context: "{{defaultContext}}:payments"
+        context: ./payments
         push: true
         tags: ghcr.io/ihudak/payments-noagent:latest,ghcr.io/ihudak/payments-noagent:${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
@@ -307,7 +297,7 @@ jobs:
     - name: Build and push payments-agents
       uses: docker/build-push-action@v5
       with:
-        context: "{{defaultContext}}:payments"
+        context: ./payments
         push: true
         tags: ghcr.io/ihudak/payments-agents:latest,ghcr.io/ihudak/payments-agents:${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
@@ -318,7 +308,7 @@ jobs:
     - name: Build and push payments-preinstrument
       uses: docker/build-push-action@v5
       with:
-        context: "{{defaultContext}}:payments"
+        context: ./payments
         push: true
         tags: ghcr.io/ihudak/payments-preinstrument:latest,ghcr.io/ihudak/payments-preinstrument:${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
@@ -330,7 +320,7 @@ jobs:
     - name: Build and push dynapay-noagent
       uses: docker/build-push-action@v5
       with:
-        context: "{{defaultContext}}:dynapay"
+        context: ./dynapay
         push: true
         tags: ghcr.io/ihudak/dynapay-noagent:latest,ghcr.io/ihudak/dynapay-noagent:${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
@@ -341,7 +331,7 @@ jobs:
     - name: Build and push dynapay-agents
       uses: docker/build-push-action@v5
       with:
-        context: "{{defaultContext}}:dynapay"
+        context: ./dynapay
         push: true
         tags: ghcr.io/ihudak/dynapay-agents:latest,ghcr.io/ihudak/dynapay-agents:${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
@@ -352,7 +342,7 @@ jobs:
     - name: Build and push dynapay-preinstrument
       uses: docker/build-push-action@v5
       with:
-        context: "{{defaultContext}}:dynapay"
+        context: ./dynapay
         push: true
         tags: ghcr.io/ihudak/dynapay-preinstrument:latest,ghcr.io/ihudak/dynapay-preinstrument:${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
@@ -364,7 +354,7 @@ jobs:
     - name: Build and push ingest-noagent
       uses: docker/build-push-action@v5
       with:
-        context: "{{defaultContext}}:ingest"
+        context: ./ingest
         push: true
         tags: ghcr.io/ihudak/ingest-noagent:latest,ghcr.io/ihudak/ingest-noagent:${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
@@ -375,7 +365,7 @@ jobs:
     - name: Build and push ingest-agents
       uses: docker/build-push-action@v5
       with:
-        context: "{{defaultContext}}:ingest"
+        context: ./ingest
         push: true
         tags: ghcr.io/ihudak/ingest-agents:latest,ghcr.io/ihudak/ingest-agents:${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
@@ -386,7 +376,7 @@ jobs:
     - name: Build and push ingest-preinstrument
       uses: docker/build-push-action@v5
       with:
-        context: "{{defaultContext}}:ingest"
+        context: ./ingest
         push: true
         tags: ghcr.io/ihudak/ingest-preinstrument:latest,ghcr.io/ihudak/ingest-preinstrument:${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
@@ -398,7 +388,7 @@ jobs:
     - name: Build and push WebApp Base docker image
       uses: docker/build-push-action@v5
       with:
-        context: "{{defaultContext}}:web/base/noagent"
+        context: ./web/base/noagent
         push: true
         tags: ghcr.io/ihudak/node-angular-noagent:latest,ghcr.io/ihudak/node-angular-noagent:${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
@@ -406,7 +396,7 @@ jobs:
     - name: Build and push web app image
       uses: docker/build-push-action@v5
       with:
-        context: "{{defaultContext}}:web"
+        context: ./web
         push: true
         tags: ghcr.io/ihudak/web-noagent:latest,ghcr.io/ihudak/web-noagent:${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8

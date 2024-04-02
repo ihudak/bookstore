@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
         - name: payments
-          image: ghcr.io/ihudak/payments-{AGENT}-{ARCH}:latest
+          image: ghcr.io/ihudak/payments-{AGENT}:latest
           ports:
             - containerPort: 8080
             - containerPort: 5005

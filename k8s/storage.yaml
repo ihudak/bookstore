@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
         - name: storage
-          image: ghcr.io/ihudak/storage-{AGENT}-{ARCH}:latest
+          image: ghcr.io/ihudak/storage-{AGENT}:latest
           ports:
             - containerPort: 8080
             - containerPort: 5005

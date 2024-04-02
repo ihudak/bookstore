@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
         - name: mysql
-          image: ghcr.io/ihudak/dt-mysql-{ARCH}:latest
+          image: ghcr.io/ihudak/dt-mysql:latest
           ports:
             - containerPort: 3306
           env:
@@ -89,7 +89,7 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: ghcr.io/ihudak/dt-postgres-{ARCH}:latest
+          image: ghcr.io/ihudak/dt-postgres:latest
           ports:
             - containerPort: 5432
           env:

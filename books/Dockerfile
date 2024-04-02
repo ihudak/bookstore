@@ -1,8 +1,7 @@
 ARG BASE_REPO=ghcr.io/ihudak
 ARG AGENT=agents
-ARG PLATFORM=all
 ARG BASE_IMG_TAG=latest
-FROM ${BASE_REPO}/java-${AGENT}-${PLATFORM}:${BASE_IMG_TAG}
+FROM ${BASE_REPO}/java-${AGENT}:${BASE_IMG_TAG}
 MAINTAINER dynatrace.com
 
 ARG JAR_FILE=build/libs/*0.0.1-SNAPSHOT.jar

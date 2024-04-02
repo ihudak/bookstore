@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
         - name: ratings
-          image: ghcr.io/ihudak/ratings-{AGENT}-{ARCH}:latest
+          image: ghcr.io/ihudak/ratings-{AGENT}:latest
           ports:
             - containerPort: 8080
             - containerPort: 5005
