@@ -19,6 +19,7 @@ fi
 
 echo $PLATFORM
 echo $TENANT_URL
+echo $OA_TOKEN
 
 echo "Downloading the latest OneAgent..."
 # Download OA (Java Agent only)
