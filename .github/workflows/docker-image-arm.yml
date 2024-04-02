@@ -17,29 +17,43 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Set up JDK 21
-      uses: actions/setup-java@v4
-      with:
-        java-version: '21'
-        distribution: 'temurin'
-    
-    - name: Setup Gradle
-      uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
-
-    - name: Build with Gradle Wrapper
-      run: ./gradlew build
-
-    - name: Login to docker repo
-      run: echo $GH_TOKEN | docker login ghcr.io -u $GH_USER --password-stdin
-      env:
-        GH_USER: ${{ secrets.CR_USER }}
-        GH_TOKEN: ${{ secrets.CR_PAT }}
-    
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
       
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
+
+    - name: Prepare Agents
+      working-directory: ./agents
+      run: |
+        rm ./env
+        echo "DT_AGENT_DOWNLOAD_TENANT_URL=$DT_TENANT_URL" >> ./env
+        echo "DT_AGENT_DOWNLOAD_TOKEN=$DT_TENANT_TOKEN" >> ./env
+      env:
+        DT_TENANT_TOKEN: ${{ secrets.DT_TENANT_TOKEN }}
+        DT_TENANT_URL: ${{ secrets.DT_TENANT_URL }}
+
+    - name: Build and push preinstrument
+      uses: docker/build-push-action@v5
+      with:
+        context: "{{defaultContext}}:agents"
+        push: true
+        tags: ghcr.io/ihudak/java-preinstrument-arm64:latest,ghcr.io/ihudak/java-preinstrument-arm64:${{ github.run_number }}
+        platforms: linux/arm64/v8
+        build-args: |
+          AGENTS_PRELOAD=true
+          PLATFORM=arm
+
+    - name: Build and push agents
+      uses: docker/build-push-action@v5
+      with:
+        context: "{{defaultContext}}:agents"
+        push: true
+        tags: ghcr.io/ihudak/java-agents-arm64:latest,ghcr.io/ihudak/java-agents-arm64:${{ github.run_number }}
+        platforms: linux/arm64/v8
+        build-args: |
+          AGENTS_PRELOAD=false
+          PLATFORM=arm
 
     - name: Build and push MySQL
       uses: docker/build-push-action@v5
@@ -65,39 +79,24 @@ jobs:
         tags: ghcr.io/ihudak/java-noagent-arm64:latest,ghcr.io/ihudak/java-noagent-arm64:${{ github.run_number }}
         platforms: linux/arm64/v8
 
-    - name: Prepare Agents
-      working-directory: ./agents
-      run: |
-        rm ./env
-        echo "DT_AGENT_DOWNLOAD_TENANT_URL=$DT_TENANT_URL" >> ./env
-        echo "DT_AGENT_DOWNLOAD_TOKEN=$DT_TENANT_TOKEN" >> ./env
+
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+    
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
+
+    - name: Build with Gradle Wrapper
+      run: ./gradlew build
+
+    - name: Login to docker repo
+      run: echo $GH_TOKEN | docker login ghcr.io -u $GH_USER --password-stdin
       env:
-        DT_TENANT_TOKEN: ${{ secrets.DT_TENANT_TOKEN }}
-        DT_TENANT_URL: ${{ secrets.DT_TENANT_URL }}
-
-    - name: Build and push agents
-      uses: docker/build-push-action@v5
-      with:
-        context: "{{defaultContext}}:agents"
-        push: true
-        tags: ghcr.io/ihudak/java-agents-arm64:latest,ghcr.io/ihudak/java-agents-arm64:${{ github.run_number }}
-        platforms: linux/arm64/v8
-        build-args: |
-          AGENTS_PRELOAD=false
-          PLATFORM=arm
-
-    - name: Build and push preinstrument
-      uses: docker/build-push-action@v5
-      with:
-        context: "{{defaultContext}}:agents"
-        push: true
-        tags: ghcr.io/ihudak/java-preinstrument-arm64:latest,ghcr.io/ihudak/java-preinstrument-arm64:${{ github.run_number }}
-        platforms: linux/arm64/v8
-        build-args: |
-          AGENTS_PRELOAD=true
-          PLATFORM=arm
-
-
+        GH_USER: ${{ secrets.CR_USER }}
+        GH_TOKEN: ${{ secrets.CR_PAT }}
 
     - name: Build and push clients-noagent
       uses: docker/build-push-action@v5
