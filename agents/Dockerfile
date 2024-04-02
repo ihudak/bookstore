@@ -8,9 +8,7 @@ ENV OTEL_AGENT="otelAgent"
 
 ARG AGENTS_PRELOAD=false
 ARG TENANT_URL
-ARG OA_TOKEN
-ENV TENANT_URL=$TENANT_URL
-ENV OA_TOKEN=$OA_TOKEN
+ARG ENC_TOKEN
 
 ARG TENANT_ID_SHELL
 ARG TENANT_LAYER_SHELL=dev
@@ -50,7 +48,10 @@ ENV JAVA_TOOL_OPTIONS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,addr
 # oneAgent.sh will set tenant-specific settings on deploy
 RUN if [ "$AGENTS_PRELOAD" = true ]; then \
       . /opt/set_bash_instrumentation.sh ; \
-      if [ -n "${TENANT_URL+x}" ] && [ -n "${OA_TOKEN+x}" ]; then \
+      echo $TENANT_URL
+      if [ -n "${TENANT_URL+x}" ] && [ -n "${ENC_TOKEN+x}" ]; then \
+          OA_TOKEN=$(echo $ENC_TOKEN | base64 -d); \
+          export OA_TOKEN
           /opt/get_otel.sh ; \
           /opt/get_oa.sh ; \
       fi; \
