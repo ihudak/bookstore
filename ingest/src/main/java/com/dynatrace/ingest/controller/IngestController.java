@@ -52,6 +52,7 @@ public class IngestController {
             if (bookstoreDataGenerator.isInterrupted() || bookstoreDataGenerator.wasUsed()) {
                 bookstoreDataGenerator = new BookstoreDataGenerator();
             }
+            bookstoreDataGenerator.clearData(true, true);
             IngestController.isWorking = true;
             ingest.setMessage(ingest.isContinuousLoad() ? "Generation In Loop Started" : "One-time Generation Started");
             bookstoreDataGenerator.generateData(ingest, ingest.isContinuousLoad());
