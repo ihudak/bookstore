@@ -49,20 +49,20 @@ jobs:
           TENANT_TOKEN_SHELL=${{ secrets.DT_DEPLOY_MON_ENC_TOKEN }}
           TENANT_URL_DOMAIN=${{ secrets.DT_DEPLOY_MON_DOMAIN }}
 
-
-    - name: Build and push agents
-      uses: docker/build-push-action@v5
-      with:
-        context: ./agents
-        push: true
-        tags: ghcr.io/ihudak/java-agents:latest,ghcr.io/ihudak/java-agents:${{ github.run_number }}
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          AGENTS_PRELOAD=false
-          TENANT_ID_SHELL=${{ secrets.DT_DEPLOY_MON_TENANT }}
-          TENANT_LAYER_SHELL=${{ secrets.DT_DEPLOY_MON_TIER }}
-          TENANT_TOKEN_SHELL=${{ secrets.DT_DEPLOY_MON_ENC_TOKEN }}
-          TENANT_URL_DOMAIN=${{ secrets.DT_DEPLOY_MON_DOMAIN }}
+#
+#    - name: Build and push agents
+#      uses: docker/build-push-action@v5
+#      with:
+#        context: ./agents
+#        push: true
+#        tags: ghcr.io/ihudak/java-agents:latest,ghcr.io/ihudak/java-agents:${{ github.run_number }}
+#        platforms: linux/amd64,linux/arm64/v8
+#        build-args: |
+#          AGENTS_PRELOAD=false
+#          TENANT_ID_SHELL=${{ secrets.DT_DEPLOY_MON_TENANT }}
+#          TENANT_LAYER_SHELL=${{ secrets.DT_DEPLOY_MON_TIER }}
+#          TENANT_TOKEN_SHELL=${{ secrets.DT_DEPLOY_MON_ENC_TOKEN }}
+#          TENANT_URL_DOMAIN=${{ secrets.DT_DEPLOY_MON_DOMAIN }}
 
 #
 #    - name: Build and push MySQL
