@@ -2,9 +2,9 @@
 
 echo "Configuring OTELOTELOTELOTELOTELOTEL!!!!"
 
-echo "boo$TENANT_ID_SHELL"
-echo "boo$TENANT_URL_SHELL"
-echo "boo$OTEL_OTEL_TOKEN_SHELL"
+echo "foo$TENANT_ID_SHELL foo"
+echo "foo$TENANT_URL_SHELL foo"
+echo "foo$OTEL_OTEL_TOKEN_SHELL foo"
 
 ## Set Otel env variables that come from the monitoring tenant
 if [ -z ${TENANT_ID_SHELL+x} ] || [ -z ${TENANT_URL_SHELL+x} ] || [ -z ${OTEL_TOKEN_SHELL+x} ]; then
@@ -12,6 +12,7 @@ if [ -z ${TENANT_ID_SHELL+x} ] || [ -z ${TENANT_URL_SHELL+x} ] || [ -z ${OTEL_TO
   export OTEL_SHELL_TRACES_ENABLE=FALSE;
   export OTEL_SHELL_METRICS_ENABLE=FALSE;
   export OTEL_SHELL_LOGS_ENABLE=FALSE;
+  echo "can't instrument"
   return 0
 fi
 
