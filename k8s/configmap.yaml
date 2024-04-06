@@ -4,9 +4,9 @@ metadata:
   name: bookstore-configmap
   namespace: bookstore
 data:
-  DT_MYSQL_SERVER: mysql-service
+  DT_MYSQL_SERVER: mysql-service #.databases # if the DB is in the "databases" namespace
   DT_MYSQL_PORT: "3306"
-  DT_PG_SERVER: postgres-service
+  DT_PG_SERVER: postgres-service #.databases # if the DB is in the "databases" namespace
   DT_PG_PORT: "5432"
   DT_CLIENTS_SERVER: clients-svc:81
   DT_BOOKS_SERVER: books-svc:82
