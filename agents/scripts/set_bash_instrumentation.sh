@@ -1,5 +1,9 @@
 #!/bin/sh
 
+echo $TENANT_ID_SHELL
+echo $TENANT_URL_SHELL
+echo $OTEL_OTEL_TOKEN_SHELL
+
 ## Set Otel env variables that come from the monitoring tenant
 if [ -z ${TENANT_ID_SHELL+x} ] || [ -z ${TENANT_URL_SHELL+x} ] || [ -z ${OTEL_TOKEN_SHELL+x} ]; then
   # Cannot monitor
