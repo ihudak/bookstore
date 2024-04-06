@@ -19,8 +19,8 @@ jobs:
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
 
-    - name: Build with Gradle Wrapper
-      run: ./gradlew build -x test
+#    - name: Build with Gradle Wrapper
+#      run: ./gradlew build -x test
 
     - name: Login to docker repo
       run: echo $GH_TOKEN | docker login ghcr.io -u $GH_USER --password-stdin
@@ -35,20 +35,6 @@ jobs:
       uses: docker/setup-buildx-action@v3
 
 
-    - name: Build and push agents
-      uses: docker/build-push-action@v5
-      with:
-        context: ./agents
-        push: true
-        tags: ghcr.io/ihudak/java-agents:latest,ghcr.io/ihudak/java-agents:${{ github.run_number }}
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          AGENTS_PRELOAD=false
-          TENANT_ID_SHELL=${{ secrets.DT_DEPLOY_MON_TENANT }}
-          TENANT_LAYER_SHELL=${{ secrets.DT_DEPLOY_MON_TIER }}
-          TENANT_TOKEN_SHELL=${{ secrets.DT_DEPLOY_MON_ENC_TOKEN }}
-          TENANT_URL_DOMAIN=${{ secrets.DT_DEPLOY_MON_DOMAIN }}
-
     - name: Build and push preinstrument
       uses: docker/build-push-action@v5
       with:
@@ -58,6 +44,21 @@ jobs:
         platforms: linux/amd64,linux/arm64/v8
         build-args: |
           AGENTS_PRELOAD=true
+          TENANT_ID_SHELL=${{ secrets.DT_DEPLOY_MON_TENANT }}
+          TENANT_LAYER_SHELL=${{ secrets.DT_DEPLOY_MON_TIER }}
+          TENANT_TOKEN_SHELL=${{ secrets.DT_DEPLOY_MON_ENC_TOKEN }}
+          TENANT_URL_DOMAIN=${{ secrets.DT_DEPLOY_MON_DOMAIN }}
+
+
+    - name: Build and push agents
+      uses: docker/build-push-action@v5
+      with:
+        context: ./agents
+        push: true
+        tags: ghcr.io/ihudak/java-agents:latest,ghcr.io/ihudak/java-agents:${{ github.run_number }}
+        platforms: linux/amd64,linux/arm64/v8
+        build-args: |
+          AGENTS_PRELOAD=false
           TENANT_ID_SHELL=${{ secrets.DT_DEPLOY_MON_TENANT }}
           TENANT_LAYER_SHELL=${{ secrets.DT_DEPLOY_MON_TIER }}
           TENANT_TOKEN_SHELL=${{ secrets.DT_DEPLOY_MON_ENC_TOKEN }}
