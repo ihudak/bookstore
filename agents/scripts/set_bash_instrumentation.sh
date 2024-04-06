@@ -1,18 +1,11 @@
 #!/bin/sh
 
-echo "Configuring OTELOTELOTELOTELOTELOTEL!!!!"
-
-echo "foo$TENANT_ID_SHELL foo"
-echo "foo$TENANT_URL_SHELL foo"
-echo "foo$OTEL_OTEL_TOKEN_SHELL foo"
-
 ## Set Otel env variables that come from the monitoring tenant
 if [ -z ${TENANT_ID_SHELL+x} ] || [ -z ${TENANT_URL_SHELL+x} ] || [ -z ${OTEL_TOKEN_SHELL+x} ]; then
   # Cannot monitor
   export OTEL_SHELL_TRACES_ENABLE=FALSE;
   export OTEL_SHELL_METRICS_ENABLE=FALSE;
   export OTEL_SHELL_LOGS_ENABLE=FALSE;
-  echo "can't instrument"
   return 0
 fi
 
@@ -49,7 +42,6 @@ export OTEL_SERVICE_NAME="BookStoreAppDocker $SERVICE_FULL_NAME"
 
 # Configure service
 # turn on instrumenting
-echo "Stating OTELOTELOTELOTELOTELOTEL!!!"
 . /usr/bin/otel.sh
 otel_instrument echo
 # the first echo will give trace a name
