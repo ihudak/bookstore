@@ -41,29 +41,6 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
 
-    - name: Build and push MySQL
-      uses: docker/build-push-action@v5
-      with:
-        context: ./database/mysql"
-        push: true
-        tags: ghcr.io/ihudak/dt-mysql-arm64:latest,ghcr.io/ihudak/dt-mysql-arm64:${{ github.run_number }}
-        platforms: linux/arm64/v8
-        
-    - name: Build and push Postgres
-      uses: docker/build-push-action@v5
-      with:
-        context: ./database/pg"
-        push: true
-        tags: ghcr.io/ihudak/dt-postgres-arm64:latest,ghcr.io/ihudak/dt-postgres-arm64:${{ github.run_number }}
-        platforms: linux/arm64/v8
-    
-    - name: Build and push noagent
-      uses: docker/build-push-action@v5
-      with:
-        context: ./noagent"
-        push: true
-        tags: ghcr.io/ihudak/java-noagent-arm64:latest,ghcr.io/ihudak/java-noagent-arm64:${{ github.run_number }}
-        platforms: linux/arm64/v8
 
     - name: Build and push preinstrument
       uses: docker/build-push-action@v5
@@ -90,7 +67,32 @@ jobs:
           PLATFORM=arm
           TENANT_URL=${{ secrets.DT_TENANT_URL }}
           ENC_TOKEN=${{ secrets.DT_TENANT_TOKEN }}
+    
+    
 
+    - name: Build and push MySQL
+      uses: docker/build-push-action@v5
+      with:
+        context: ./database/mysql"
+        push: true
+        tags: ghcr.io/ihudak/dt-mysql-arm64:latest,ghcr.io/ihudak/dt-mysql-arm64:${{ github.run_number }}
+        platforms: linux/arm64/v8
+        
+    - name: Build and push Postgres
+      uses: docker/build-push-action@v5
+      with:
+        context: ./database/pg"
+        push: true
+        tags: ghcr.io/ihudak/dt-postgres-arm64:latest,ghcr.io/ihudak/dt-postgres-arm64:${{ github.run_number }}
+        platforms: linux/arm64/v8
+    
+    - name: Build and push noagent
+      uses: docker/build-push-action@v5
+      with:
+        context: ./noagent"
+        push: true
+        tags: ghcr.io/ihudak/java-noagent-arm64:latest,ghcr.io/ihudak/java-noagent-arm64:${{ github.run_number }}
+        platforms: linux/arm64/v8
 
     - name: Build and push clients-noagent
       uses: docker/build-push-action@v5
