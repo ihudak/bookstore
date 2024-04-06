@@ -49,6 +49,7 @@ export OTEL_SERVICE_NAME="BookStoreAppDocker $SERVICE_FULL_NAME"
 
 # Configure service
 # turn on instrumenting
+echo "Stating OTELOTELOTELOTELOTELOTEL!!!"
 . /usr/bin/opentelemetry_shell.sh
 otel_instrument echo
 # the first echo will give trace a name
