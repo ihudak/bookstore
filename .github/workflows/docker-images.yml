@@ -1,7 +1,20 @@
-name: Docker Image CI All
+name: Docker Images CI
 
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        type: string
+        description: Version of the images
+        required: true
+      publish:
+        type: boolean
+        description: Whether to publish the image to the Github Registry
+        required: false
+        default: false
+  push:
+    tags:
+      - 'v*.*.*'
 
 jobs:
   build:
@@ -9,6 +22,20 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: Set Env  
+      run: | 
+        export REL_VER="${GITHUB_REF#refs/*/}" ###### >> $GITHUB_ENV
+        echo "REL_VER0 = $REL_VER"
+        if [ -z ${REL_VER+x} ] || [ "$(echo $REL_VER | cut -c 1-2)" != "v." ] then;
+          export REL_VER=${{ inputs.version }};
+          echo "REL_VER1 = $REL_VER"
+        fi
+        echo "RELEASE_VERSION=$REL_VER" >> $GITHUB_ENV
+    - name: Test
+      run: |
+        echo $RELEASE_VERSION
+        echo ${{ env.RELEASE_VERSION }}
+        
 
     - name: Set up JDK 21
       uses: actions/setup-java@v4
@@ -22,12 +49,13 @@ jobs:
     - name: Build with Gradle Wrapper
       run: ./gradlew build -x test
 
-    - name: Login to docker repo
-      run: echo $GH_TOKEN | docker login ghcr.io -u $GH_USER --password-stdin
-      env:
-        GH_USER: ${{ secrets.CR_USER }}
-        GH_TOKEN: ${{ secrets.CR_PAT }}
-    
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.CR_PAT }}
+      
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
       
@@ -35,26 +63,22 @@ jobs:
       uses: docker/setup-buildx-action@v3
 
 
-    - name: Build and push preinstrument
+    - name: Build and push noagent
       uses: docker/build-push-action@v5
       with:
-        context: ./agents
-        push: true
-        tags: ghcr.io/ihudak/java-preinstrument:latest,ghcr.io/ihudak/java-preinstrument:${{ github.run_number }}
+        context: ./noagent
+        push: ${{ github.event_name == 'push' || inputs.publish }}
+        tags: ghcr.io/ihudak/java-noagent:latest,ghcr.io/ihudak/java-noagent:build_${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          AGENTS_PRELOAD=true
-          TENANT_ID_SHELL=${{ secrets.DT_DEPLOY_MON_TENANT }}
-          TENANT_LAYER_SHELL=${{ secrets.DT_DEPLOY_MON_TIER }}
-          TENANT_TOKEN_SHELL=${{ secrets.DT_DEPLOY_MON_ENC_TOKEN }}
-          TENANT_URL_DOMAIN=${{ secrets.DT_DEPLOY_MON_DOMAIN }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
     - name: Build and push agents
       uses: docker/build-push-action@v5
       with:
         context: ./agents
-        push: true
-        tags: ghcr.io/ihudak/java-agents:latest,ghcr.io/ihudak/java-agents:${{ github.run_number }}
+        push: ${{ github.event_name == 'push' || inputs.publish }}
+        tags: ghcr.io/ihudak/java-agents:latest,ghcr.io/ihudak/java-agents:build_${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
         build-args: |
           AGENTS_PRELOAD=false
@@ -62,354 +86,426 @@ jobs:
           TENANT_LAYER_SHELL=${{ secrets.DT_DEPLOY_MON_TIER }}
           TENANT_TOKEN_SHELL=${{ secrets.DT_DEPLOY_MON_ENC_TOKEN }}
           TENANT_URL_DOMAIN=${{ secrets.DT_DEPLOY_MON_DOMAIN }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
-    - name: Build and push noagent
+    - name: Build and push preinstrument
       uses: docker/build-push-action@v5
       with:
-        context: ./noagent
-        push: true
-        tags: ghcr.io/ihudak/java-noagent:latest,ghcr.io/ihudak/java-noagent:${{ github.run_number }}
+        context: ./agents
+        push: ${{ github.event_name == 'push' || inputs.publish }}
+        tags: ghcr.io/ihudak/java-preinstrument:latest,ghcr.io/ihudak/java-preinstrument:build_${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
+        build-args: |
+          AGENTS_PRELOAD=true
+          TENANT_ID_SHELL=${{ secrets.DT_DEPLOY_MON_TENANT }}
+          TENANT_LAYER_SHELL=${{ secrets.DT_DEPLOY_MON_TIER }}
+          TENANT_TOKEN_SHELL=${{ secrets.DT_DEPLOY_MON_ENC_TOKEN }}
+          TENANT_URL_DOMAIN=${{ secrets.DT_DEPLOY_MON_DOMAIN }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
 
     - name: Build and push MySQL
       uses: docker/build-push-action@v5
       with:
         context: ./database/mysql
-        push: true
-        tags: ghcr.io/ihudak/dt-mysql:latest,ghcr.io/ihudak/dt-mysql:${{ github.run_number }}
+        push: ${{ github.event_name == 'push' || inputs.publish }}
+        tags: ghcr.io/ihudak/dt-mysql:latest,ghcr.io/ihudak/dt-mysql:build_${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
     - name: Build and push Postgres
       uses: docker/build-push-action@v5
       with:
         context: ./database/pg
-        push: true
-        tags: ghcr.io/ihudak/dt-postgres:latest,ghcr.io/ihudak/dt-postgres:${{ github.run_number }}
+        push: ${{ github.event_name == 'push' || inputs.publish }}
+        tags: ghcr.io/ihudak/dt-postgres:latest,ghcr.io/ihudak/dt-postgres:build_${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
 
     - name: Build and push clients-noagent
       uses: docker/build-push-action@v5
       with:
         context: ./clients
-        push: true
-        tags: ghcr.io/ihudak/clients-noagent:latest,ghcr.io/ihudak/clients-noagent:${{ github.run_number }}
+        push: ${{ github.event_name == 'push' || inputs.publish }}
+        tags: ghcr.io/ihudak/clients-noagent:latest,ghcr.io/ihudak/clients-noagent:build_${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
         build-args: |
           BASE_IMG_TAG=${{ github.run_number }}
           AGENT=noagent
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
     - name: Build and push clients-agents
       uses: docker/build-push-action@v5
       with:
         context: ./clients
-        push: true
-        tags: ghcr.io/ihudak/clients-agents:latest,ghcr.io/ihudak/clients-agents:${{ github.run_number }}
+        push: ${{ github.event_name == 'push' || inputs.publish }}
+        tags: ghcr.io/ihudak/clients-agents:latest,ghcr.io/ihudak/clients-agents:build_${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
         build-args: |
           BASE_IMG_TAG=${{ github.run_number }}
           AGENT=agents
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
     - name: Build and push clients-preinstrument
       uses: docker/build-push-action@v5
       with:
         context: ./clients
-        push: true
-        tags: ghcr.io/ihudak/clients-preinstrument:latest,ghcr.io/ihudak/clients-preinstrument:${{ github.run_number }}
+        push: ${{ github.event_name == 'push' || inputs.publish }}
+        tags: ghcr.io/ihudak/clients-preinstrument:latest,ghcr.io/ihudak/clients-preinstrument:build_${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
         build-args: |
           BASE_IMG_TAG=${{ github.run_number }}
           AGENT=preinstrument
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
 
     - name: Build and push books-noagent
       uses: docker/build-push-action@v5
       with:
         context: ./books
-        push: true
-        tags: ghcr.io/ihudak/books-noagent:latest,ghcr.io/ihudak/books-noagent:${{ github.run_number }}
+        push: ${{ github.event_name == 'push' || inputs.publish }}
+        tags: ghcr.io/ihudak/books-noagent:latest,ghcr.io/ihudak/books-noagent:build_${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
         build-args: |
           BASE_IMG_TAG=${{ github.run_number }}
           AGENT=noagent
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
     - name: Build and push books-agents
       uses: docker/build-push-action@v5
       with:
         context: ./books
-        push: true
-        tags: ghcr.io/ihudak/books-agents:latest,ghcr.io/ihudak/books-agents:${{ github.run_number }}
+        push: ${{ github.event_name == 'push' || inputs.publish }}
+        tags: ghcr.io/ihudak/books-agents:latest,ghcr.io/ihudak/books-agents:build_${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
         build-args: |
           BASE_IMG_TAG=${{ github.run_number }}
           AGENT=agents
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
     - name: Build and push books-preinstrument
       uses: docker/build-push-action@v5
       with:
         context: ./books
-        push: true
-        tags: ghcr.io/ihudak/books-preinstrument:latest,ghcr.io/ihudak/books-preinstrument:${{ github.run_number }}
+        push: ${{ github.event_name == 'push' || inputs.publish }}
+        tags: ghcr.io/ihudak/books-preinstrument:latest,ghcr.io/ihudak/books-preinstrument:build_${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
         build-args: |
           BASE_IMG_TAG=${{ github.run_number }}
           AGENT=preinstrument
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
 
     - name: Build and push carts-noagent
       uses: docker/build-push-action@v5
       with:
         context: ./carts
-        push: true
-        tags: ghcr.io/ihudak/carts-noagent:latest,ghcr.io/ihudak/carts-noagent:${{ github.run_number }}
+        push: ${{ github.event_name == 'push' || inputs.publish }}
+        tags: ghcr.io/ihudak/carts-noagent:latest,ghcr.io/ihudak/carts-noagent:build_${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
         build-args: |
           BASE_IMG_TAG=${{ github.run_number }}
           AGENT=noagent
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
     - name: Build and push carts-agents
       uses: docker/build-push-action@v5
       with:
         context: ./carts
-        push: true
-        tags: ghcr.io/ihudak/carts-agents:latest,ghcr.io/ihudak/carts-agents:${{ github.run_number }}
+        push: ${{ github.event_name == 'push' || inputs.publish }}
+        tags: ghcr.io/ihudak/carts-agents:latest,ghcr.io/ihudak/carts-agents:build_${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
         build-args: |
           BASE_IMG_TAG=${{ github.run_number }}
           AGENT=agents
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
     - name: Build and push carts-preinstrument
       uses: docker/build-push-action@v5
       with:
         context: ./carts
-        push: true
-        tags: ghcr.io/ihudak/carts-preinstrument:latest,ghcr.io/ihudak/carts-preinstrument:${{ github.run_number }}
+        push: ${{ github.event_name == 'push' || inputs.publish }}
+        tags: ghcr.io/ihudak/carts-preinstrument:latest,ghcr.io/ihudak/carts-preinstrument:build_${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
         build-args: |
           BASE_IMG_TAG=${{ github.run_number }}
           AGENT=preinstrument
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
 
     - name: Build and push storage-noagent
       uses: docker/build-push-action@v5
       with:
         context: ./storage
-        push: true
-        tags: ghcr.io/ihudak/storage-noagent:latest,ghcr.io/ihudak/storage-noagent:${{ github.run_number }}
+        push: ${{ github.event_name == 'push' || inputs.publish }}
+        tags: ghcr.io/ihudak/storage-noagent:latest,ghcr.io/ihudak/storage-noagent:build_${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
         build-args: |
           BASE_IMG_TAG=${{ github.run_number }}
           AGENT=noagent
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
     - name: Build and push storage-agents
       uses: docker/build-push-action@v5
       with:
         context: ./storage
-        push: true
-        tags: ghcr.io/ihudak/storage-agents:latest,ghcr.io/ihudak/storage-agents:${{ github.run_number }}
+        push: ${{ github.event_name == 'push' || inputs.publish }}
+        tags: ghcr.io/ihudak/storage-agents:latest,ghcr.io/ihudak/storage-agents:build_${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
         build-args: |
           BASE_IMG_TAG=${{ github.run_number }}
           AGENT=agents
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
     - name: Build and push storage-preinstrument
       uses: docker/build-push-action@v5
       with:
         context: ./storage
-        push: true
-        tags: ghcr.io/ihudak/storage-preinstrument:latest,ghcr.io/ihudak/storage-preinstrument:${{ github.run_number }}
+        push: ${{ github.event_name == 'push' || inputs.publish }}
+        tags: ghcr.io/ihudak/storage-preinstrument:latest,ghcr.io/ihudak/storage-preinstrument:build_${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
         build-args: |
           BASE_IMG_TAG=${{ github.run_number }}
           AGENT=preinstrument
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
 
     - name: Build and push ratings-noagent
       uses: docker/build-push-action@v5
       with:
         context: ./ratings
-        push: true
-        tags: ghcr.io/ihudak/ratings-noagent:latest,ghcr.io/ihudak/ratings-noagent:${{ github.run_number }}
+        push: ${{ github.event_name == 'push' || inputs.publish }}
+        tags: ghcr.io/ihudak/ratings-noagent:latest,ghcr.io/ihudak/ratings-noagent:build_${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
         build-args: |
           BASE_IMG_TAG=${{ github.run_number }}
           AGENT=noagent
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
     - name: Build and push ratings-agents
       uses: docker/build-push-action@v5
       with:
         context: ./ratings
-        push: true
-        tags: ghcr.io/ihudak/ratings-agents:latest,ghcr.io/ihudak/ratings-agents:${{ github.run_number }}
+        push: ${{ github.event_name == 'push' || inputs.publish }}
+        tags: ghcr.io/ihudak/ratings-agents:latest,ghcr.io/ihudak/ratings-agents:build_${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
         build-args: |
           BASE_IMG_TAG=${{ github.run_number }}
           AGENT=agents
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
     - name: Build and push ratings-preinstrument
       uses: docker/build-push-action@v5
       with:
         context: ./ratings
-        push: true
-        tags: ghcr.io/ihudak/ratings-preinstrument:latest,ghcr.io/ihudak/ratings-preinstrument:${{ github.run_number }}
+        push: ${{ github.event_name == 'push' || inputs.publish }}
+        tags: ghcr.io/ihudak/ratings-preinstrument:latest,ghcr.io/ihudak/ratings-preinstrument:build_${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
         build-args: |
           BASE_IMG_TAG=${{ github.run_number }}
           AGENT=preinstrument
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
 
     - name: Build and push orders-noagent
       uses: docker/build-push-action@v5
       with:
         context: ./orders
-        push: true
-        tags: ghcr.io/ihudak/orders-noagent:latest,ghcr.io/ihudak/orders-noagent:${{ github.run_number }}
+        push: ${{ github.event_name == 'push' || inputs.publish }}
+        tags: ghcr.io/ihudak/orders-noagent:latest,ghcr.io/ihudak/orders-noagent:build_${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
         build-args: |
           BASE_IMG_TAG=${{ github.run_number }}
           AGENT=noagent
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
     - name: Build and push orders-agents
       uses: docker/build-push-action@v5
       with:
         context: ./orders
-        push: true
-        tags: ghcr.io/ihudak/orders-agents:latest,ghcr.io/ihudak/orders-agents:${{ github.run_number }}
+        push: ${{ github.event_name == 'push' || inputs.publish }}
+        tags: ghcr.io/ihudak/orders-agents:latest,ghcr.io/ihudak/orders-agents:build_${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
         build-args: |
           BASE_IMG_TAG=${{ github.run_number }}
           AGENT=agents
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
     - name: Build and push orders-preinstrument
       uses: docker/build-push-action@v5
       with:
         context: ./orders
-        push: true
-        tags: ghcr.io/ihudak/orders-preinstrument:latest,ghcr.io/ihudak/orders-preinstrument:${{ github.run_number }}
+        push: ${{ github.event_name == 'push' || inputs.publish }}
+        tags: ghcr.io/ihudak/orders-preinstrument:latest,ghcr.io/ihudak/orders-preinstrument:build_${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
         build-args: |
           BASE_IMG_TAG=${{ github.run_number }}
           AGENT=preinstrument
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
 
     - name: Build and push payments-noagent
       uses: docker/build-push-action@v5
       with:
         context: ./payments
-        push: true
-        tags: ghcr.io/ihudak/payments-noagent:latest,ghcr.io/ihudak/payments-noagent:${{ github.run_number }}
+        push: ${{ github.event_name == 'push' || inputs.publish }}
+        tags: ghcr.io/ihudak/payments-noagent:latest,ghcr.io/ihudak/payments-noagent:build_${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
         build-args: |
           BASE_IMG_TAG=${{ github.run_number }}
           AGENT=noagent
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
     - name: Build and push payments-agents
       uses: docker/build-push-action@v5
       with:
         context: ./payments
-        push: true
-        tags: ghcr.io/ihudak/payments-agents:latest,ghcr.io/ihudak/payments-agents:${{ github.run_number }}
+        push: ${{ github.event_name == 'push' || inputs.publish }}
+        tags: ghcr.io/ihudak/payments-agents:latest,ghcr.io/ihudak/payments-agents:build_${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
         build-args: |
           BASE_IMG_TAG=${{ github.run_number }}
           AGENT=agents
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
     - name: Build and push payments-preinstrument
       uses: docker/build-push-action@v5
       with:
         context: ./payments
-        push: true
-        tags: ghcr.io/ihudak/payments-preinstrument:latest,ghcr.io/ihudak/payments-preinstrument:${{ github.run_number }}
+        push: ${{ github.event_name == 'push' || inputs.publish }}
+        tags: ghcr.io/ihudak/payments-preinstrument:latest,ghcr.io/ihudak/payments-preinstrument:build_${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
         build-args: |
           BASE_IMG_TAG=${{ github.run_number }}
           AGENT=preinstrument
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
 
     - name: Build and push dynapay-noagent
       uses: docker/build-push-action@v5
       with:
         context: ./dynapay
-        push: true
-        tags: ghcr.io/ihudak/dynapay-noagent:latest,ghcr.io/ihudak/dynapay-noagent:${{ github.run_number }}
+        push: ${{ github.event_name == 'push' || inputs.publish }}
+        tags: ghcr.io/ihudak/dynapay-noagent:latest,ghcr.io/ihudak/dynapay-noagent:build_${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
         build-args: |
           BASE_IMG_TAG=${{ github.run_number }}
           AGENT=noagent
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
     - name: Build and push dynapay-agents
       uses: docker/build-push-action@v5
       with:
         context: ./dynapay
-        push: true
-        tags: ghcr.io/ihudak/dynapay-agents:latest,ghcr.io/ihudak/dynapay-agents:${{ github.run_number }}
+        push: ${{ github.event_name == 'push' || inputs.publish }}
+        tags: ghcr.io/ihudak/dynapay-agents:latest,ghcr.io/ihudak/dynapay-agents:build_${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
         build-args: |
           BASE_IMG_TAG=${{ github.run_number }}
           AGENT=agents
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
     - name: Build and push dynapay-preinstrument
       uses: docker/build-push-action@v5
       with:
         context: ./dynapay
-        push: true
-        tags: ghcr.io/ihudak/dynapay-preinstrument:latest,ghcr.io/ihudak/dynapay-preinstrument:${{ github.run_number }}
+        push: ${{ github.event_name == 'push' || inputs.publish }}
+        tags: ghcr.io/ihudak/dynapay-preinstrument:latest,ghcr.io/ihudak/dynapay-preinstrument:build_${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
         build-args: |
           BASE_IMG_TAG=${{ github.run_number }}
           AGENT=preinstrument
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
 
     - name: Build and push ingest-noagent
       uses: docker/build-push-action@v5
       with:
         context: ./ingest
-        push: true
-        tags: ghcr.io/ihudak/ingest-noagent:latest,ghcr.io/ihudak/ingest-noagent:${{ github.run_number }}
+        push: ${{ github.event_name == 'push' || inputs.publish }}
+        tags: ghcr.io/ihudak/ingest-noagent:latest,ghcr.io/ihudak/ingest-noagent:build_${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
         build-args: |
           BASE_IMG_TAG=${{ github.run_number }}
           AGENT=noagent
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
     - name: Build and push ingest-agents
       uses: docker/build-push-action@v5
       with:
         context: ./ingest
-        push: true
-        tags: ghcr.io/ihudak/ingest-agents:latest,ghcr.io/ihudak/ingest-agents:${{ github.run_number }}
+        push: ${{ github.event_name == 'push' || inputs.publish }}
+        tags: ghcr.io/ihudak/ingest-agents:latest,ghcr.io/ihudak/ingest-agents:build_${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
         build-args: |
           BASE_IMG_TAG=${{ github.run_number }}
           AGENT=agents
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
     - name: Build and push ingest-preinstrument
       uses: docker/build-push-action@v5
       with:
         context: ./ingest
-        push: true
-        tags: ghcr.io/ihudak/ingest-preinstrument:latest,ghcr.io/ihudak/ingest-preinstrument:${{ github.run_number }}
+        push: ${{ github.event_name == 'push' || inputs.publish }}
+        tags: ghcr.io/ihudak/ingest-preinstrument:latest,ghcr.io/ihudak/ingest-preinstrument:build_${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
         build-args: |
           BASE_IMG_TAG=${{ github.run_number }}
           AGENT=preinstrument
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
 
     - name: Build and push WebApp Base docker image
       uses: docker/build-push-action@v5
       with:
         context: ./web/base/noagent
-        push: true
-        tags: ghcr.io/ihudak/node-angular-noagent:latest,ghcr.io/ihudak/node-angular-noagent:${{ github.run_number }}
+        push: ${{ github.event_name == 'push' || inputs.publish }}
+        tags: ghcr.io/ihudak/node-angular-noagent:latest,ghcr.io/ihudak/node-angular-noagent:build_${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
     - name: Build and push web app image
       uses: docker/build-push-action@v5
       with:
         context: ./web
-        push: true
-        tags: ghcr.io/ihudak/web-noagent:latest,ghcr.io/ihudak/web-noagent:${{ github.run_number }}
+        push: ${{ github.event_name == 'push' || inputs.publish }}
+        tags: ghcr.io/ihudak/web-noagent:latest,ghcr.io/ihudak/web-noagent:build_${{ github.run_number }}
         platforms: linux/amd64,linux/arm64/v8
         build-args: |
           BASE_IMG_TAG=${{ github.run_number }}
           AGENT=noagent
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
