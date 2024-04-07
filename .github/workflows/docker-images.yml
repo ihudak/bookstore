@@ -26,7 +26,10 @@ jobs:
       run: | 
         export REL_VER="${GITHUB_REF#refs/*/}"
         echo "REL_VER0 == $REL_VER"
-        if [ -z ${REL_VER+x} ] || [ "$(echo $REL_VER | cut -c 1-2)" != "v." ] then; export REL_VER=${{ inputs.version }}; fi
+        if [ -z ${REL_VER+x} ] || [ "$(echo $REL_VER | cut -c 1-2)" != "v." ] then;
+          export REL_VER=${{ inputs.version }}
+          echo "REL_VER1 == $REL_VER"
+        fi
         echo "RELEASE_VERSION=$REL_VER" >> $GITHUB_ENV
     - name: Test
       run: |
