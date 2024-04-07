@@ -2,7 +2,7 @@
 FROM node:lts-alpine
 MAINTAINER dynatrace.com
 
-ENV DOCKER_VER=1.0.0
+ENV DOCKER_VER=1.5.0
 
 # set the current working directory for all commands
 WORKDIR /usr/src/app

@@ -17,7 +17,7 @@ ENV TENANT_ID_SHELL=$TENANT_ID_SHELL
 ENV TENANT_URL_SHELL="https://$TENANT_ID_SHELL.$TENANT_LAYER_SHELL.$TENANT_URL_DOMAIN"
 ENV OTEL_TOKEN_SHELL=$TENANT_TOKEN_SHELL
 
-ENV DOCKER_VER=1.4.0
+ENV DOCKER_VER=1.5.0
 
 # Prepare OA config
 ENV OA_INSTALL_DIR=/var/lib/dynatrace/oneagent
@@ -25,7 +25,7 @@ ENV AGENT_ZIP=$OA_INSTALL_DIR/OneAgent.zip
 ENV OA_CONF_FILE=$OA_INSTALL_DIR/agent/conf/standalone.conf
 
 # Prepare OTel config
-ENV OTEL_RESOURCE_ATTRIBUTES="service.name=java-quickstart,service.version=1.0.1"
+ENV OTEL_RESOURCE_ATTRIBUTES="service.name=java-quickstart,service.version=1.1.0"
 ENV OTEL_METRICS_EXPORTER=none
 ENV OTEL_EXPORTER_OTLP_TRACES_PROTOCOL=http/protobuf
 

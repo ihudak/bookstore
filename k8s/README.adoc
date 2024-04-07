@@ -1,6 +1,6 @@
 = BookStore - Demo project
 Ivan Gudak <ivan.gudak@dynatrace.com>
-1.0, February 01, 2023: Kubernetes Deployment
+1.5.0, April 07, 2024: Kubernetes Deployment
 :toc:
 :icons: font
 :url-quickref: https://docs.asciidoctor.org/asciidoc/latest/syntax-quick-reference/
