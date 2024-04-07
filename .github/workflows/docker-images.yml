@@ -22,15 +22,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Set Env  
-      run: | 
-        export REL_VER="${GITHUB_REF#refs/*/}"
-        echo "REL_VER0 == $REL_VER"
-        if [ -z ${REL_VER+x} ] || [ "$(echo $REL_VER | cut -c 1-2)" != "v." ] then;
-          export REL_VER=${{ inputs.version }}
-          echo "REL_VER1 == $REL_VER"
-        fi
-        echo "RELEASE_VERSION=$REL_VER" >> $GITHUB_ENV
+    - name: Set Env Push
+      if: ${{ github.event_name == 'push' }}
+      run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+    - name: Set Env Dispatch
+      if: ${{ github.event_name == 'workflow_dispatch' }}
+      run: echo "RELEASE_VERSION=${{ inputs.version }}" >> $GITHUB_ENV
+    - name: Set Env Other
+      if: ${{ github.event_name != 'workflow_dispatch' && github.event_name != 'push' }}
+      run: echo "RELEASE_VERSION=none" >> $GITHUB_ENV
     - name: Test
       run: |
         echo $RELEASE_VERSION
