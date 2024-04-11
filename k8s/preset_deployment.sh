@@ -81,7 +81,9 @@ else
   ag="agents";
 fi
 sed -i.bak "s/-{AGENT}:latest/-$ag:latest/g" *.yaml
-#sed -i.bak "s/bookstore-webapp:latest/bookstore-webapp:latest/g" bookstore.yaml
+# web app is available in the "noagent" config only
+sed -i.bak "s/web-agents:latest/web-noagent:latest/g" bookstore.yaml
+sed -i.bak "s/web-preinstrument:latest/web-noagent:latest/g" bookstore.yaml
 
 # set namespace
 sed -i.bak -E "/name:.*$/ s/name:.*$/name: ${ns}/g" namespace.yaml
