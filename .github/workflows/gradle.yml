@@ -24,9 +24,9 @@ jobs:
         OTEL_EXPORTER_OTLP_ENDPOINT: ${{ secrets.DT_OTLP_ENDPOINT }}
         OTEL_EXPORTER_OTLP_HEADERS: ${{ secrets.DT_OTLP_HEADERS }}
         OTEL_SERVICE_NAME: ${{ secrets.SERVICE_NAME }}
-        OTEL_METRICS_EXPORTER: 'console'
-        OTEL_LOGS_EXPORTER: 'console'
-        OTEL_TRACES_EXPORTER: 'console'
+#        OTEL_METRICS_EXPORTER: 'console'
+#        OTEL_LOGS_EXPORTER: 'console'
+#        OTEL_TRACES_EXPORTER: 'console'
 #        OTEL_RESOURCE_ATTRIBUTES: release=${GITHUB_REF#refs/*/},run_num=${{ github.run_number }}
 #  build:
 #    runs-on: ubuntu-latest
