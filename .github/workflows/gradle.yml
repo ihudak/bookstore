@@ -32,7 +32,6 @@ jobs:
 #    runs-on: ubuntu-latest
 #    permissions:
 #      contents: read
-
 #    steps:
     - uses: plengauer/opentelemetry-bash/actions/instrument/job@main
       env:
