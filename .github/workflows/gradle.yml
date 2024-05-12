@@ -14,16 +14,16 @@ on:
     branches: [ "**" ]
 
 jobs:
-  build:
+  observe:
     runs-on: ubuntu-latest
     permissions:
       contents: read
     steps:
-#    - uses: plengauer/opentelemetry-bash/actions/instrument/workflow@main
-#      env:
-#        OTEL_EXPORTER_OTLP_ENDPOINT: ${{ secrets.DT_OTLP_ENDPOINT }}
-#        OTEL_EXPORTER_OTLP_HEADERS: ${{ secrets.DT_OTLP_HEADERS }}
-#        OTEL_SERVICE_NAME: ${{ secrets.SERVICE_NAME }}
+    - uses: plengauer/opentelemetry-bash/actions/instrument/workflow@main
+      env:
+        OTEL_EXPORTER_OTLP_ENDPOINT: ${{ secrets.DT_OTLP_ENDPOINT }}
+        OTEL_EXPORTER_OTLP_HEADERS: ${{ secrets.DT_OTLP_HEADERS }}
+        OTEL_SERVICE_NAME: ${{ secrets.SERVICE_NAME }}
 #        OTEL_METRICS_EXPORTER: 'console'
 #        OTEL_LOGS_EXPORTER: 'console'
 #        OTEL_TRACES_EXPORTER: 'console'
