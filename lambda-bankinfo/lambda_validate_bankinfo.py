@@ -15,7 +15,7 @@
     1. create a new function and copy-paste its body and click "Deploy"
     2. set env vars in the config (Get Data to Dynatrace -> Lambda -> ...
     3. add an arn layer (AWS Lambda UI -> Layers
-    4. add API Gateway: HTTP API with Open security
+    4. add trigger -> add API Gateway: HTTP API with Open security
 """
 
 

@@ -4,30 +4,31 @@ metadata:
   name: bookstore-configmap
   namespace: bookstore
 data:
-  DT_MYSQL_SERVER: mysql-service #.databases # if the DB is in the "databases" namespace
+  DT_MYSQL_SERVER: "mysql-service" #.databases # if the DB is in the "databases" namespace
   DT_MYSQL_PORT: "3306"
-  DT_PG_SERVER: postgres-service #.databases # if the DB is in the "databases" namespace
+  DT_PG_SERVER: "postgres-service" #.databases # if the DB is in the "databases" namespace
   DT_PG_PORT: "5432"
-  DT_CLIENTS_SERVER: clients-svc:81
-  DT_BOOKS_SERVER: books-svc:82
-  DT_CARTS_SERVER: carts-svc:83
-  DT_STORAGE_SERVER: storage-svc:84
-  DT_ORDERS_SERVER: orders-svc:85
-  DT_PAYMENTS_SERVER: payments-svc:86
-  DT_DYNAPAY_SERVER: superpay-svc:87
-  DT_RATINGS_SERVER: ratings-svc:88
-  DT_INGEST_SERVER: ingest-svc:89
+  DT_CLIENTS_SERVER: "clients-svc:81"
+  DT_BOOKS_SERVER: "books-svc:82"
+  DT_CARTS_SERVER: "carts-svc:83"
+  DT_STORAGE_SERVER: "storage-svc:84"
+  DT_ORDERS_SERVER: "orders-svc:85"
+  DT_PAYMENTS_SERVER: "payments-svc:86"
+  DT_DYNAPAY_SERVER: "superpay-svc:87"
+  DT_RATINGS_SERVER: "ratings-svc:88"
+  DT_INGEST_SERVER: "ingest-svc:89"
   DT_SERVER_PORT: "8080"
-  TENANT_ID: <tenant-id>
-  TENANT_LAYER: dev # dev | sprint
-  APP_NAME: BookStore
+  TENANT_ID: "<tenant-id>"
+  TENANT_LAYER: "dev" # dev | sprint
+  APP_NAME: "BookStore"
   SVC_SUFFIX: "dev"
   SECURITY_CONTEXT: "Buch"
   COST_CENTER: "BuchSales"
-  COST_PROJECT: "BookStore"
+  COST_PRODUCT: "BookStore"
   DT_BANK_CHECK: "rand" # lambda | rand
   OTEL_JAVAAGENT_DEBUG: "false"
-  DT_BOOKSTORE_PROFILE: prod # prod | stage | dev -- logging levels -- prod:ERROR; stage:INFO; dev:DEBUG
-  DT_ACTIVE_WEB_ENV: production # production|staging|development|custom -- production (k8s docker desktop w Ingress) | staging (k8s docker desktop w/o Ingress) | development (w/o kubernetes)
-  BOOKSTORE_BASE_SRV_URL: http://localhost # if web_app_profile==custom, this is the base EXTERNAL URL where microservices APIs can be found by the web app
-  AWS_LAMBDA_URL: <URL to the Lambda function>
+  GIT_REPO: "https://github.com/ihudak/bookstore"
+  DT_BOOKSTORE_PROFILE: "prod" # prod | stage | dev -- logging levels -- prod:ERROR; stage:INFO; dev:DEBUG
+  DT_ACTIVE_WEB_ENV: "custom" # production|staging|development|custom -- production (k8s docker desktop w Ingress) | staging (k8s docker desktop w/o Ingress) | development (w/o kubernetes)
+  BOOKSTORE_BASE_SRV_URL: "http://kubernetes.docker.internal/api" # if web_app_profile==custom, this is the base EXTERNAL URL where microservices APIs can be found by the web app
+  AWS_LAMBDA_URL: "<URL to the Lambda function>"

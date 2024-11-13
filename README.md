@@ -3,6 +3,9 @@
 Bookstore project consists of 8 primary microservices, one web application, and a load generator.  
 **Purposes:** demonstrating of Dynatrace capabilities in high-load and unhealthy environments
 
+> **Note:** to setup a Kubernetes-based environment from public docker images from GCR, 
+> please follow the instructions in the k8s/README file
+
 # Build
 
 ### Prerequisite
@@ -42,11 +45,21 @@ Install Ingress controller to enable WebApp access all microservices in your dep
 
 
 ## Configuration
+### ingress
+* Set the public host name in `ingress.yaml`
+        
+        - host: kubernetes.docker.internal
+
 ### configmap
 * Set your tenant's id and URL in `configmap.yaml`
 
         TENANT_ID: <tenant-id> ## for instance, fdg3423
         TENANT_LAYER: <layer> ## e.g. sprint or dev
+        ...
+        BOOKSTORE_BASE_SRV_URL: "http://<host_from_ingress>/api" ## e.g. BOOKSTORE_BASE_SRV_URL: "http://kubernetes.docker.internal/api"
+        ## if you use Labmda function to randomize payment failure/success, please also set the following:
+        DT_BANK_CHECK: "lambda" # lambda | rand
+        AWS_LAMBDA_URL: <URL to the Lambda function> ## e.g. AWS_LAMBDA_URL: "https://my-lambla.execute-api.us-east-1.amazonaws.com/default/bookstore-bankinfo"
 
 * Define instrumentation (OneAgent or Otel) for the microservices in `config_agents.yaml`  
 

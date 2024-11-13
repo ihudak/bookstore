@@ -2,5 +2,12 @@ kind: Namespace
 apiVersion: v1
 metadata:
   name: bookstore
+  annotations:
+    metadata.dynatrace.com/boo: foo
+    metadata.dynatrace.com/my.annotation: custom_cost_center # mapping rule: my_annotation -> cost_center
+    metadata.dynatrace.com/dt.cost.costcenter: fixed_cost_center
+    metadata.dynatrace.com/dt.security_context: fixed_security
+    mystuff/my.annotation: ann1
   labels:
     name: bookstore
+    mystuff/my.label: lab2
