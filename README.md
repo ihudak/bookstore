@@ -26,6 +26,11 @@ Install Ingress controller to enable WebApp access all microservices in your dep
 
 > *Note:* Restart Docker Desktop after setting up ingress-nginx
 
+#### Azure Kubernetes Service (AKS)
+
+    helm install ingress-nginx ingress-nginx/ingress-nginx --create-namespace --namespace ingess-nginx `
+    --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-health-probe-request-path"=/healthz
+
 #### Minikube
 
     minikube addons enable ingress
