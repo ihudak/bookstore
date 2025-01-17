@@ -49,7 +49,6 @@ ENV JAVA_TOOL_OPTIONS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,addr
 # Prepare OA. Download Java Agent
 # oneAgent.sh will set tenant-specific settings on deploy
 RUN if [ "$AGENTS_PRELOAD" = true ]; then \
-      . /opt/set_bash_instrumentation.sh ; \
       if [ -n "${TENANT_URL+x}" ] && [ -n "${ENC_TOKEN+x}" ]; then \
           OA_TOKEN=$(echo $ENC_TOKEN | base64 -d); \
           export OA_TOKEN; \
@@ -63,20 +62,16 @@ ENTRYPOINT export OTEL_SERVICE_NAME="$SERVICE_FULL_NAME" && \
            if [ -z ${AGENT+x} ]; then \
                 java -Dotel.service.name=$SERVICE_FULL_NAME -jar /opt/app/app.jar; \
            elif [ $AGENT = $ONE_AGENT ] && [ -n "${TENANT_URL+x}" ] && [ -n "${OA_TOKEN+x}" ]; then \
-                . /opt/set_bash_instrumentation.sh; \
                 if [ "$AGENTS_PRELOAD" = false ]; then \
                     . /opt/get_oa.sh; \
                     . /opt/config_oa.sh; \
                 else \
                     [ -f /opt/config_oa.sh ] && { /opt/config_oa.sh; rm /opt/config_oa.sh; } || echo "config_oa.sh gone"; \
                 fi; \
-                /opt/deployment_event.sh; \
                 exec java -Dotel.service.name=$SERVICE_FULL_NAME -jar -agentpath:/var/lib/dynatrace/oneagent/agent/lib64/liboneagentloader.so -Xshare:off /opt/app/app.jar -nofork; \
            elif [ $AGENT = $OTEL_AGENT ] && [ -n "${TENANT_URL+x}" ] && [ -n "${OTEL_TOKEN+x}" ]; then \
-                . /opt/set_bash_instrumentation.sh; \
                 if [ "$AGENTS_PRELOAD" = false ]; then . /opt/get_otel.sh; fi; \
                 . /opt/config_otel.sh; \
-                /opt/deployment_event.sh; \
                 exec java -javaagent:/opt/opentelemetry-javaagent.jar -Dotel.service.name=$SERVICE_FULL_NAME -jar /opt/app/app.jar; \
            else \
                 java -Dotel.service.name=$SERVICE_FULL_NAME -jar /opt/app/app.jar; \
