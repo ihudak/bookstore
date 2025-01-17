@@ -35,10 +35,11 @@ COPY scripts/standalone.conf /opt/
 RUN chmod +x /opt/*.sh
 
 # install unzip and otel bash agent
-RUN apt-get update && \
-    apt-get install -y zip unzip vim jq && \
-    wget -O - https://raw.githubusercontent.com/plengauer/opentelemetry-bash/main/INSTALL.sh | sh -E && \
-    rm -rf /var/lib/apt/lists/*
+#RUN apt-get update && \
+#    apt-get install -y zip unzip vim jq && \
+#    wget -O - https://raw.githubusercontent.com/plengauer/opentelemetry-bash/main/INSTALL.sh | sh -E && \
+#    rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache --update zip
 
 # create directory for the application
 RUN mkdir -p /opt/app
