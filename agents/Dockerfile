@@ -1,4 +1,5 @@
-FROM eclipse-temurin:21
+#FROM eclipse-temurin:21
+FROM eclipse-temurin:21-jdk-alpine
 MAINTAINER dynatrace.com
 
 ARG OTEL_SERVICE_NAME=BookStoreDeploy
@@ -17,7 +18,7 @@ ENV TENANT_ID_SHELL=$TENANT_ID_SHELL
 ENV TENANT_URL_SHELL="https://$TENANT_ID_SHELL.$TENANT_LAYER_SHELL.$TENANT_URL_DOMAIN"
 ENV OTEL_TOKEN_SHELL=$TENANT_TOKEN_SHELL
 
-ENV DOCKER_VER=1.5.0
+ENV DOCKER_VER=1.5.3
 
 # Prepare OA config
 ENV OA_INSTALL_DIR=/var/lib/dynatrace/oneagent
