@@ -20,7 +20,7 @@ fi
 echo "Downloading the latest OneAgent..."
 # Download OA (Java Agent only)
 curl --request GET -sL \
---url "$TENANT_URL/api/v1/deployment/installer/agent/unix/paas/latest?flavor=musl&arch=$PLATFORM&bitness=64&include=java&skipMetadata=true" \
+--url "$TENANT_URL/api/v1/deployment/installer/agent/unix/paas/latest?flavor=musl&arch=arm&bitness=64&include=java&skipMetadata=true" \
 --header 'accept: application/octet-stream' \
 --header "Authorization: Api-Token $OA_TOKEN" \
 --output "$AGENT_ZIP"
