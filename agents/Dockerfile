@@ -18,7 +18,7 @@ ENV TENANT_ID_SHELL=$TENANT_ID_SHELL
 ENV TENANT_URL_SHELL="https://$TENANT_ID_SHELL.$TENANT_LAYER_SHELL.$TENANT_URL_DOMAIN"
 ENV OTEL_TOKEN_SHELL=$TENANT_TOKEN_SHELL
 
-ENV DOCKER_VER=1.5.3
+ENV DOCKER_VER=1.5.4
 
 # Prepare OA config
 ENV OA_INSTALL_DIR=/var/lib/dynatrace/oneagent
@@ -40,6 +40,7 @@ RUN chmod +x /opt/*.sh
 #    wget -O - https://raw.githubusercontent.com/plengauer/opentelemetry-bash/main/INSTALL.sh | sh -E && \
 #    rm -rf /var/lib/apt/lists/*
 RUN apk add --no-cache --update zip
+RUN apk --no-cache add curl
 
 # create directory for the application
 RUN mkdir -p /opt/app
