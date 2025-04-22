@@ -6,6 +6,12 @@ rm -rf $OA_INSTALL_DIR && mkdir -p $OA_INSTALL_DIR
 # MINSIZE is 5 MB
 export MINSIZE=500000
 
+if [ "$SYS" = "alpine" ]; then
+  export FLAVOR="musl";
+else
+  export FLAVOR="default";
+fi
+
 # define platform param for the Dynatrace API call
 PLATFORM=$(uname -p);
 export PLATFORM;
@@ -20,7 +26,7 @@ fi
 echo "Downloading the latest OneAgent..."
 # Download OA (Java Agent only)
 curl --request GET -sL \
---url "$TENANT_URL/api/v1/deployment/installer/agent/unix/paas/latest?flavor=musl&arch=arm&bitness=64&include=java&skipMetadata=true" \
+--url "$TENANT_URL/api/v1/deployment/installer/agent/unix/paas/latest?flavor=$FLAVOR&arch=$PLATFORM&bitness=64&include=java&skipMetadata=true" \
 --header 'accept: application/octet-stream' \
 --header "Authorization: Api-Token $OA_TOKEN" \
 --output "$AGENT_ZIP"

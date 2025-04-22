@@ -1,6 +1,10 @@
-#FROM eclipse-temurin:21
-FROM eclipse-temurin:21-jdk-alpine
+ARG VER=21
+ARG SYS=noble
+
+FROM eclipse-temurin:${VER}-jdk-${SYS}
 MAINTAINER dynatrace.com
+
+ENV SYS=$SYS
 
 ARG OTEL_SERVICE_NAME=BookStoreDeploy
 ENV ONE_AGENT="oneAgent"
@@ -18,7 +22,7 @@ ENV TENANT_ID_SHELL=$TENANT_ID_SHELL
 ENV TENANT_URL_SHELL="https://$TENANT_ID_SHELL.$TENANT_LAYER_SHELL.$TENANT_URL_DOMAIN"
 ENV OTEL_TOKEN_SHELL=$TENANT_TOKEN_SHELL
 
-ENV DOCKER_VER=1.5.4
+ENV DOCKER_VER="1.6.0"
 
 # Prepare OA config
 ENV OA_INSTALL_DIR=/var/lib/dynatrace/oneagent
@@ -34,13 +38,20 @@ COPY scripts/*.sh /opt/
 COPY scripts/standalone.conf /opt/
 RUN chmod +x /opt/*.sh
 
-# install unzip and otel bash agent
+# install unzip and curl
+RUN if [ "$SYS" = "alpine" ]; then \
+      apk add --no-cache --update zip curl; \
+    else \
+      apt-get update && \
+      apt-get install -y zip unzip vim jq && \
+      rm -rf /var/lib/apt/lists/* ; \
+    fi
 #RUN apt-get update && \
 #    apt-get install -y zip unzip vim jq && \
 #    wget -O - https://raw.githubusercontent.com/plengauer/opentelemetry-bash/main/INSTALL.sh | sh -E && \
 #    rm -rf /var/lib/apt/lists/*
-RUN apk add --no-cache --update zip
-RUN apk --no-cache add curl
+#RUN apk add --no-cache --update zip
+#RUN apk --no-cache add curl
 
 # create directory for the application
 RUN mkdir -p /opt/app

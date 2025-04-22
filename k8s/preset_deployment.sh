@@ -3,12 +3,13 @@
 display_usage() {
   echo "Sets agent instrumentation in the deployment yaml files"
   echo "Usage:";
-  echo "   ${0} -gyes -pmin -n bookstore  # installs agents on deploy; minimizes external port usage; bookstore namespace";
-  echo "   ${0} -gpre -pall -n bookstore  # takes agents prebuilt in the docker image; every service will be open (callable from outside of the k8s)";
+  echo "   ${0} -gyes -pmin -fubuntu -n bookstore  # installs agents on deploy; minimizes external port usage; bookstore namespace";
+  echo "   ${0} -gpre -pall -falpine -n bookstore  # takes agents prebuilt in the docker image; every service will be open (callable from outside of the k8s)";
   echo "   ${0} -r                   # resets yamls";
   echo "Flags:";
   echo " -g - agent: yes/no/pre. default = yes - preloads otel and dynatrace java agents. pre - use preinstrumented images";
   echo " -p - ports for k8s services: all/min. default = min - defines whether all k8s should get an external IP. Min - only ingest";
+  echo " -f - flavor: alpine/ubuntu. default = ubuntu";
   echo " -n - namespace. default bookstore";
   echo;
   echo "Please supply at least one flag";
@@ -18,6 +19,12 @@ display_usage() {
 
 reset_settings() {
   echo Resetting the config...
+  # reset flavor
+  # reset settings
+  sed -i.bak "s/:latest/:{FLAVOR}/g" *.yaml
+  sed -i.bak "s/:noble/:{FLAVOR}/g" *.yaml
+  sed -i.bak "s/:alpine/:{FLAVOR}/g" *.yaml
+
   # reset settings
   sed -i.bak "s/-noagent:latest/-{AGENT}:latest/g" *.yaml
   sed -i.bak "s/-agents:latest/-{AGENT}:latest/g" *.yaml
@@ -35,6 +42,7 @@ reset_settings() {
 get_params() {
   ag="yes"       # default - with agents
   po="min"       # default - all k8s have their public IPs
+  fl="latest"    # default - latest (ubuntu for Java, Alpine for Node.js)
   ns="bookstore" # default namespace
   rs="no"        # no reset by default
   hl="no"        # help
@@ -44,6 +52,7 @@ get_params() {
         h) hl="yes";;
         g) ag=${OPTARG};;
         p) po=${OPTARG};;
+        f) fl=${OPTARG};;
         n) ns=${OPTARG};;
         r) rs="yes";;
         *) echo unsupported flag ${flag}
@@ -53,6 +62,7 @@ get_params() {
   # fixing most common typos
   if [ $ag != "yes" ] && [ $ag != "y" ] && [ $ag != "pre" ] && [ $ag != "p" ]; then ag="no";    fi
   if [ $po != "min" ];                                                         then po="all";   fi
+  if [ $fl != "alpine" ];                                                      then fl="latest";    fi
   if [ $ns = "" ];                                                             then ns="bookstore"; fi
 
   if [ $hl = "yes" ]; then # user wanted help. ignoring everything else
@@ -64,6 +74,7 @@ get_params() {
     echo Parameters configured:
     echo " agents:    " $ag;
     echo " ports:     " $po;
+    echo " flavor:    " $fl;
     echo " namespace: " $ns;
   fi
 }
@@ -80,10 +91,10 @@ elif [ $ag = "pre" ] || [ $ag = "p" ]; then
 else
   ag="agents";
 fi
-sed -i.bak "s/-{AGENT}:latest/-$ag:latest/g" *.yaml
-# web app is available in the "noagent" config only
-sed -i.bak "s/web-agents:latest/web-noagent:latest/g" web.yaml
-sed -i.bak "s/web-preinstrument:latest/web-noagent:latest/g" web.yaml
+
+# web app is available in latest flavor and noagent only
+sed -i.bak "s/web-{AGENT}:{FLAVOR}/web-noagent:latest/g" web.yaml
+sed -i.bak "s/-{AGENT}:{FLAVOR}/-$ag:$fl/g" *.yaml
 
 # set namespace
 sed -i.bak -E "/name:.*$/ s/name:.*$/name: ${ns}/g" namespace.yaml
