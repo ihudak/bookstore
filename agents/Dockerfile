@@ -4,8 +4,6 @@ ARG SYS=noble
 FROM eclipse-temurin:${VER}-jdk-${SYS}
 MAINTAINER dynatrace.com
 
-ENV SYS=$SYS
-
 ARG OTEL_SERVICE_NAME=BookStoreDeploy
 ENV ONE_AGENT="oneAgent"
 ENV OTEL_AGENT="otelAgent"
@@ -39,7 +37,7 @@ COPY scripts/standalone.conf /opt/
 RUN chmod +x /opt/*.sh
 
 # install unzip and curl
-RUN if [ "$SYS" = "alpine" ]; then \
+RUN if [ "$SYS" = alpine ]; then \
       apk add --no-cache --update zip curl; \
     else \
       apt-get update && \
