@@ -79,7 +79,7 @@ jobs:
         platforms: linux/amd64,linux/arm64/v8
         build-args: |
           VER=21
-          SYS=noble
+          FLAVOR=noble
         cache-from: type=gha
         cache-to: type=gha,mode=max
 
@@ -95,7 +95,7 @@ jobs:
         platforms: linux/amd64,linux/arm64/v8
         build-args: |
           VER=21
-          SYS=alpine
+          FLAVOR=alpine
         cache-from: type=gha
         cache-to: type=gha,mode=max
 
@@ -117,7 +117,7 @@ jobs:
           TENANT_TOKEN_SHELL=${{ secrets.DT_DEPLOY_MON_ENC_TOKEN }}
           TENANT_URL_DOMAIN=${{ secrets.DT_DEPLOY_MON_DOMAIN }}
           VER=21
-          SYS=noble
+          FLAVOR=noble
         cache-from: type=gha
         cache-to: type=gha,mode=max
 
@@ -138,7 +138,7 @@ jobs:
           TENANT_TOKEN_SHELL=${{ secrets.DT_DEPLOY_MON_ENC_TOKEN }}
           TENANT_URL_DOMAIN=${{ secrets.DT_DEPLOY_MON_DOMAIN }}
           VER=21
-          SYS=alpine
+          FLAVOR=alpine
         cache-from: type=gha
         cache-to: type=gha,mode=max
 
@@ -160,7 +160,7 @@ jobs:
           TENANT_TOKEN_SHELL=${{ secrets.DT_DEPLOY_MON_ENC_TOKEN }}
           TENANT_URL_DOMAIN=${{ secrets.DT_DEPLOY_MON_DOMAIN }}
           VER=21
-          SYS=noble
+          FLAVOR=noble
         cache-from: type=gha
         cache-to: type=gha,mode=max
 
@@ -181,7 +181,7 @@ jobs:
           TENANT_TOKEN_SHELL=${{ secrets.DT_DEPLOY_MON_ENC_TOKEN }}
           TENANT_URL_DOMAIN=${{ secrets.DT_DEPLOY_MON_DOMAIN }}
           VER=21
-          SYS=alpine
+          FLAVOR=alpine
         cache-from: type=gha
         cache-to: type=gha,mode=max
 

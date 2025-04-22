@@ -1,7 +1,7 @@
 ARG VER=21
-ARG SYS=noble
+ARG FLAVOR=noble
 
-FROM eclipse-temurin:${VER}-jdk-${SYS}
+FROM eclipse-temurin:${VER}-jdk-${FLAVOR}
 MAINTAINER dynatrace.com
 
 #COPY --from=pae32231.dev.dynatracelabs.com/linux/oneagent-codemodules-musl:java / /

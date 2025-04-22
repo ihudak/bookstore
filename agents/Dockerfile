@@ -1,7 +1,7 @@
 ARG VER=21
-ARG SYS=noble
+ARG FLAVOR=noble
 
-FROM eclipse-temurin:${VER}-jdk-${SYS}
+FROM eclipse-temurin:${VER}-jdk-${FLAVOR}
 MAINTAINER dynatrace.com
 
 ARG OTEL_SERVICE_NAME=BookStoreDeploy
@@ -37,7 +37,7 @@ COPY scripts/standalone.conf /opt/
 RUN chmod +x /opt/*.sh
 
 # install unzip and curl
-RUN if [ "$SYS" = alpine ]; then \
+RUN if [ $FLAVOR = alpine ]; then \
       apk add --no-cache --update zip curl; \
     else \
       apt-get update && \
@@ -58,7 +58,7 @@ ENV JAVA_TOOL_OPTIONS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,addr
 
 # Prepare OA. Download Java Agent
 # oneAgent.sh will set tenant-specific settings on deploy
-RUN if [ "$AGENTS_PRELOAD" = true ]; then \
+RUN if [ $AGENTS_PRELOAD = true ]; then \
       if [ -n "${TENANT_URL+x}" ] && [ -n "${ENC_TOKEN+x}" ]; then \
           OA_TOKEN=$(echo $ENC_TOKEN | base64 -d); \
           export OA_TOKEN; \
