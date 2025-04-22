@@ -37,7 +37,7 @@ COPY scripts/standalone.conf /opt/
 RUN chmod +x /opt/*.sh
 
 # install unzip and curl
-RUN if [ $FLAVOR = alpine ]; then \
+RUN if [ ${FLAVOR:-ubuntu} = alpine ]; then \
       apk add --no-cache --update zip curl; \
     else \
       apt-get update && \
@@ -58,7 +58,7 @@ ENV JAVA_TOOL_OPTIONS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,addr
 
 # Prepare OA. Download Java Agent
 # oneAgent.sh will set tenant-specific settings on deploy
-RUN if [ $AGENTS_PRELOAD = true ]; then \
+RUN if [ ${AGENTS_PRELOAD} = true ]; then \
       if [ -n "${TENANT_URL+x}" ] && [ -n "${ENC_TOKEN+x}" ]; then \
           OA_TOKEN=$(echo $ENC_TOKEN | base64 -d); \
           export OA_TOKEN; \
@@ -72,7 +72,7 @@ ENTRYPOINT export OTEL_SERVICE_NAME="$SERVICE_FULL_NAME" && \
            if [ -z ${AGENT+x} ]; then \
                 java -Dotel.service.name=$SERVICE_FULL_NAME -jar /opt/app/app.jar; \
            elif [ $AGENT = $ONE_AGENT ] && [ -n "${TENANT_URL+x}" ] && [ -n "${OA_TOKEN+x}" ]; then \
-                if [ "$AGENTS_PRELOAD" = false ]; then \
+                if [ $AGENTS_PRELOAD = false ]; then \
                     . /opt/get_oa.sh; \
                     . /opt/config_oa.sh; \
                 else \
@@ -80,7 +80,7 @@ ENTRYPOINT export OTEL_SERVICE_NAME="$SERVICE_FULL_NAME" && \
                 fi; \
                 exec java -Dotel.service.name=$SERVICE_FULL_NAME -jar -agentpath:/var/lib/dynatrace/oneagent/agent/lib64/liboneagentloader.so -Xshare:off /opt/app/app.jar -nofork; \
            elif [ $AGENT = $OTEL_AGENT ] && [ -n "${TENANT_URL+x}" ] && [ -n "${OTEL_TOKEN+x}" ]; then \
-                if [ "$AGENTS_PRELOAD" = false ]; then . /opt/get_otel.sh; fi; \
+                if [ $AGENTS_PRELOAD = false ]; then . /opt/get_otel.sh; fi; \
                 . /opt/config_otel.sh; \
                 exec java -javaagent:/opt/opentelemetry-javaagent.jar -Dotel.service.name=$SERVICE_FULL_NAME -jar /opt/app/app.jar; \
            else \
