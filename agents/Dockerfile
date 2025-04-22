@@ -1,5 +1,6 @@
 ARG VER=21
 ARG FLAVOR=noble
+ENV FLAV=${FLAVOR}
 
 FROM eclipse-temurin:${VER}-jdk-${FLAVOR}
 MAINTAINER dynatrace.com
@@ -37,7 +38,7 @@ COPY scripts/standalone.conf /opt/
 RUN chmod +x /opt/*.sh
 
 # install unzip and curl
-RUN if [ "${FLAVOR}" = "alpine" ]; then \
+RUN if [ "$FLAV" = "alpine" ]; then \
       apk add --no-cache --update zip curl; \
     else \
       apt-get update && \
