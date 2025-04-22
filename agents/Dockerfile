@@ -37,7 +37,7 @@ COPY scripts/standalone.conf /opt/
 RUN chmod +x /opt/*.sh
 
 # install unzip and curl
-RUN if [ ${FLAVOR:-ubuntu} = alpine ]; then \
+RUN if [ ${FLAVOR} = alpine ]; then \
       apk add --no-cache --update zip curl; \
     else \
       apt-get update && \
