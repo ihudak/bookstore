@@ -1,9 +1,10 @@
 ARG VER=21
-ARG FLAVOR=noble
-ENV FLAV=${FLAVOR}
+ARG FLAVOR=abra
 
 FROM eclipse-temurin:${VER}-jdk-${FLAVOR}
 MAINTAINER dynatrace.com
+
+ARG FLAVOR=abra
 
 ARG OTEL_SERVICE_NAME=BookStoreDeploy
 ENV ONE_AGENT="oneAgent"
