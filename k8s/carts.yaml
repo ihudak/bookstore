@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
         - name: carts
-          image: ghcr.io/ihudak/carts-{AGENT}:latest
+          image: ghcr.io/ihudak/carts-{AGENT}:{FLAVOR}
           ports:
             - containerPort: 8080
             - containerPort: 5005

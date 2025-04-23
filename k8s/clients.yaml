@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
         - name: clients
-          image: ghcr.io/ihudak/clients-{AGENT}:latest
+          image: ghcr.io/ihudak/clients-{AGENT}:{FLAVOR}
           ports:
             - containerPort: 8080
             - containerPort: 5005
