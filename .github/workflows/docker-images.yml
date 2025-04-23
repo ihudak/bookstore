@@ -159,8 +159,8 @@ jobs:
           TENANT_LAYER_SHELL=${{ secrets.DT_DEPLOY_MON_TIER }}
           TENANT_TOKEN_SHELL=${{ secrets.DT_DEPLOY_MON_ENC_TOKEN }}
           TENANT_URL_DOMAIN=${{ secrets.DT_DEPLOY_MON_DOMAIN }}
-          TENANT_URL=${{ secrets.DT_DEPLOY_MON_DOMAIN }}
-          ENC_TOKEN=${{ secrets.DT_DEPLOY_MON_ENC_TOKEN }}
+          TENANT_URL=${{ secrets.DT_TENANT_URL }}
+          ENC_TOKEN=${{ secrets.DT_TENANT_TOKEN }}
           VER=21
           FLAVOR=noble
         cache-from: type=gha
@@ -182,8 +182,8 @@ jobs:
           TENANT_LAYER_SHELL=${{ secrets.DT_DEPLOY_MON_TIER }}
           TENANT_TOKEN_SHELL=${{ secrets.DT_DEPLOY_MON_ENC_TOKEN }}
           TENANT_URL_DOMAIN=${{ secrets.DT_DEPLOY_MON_DOMAIN }}
-          TENANT_URL=${{ secrets.DT_DEPLOY_MON_DOMAIN }}
-          ENC_TOKEN=${{ secrets.DT_DEPLOY_MON_ENC_TOKEN }}
+          TENANT_URL=${{ secrets.DT_TENANT_URL }}
+          ENC_TOKEN=${{ secrets.DT_TENANT_TOKEN }}
           VER=21
           FLAVOR=alpine
         cache-from: type=gha
