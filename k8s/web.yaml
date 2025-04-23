@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
         - name: web
-          image: ghcr.io/ihudak/web-{AGENT}:latest
+          image: ghcr.io/ihudak/web-noagent:latest
           ports:
             - containerPort: 4200
           envFrom:

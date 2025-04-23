@@ -24,12 +24,19 @@ reset_settings() {
   sed -i.bak "s/:latest/:{FLAVOR}/g" *.yaml
   sed -i.bak "s/:noble/:{FLAVOR}/g" *.yaml
   sed -i.bak "s/:alpine/:{FLAVOR}/g" *.yaml
+  # databases can have only latest tag
+  sed -i.bak "s/dt-postgres:{FLAVOR}/dt-postgres:latest/g" databases.yaml
+  sed -i.bak "s/dt-mysql:{FLAVOR}/dt-mysql:latest/g" databases.yaml
 
   # reset settings
   sed -i.bak "s/-noagent:latest/-{AGENT}:latest/g" *.yaml
   sed -i.bak "s/-agents:latest/-{AGENT}:latest/g" *.yaml
   sed -i.bak "s/-preinstrument:latest/-{AGENT}:latest/g" *.yaml
 #  sed -i.bak "s/bookstore-webapp:latest/bookstore-webapp:latest/g" bookstore.yaml
+
+  # web app is available in latest flavor and noagent only
+  sed -i.bak "s/web-{AGENT}:{FLAVOR}/web-noagent:latest/g" web.yaml
+
   # setting LoadBalancer back
   sed -i.bak "s/type: ClusterIP # LoadBalancer/type: LoadBalancer # ClusterIP/g" *.yaml
   sed -i.bak -E "/^#.+nodePort: / s/^#//g" *.yaml
@@ -92,8 +99,6 @@ else
   ag="agents";
 fi
 
-# web app is available in latest flavor and noagent only
-sed -i.bak "s/web-{AGENT}:{FLAVOR}/web-noagent:latest/g" web.yaml
 sed -i.bak "s/-{AGENT}:{FLAVOR}/-$ag:$fl/g" *.yaml
 
 # set namespace
