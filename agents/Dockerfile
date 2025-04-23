@@ -1,10 +1,10 @@
 ARG VER=21
-ARG FLAVOR=abra
+ARG FLAVOR=noble
 
 FROM eclipse-temurin:${VER}-jdk-${FLAVOR}
 MAINTAINER dynatrace.com
 
-ARG FLAVOR=abra
+ARG FLAVOR=noble
 
 ARG OTEL_SERVICE_NAME=BookStoreDeploy
 ENV ONE_AGENT="oneAgent"
