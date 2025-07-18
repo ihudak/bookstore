@@ -19,6 +19,7 @@ data:
   DT_INGEST_SERVER: "ingest-svc:89"
   DT_SERVER_PORT: "8080"
   DT_ENV_ID: "<tenant-id>"
+  DT_ENV_URL: "<tenant-url>"
   APP_NAME: "BookStore"
   SVC_SUFFIX: "dev"
   SECURITY_CONTEXT: "Buch"
