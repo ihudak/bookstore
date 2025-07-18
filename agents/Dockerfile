@@ -35,10 +35,10 @@ RUN chmod +x /opt/*.sh
 
 # install unzip and curl
 RUN if [ "$FLAVOR" = "alpine" ]; then \
-      apk add --no-cache --update zip curl jq; \
+      apk add --no-cache --update zip curl jq python3 python3-pip python3-venv strace; \
     else \
       apt-get update && \
-      apt-get install -y zip unzip vim jq && \
+      apt-get install -y zip unzip vim jq python3 python3-pip python3-venv strace && \
       rm -rf /var/lib/apt/lists/* ; \
     fi
 # install otel bash
