@@ -14,7 +14,7 @@ else
   export PLATFORM="x86";
 fi
 
-wget -O "$AGENT_INSTALLER" "$TENANT_URL/api/v1/deployment/installer/agent/unix/default/latest?arch=$PLATFORM" --header="Authorization: Api-Token $OA_TOKEN"
+wget -O "$AGENT_INSTALLER" "$DT_ENV_URL/api/v1/deployment/installer/agent/unix/default/latest?arch=$PLATFORM" --header="Authorization: Api-Token $DT_TOKEN"
 
 FILESIZE=$(stat -c%s "$AGENT_INSTALLER")
 export FILESIZE

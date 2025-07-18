@@ -50,8 +50,6 @@ spec:
                 configMapKeyRef:
                   name: bookstore-agents-configmap
                   key: payments_agent
-            - name: TENANT_URL
-              value: "https://$(TENANT_ID).$(TENANT_LAYER).dynatracelabs.com"
             - name: SERVICE_NAME
               value: Payments
             - name: SERVICE_FULL_NAME

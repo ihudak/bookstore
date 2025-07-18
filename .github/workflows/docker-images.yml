@@ -112,10 +112,9 @@ jobs:
         platforms: linux/amd64,linux/arm64/v8
         build-args: |
           AGENTS_PRELOAD=false
-          TENANT_ID_SHELL=${{ secrets.DT_DEPLOY_MON_TENANT }}
-          TENANT_LAYER_SHELL=${{ secrets.DT_DEPLOY_MON_TIER }}
-          TENANT_TOKEN_SHELL=${{ secrets.DT_DEPLOY_MON_ENC_TOKEN }}
-          TENANT_URL_DOMAIN=${{ secrets.DT_DEPLOY_MON_DOMAIN }}
+          DT_ENV_ID=${{ secrets.DT_ENV_ID }}
+          DT_TOKEN=${{ secrets.DT_TOKEN }}
+          DT_ENV_URL=${{ secrets.DT_ENV_URL }}
           VER=21
           FLAVOR=noble
         cache-from: type=gha
@@ -133,10 +132,9 @@ jobs:
         platforms: linux/amd64,linux/arm64/v8
         build-args: |
           AGENTS_PRELOAD=false
-          TENANT_ID_SHELL=${{ secrets.DT_DEPLOY_MON_TENANT }}
-          TENANT_LAYER_SHELL=${{ secrets.DT_DEPLOY_MON_TIER }}
-          TENANT_TOKEN_SHELL=${{ secrets.DT_DEPLOY_MON_ENC_TOKEN }}
-          TENANT_URL_DOMAIN=${{ secrets.DT_DEPLOY_MON_DOMAIN }}
+          DT_ENV_ID=${{ secrets.DT_ENV_ID }}
+          DT_TOKEN=${{ secrets.DT_TOKEN }}
+          DT_ENV_URL=${{ secrets.DT_ENV_URL }}
           VER=21
           FLAVOR=alpine
         cache-from: type=gha
@@ -155,12 +153,9 @@ jobs:
         platforms: linux/amd64,linux/arm64/v8
         build-args: |
           AGENTS_PRELOAD=true
-          TENANT_ID_SHELL=${{ secrets.DT_DEPLOY_MON_TENANT }}
-          TENANT_LAYER_SHELL=${{ secrets.DT_DEPLOY_MON_TIER }}
-          TENANT_TOKEN_SHELL=${{ secrets.DT_DEPLOY_MON_ENC_TOKEN }}
-          TENANT_URL_DOMAIN=${{ secrets.DT_DEPLOY_MON_DOMAIN }}
-          TENANT_URL=${{ secrets.DT_TENANT_URL }}
-          ENC_TOKEN=${{ secrets.DT_TENANT_TOKEN }}
+          DT_ENV_ID=${{ secrets.DT_ENV_ID }}
+          DT_TOKEN=${{ secrets.DT_TOKEN }}
+          DT_ENV_URL=${{ secrets.DT_ENV_URL }}
           VER=21
           FLAVOR=noble
         cache-from: type=gha
@@ -178,12 +173,9 @@ jobs:
         platforms: linux/amd64,linux/arm64/v8
         build-args: |
           AGENTS_PRELOAD=true
-          TENANT_ID_SHELL=${{ secrets.DT_DEPLOY_MON_TENANT }}
-          TENANT_LAYER_SHELL=${{ secrets.DT_DEPLOY_MON_TIER }}
-          TENANT_TOKEN_SHELL=${{ secrets.DT_DEPLOY_MON_ENC_TOKEN }}
-          TENANT_URL_DOMAIN=${{ secrets.DT_DEPLOY_MON_DOMAIN }}
-          TENANT_URL=${{ secrets.DT_TENANT_URL }}
-          ENC_TOKEN=${{ secrets.DT_TENANT_TOKEN }}
+          DT_ENV_ID=${{ secrets.DT_ENV_ID }}
+          DT_TOKEN=${{ secrets.DT_TOKEN }}
+          DT_ENV_URL=${{ secrets.DT_ENV_URL }}
           VER=21
           FLAVOR=alpine
         cache-from: type=gha

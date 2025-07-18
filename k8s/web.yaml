@@ -43,8 +43,6 @@ spec:
                 configMapKeyRef:
                   name: bookstore-agents-configmap
                   key: web_agent
-            - name: TENANT_URL
-              value: "https://$(TENANT_ID).$(TENANT_LAYER).dynatracelabs.com"
           resources:
             limits:
               cpu: 500m

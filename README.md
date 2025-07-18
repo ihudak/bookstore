@@ -58,8 +58,8 @@ Install Ingress controller to enable WebApp access all microservices in your dep
 ### configmap
 * Set your tenant's id and URL in `configmap.yaml`
 
-        TENANT_ID: <tenant-id> ## for instance, fdg3423
-        TENANT_LAYER: <layer> ## e.g. sprint or dev
+        DT_ENV_ID: <tenant-id> ## for instance, "fdg3423" for Dynatrace SaaS or "a4a7b494-703c-421b-9f28-cb496d81f834" for Dynatrace Managed
+        DT_ENV_URL: <DT tenant url> ## for instance, "https://fdg3423.live.dynatrace.com" for Dynatrace SaaS or https://dynatrace-managed.example.com/e/a4a7b494-703c-421b-9f28-cb496d81f834 for Dynatrace Managed
         ...
         BOOKSTORE_BASE_SRV_URL: "http://<host_from_ingress>/api" ## e.g. BOOKSTORE_BASE_SRV_URL: "http://kubernetes.docker.internal/api"
         ## if you use Labmda function to randomize payment failure/success, please also set the following:

@@ -31,16 +31,16 @@ IF %BASH_INSTRUMENT%==false (
     docker image build --platform=linux/amd64 -t ghcr.io/ihudak/java-%IMG_NAME%-x64:latest ^
         --build-arg AGENTS_PRELOAD=%PRELOAD% ^
         --build-arg PLATFORM=x64 ^
-        --build-arg TENANT_ID_SHELL=%2 ^
-        --build-arg TENANT_LAYER_SHELL=%3 ^
-        --build-arg TENANT_TOKEN_SHELL=%4 ^
+        --build-arg DT_ENV_ID=%2 ^
+        --build-arg DT_ENV_URL=%3 ^
+        --build-arg DT_TOKEN=%4 ^
         .
     docker image build --platform=linux/arm64 -t ghcr.io/ihudak/java-%IMG_NAME%-arm64:latest ^
         --build-arg AGENTS_PRELOAD=%PRELOAD% ^
         --build-arg PLATFORM=arm64 ^
-        --build-arg TENANT_ID_SHELL=%2 ^
-        --build-arg TENANT_LAYER_SHELL=%3 ^
-        --build-arg TENANT_TOKEN_SHELL=%4 ^
+        --build-arg DT_ENV_ID=%2 ^
+        --build-arg DT_ENV_URL=%3 ^
+        --build-arg DT_TOKEN=%4 ^
         .
 )
 

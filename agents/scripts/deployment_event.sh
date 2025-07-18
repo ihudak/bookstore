@@ -1,7 +1,7 @@
 #!/bin/sh
 
-export ENTITIES_URL="$TENANT_URL/api/v2/entities?pageSize=500&entitySelector=type(SERVICE),entityName($SERVICE_FULL_NAME)"
-export EVENTS_URL="$TENANT_URL/api/v2/events/ingest"
+export ENTITIES_URL="$DT_ENV_URL/api/v2/entities?pageSize=500&entitySelector=type(SERVICE),entityName($SERVICE_FULL_NAME)"
+export EVENTS_URL="$DT_ENV_URL/api/v2/events/ingest"
 
 if [ "$(echo $ENTITIES_TOKEN | cut -c 1-7)" != "dt0c01." ] || [ "$(echo $EVENTS_TOKEN | cut -c 1-7)" != "dt0c01." ]; then
   echo Tokens for the deployment event are not ready
