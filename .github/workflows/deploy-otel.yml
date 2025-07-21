@@ -17,6 +17,8 @@ jobs:
           OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: '${{ secrets.DT_ENV_URL }}/api/v2/otlp/v1/traces'
           OTEL_EXPORTER_OTLP_METRICS_ENDPOINT: '${{ secrets.DT_ENV_URL }}/api/v2/otlp/v1/traces'
           OTEL_EXPORTER_OTLP_LOGS_ENDPOINT: '${{ secrets.DT_ENV_URL }}/api/v2/otlp/v1/traces'
+        with:
+          github_token: '${{ secrets.DEPLOY_OBSERVABILITY_TOKEN }}'
       - name: 'Set Env Vars'
         shell: bash
         run: |
@@ -25,5 +27,3 @@ jobs:
           echo "OTEL_EXPORTER_OTLP_TRACES_HEADERS=$(echo \"Api-Token ${{ secrets.DT_TOKEN }}\" | jq -Rr @uri)" >> $GITHUB_ENV
           echo "OTEL_EXPORTER_OTLP_METRICS_HEADERS=$(echo \"Api-Token ${{ secrets.DT_TOKEN }}\" | jq -Rr @uri)" >> $GITHUB_ENV
           echo "OTEL_EXPORTER_OTLP_LOGS_HEADERS=$(echo \"Api-Token ${{ secrets.DT_TOKEN }}\" | jq -Rr @uri)" >> $GITHUB_ENV
-        with:
-          github_token: '${{ secrets.DEPLOY_OBSERVABILITY_TOKEN }}'
