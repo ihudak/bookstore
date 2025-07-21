@@ -33,17 +33,19 @@ COPY scripts/*.sh /opt/
 COPY scripts/standalone.conf /opt/
 RUN chmod +x /opt/*.sh
 
-RUN echo "$FLAVOR"
+RUN echo $FLAVOR
 
 # install unzip and curl
 RUN if [ "$FLAVOR" = "alpine" ]; then \
       apk add --no-cache --update zip curl jq python3 python3-pip python3-venv strace; \
       echo "$FLAVOR" = "alpine" ; \
+      echo "alpine" ; \
     else \
       apt-get update && \
       apt-get install -y zip unzip vim jq python3 python3-pip python3-venv strace && \
       rm -rf /var/lib/apt/lists/* ; \
-      echo "$FLAVOR" = "alpine" ; \
+      echo "$FLAVOR" = "noble" ; \
+      echo "ubuntu" ; \
     fi
 # install otel bash
 RUN wget -O - https://raw.githubusercontent.com/plengauer/opentelemetry-shell/main/INSTALL.sh | sh -E
