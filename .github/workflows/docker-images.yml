@@ -1,5 +1,4 @@
 name: Docker Images CI
-
 on:
   workflow_dispatch:
     inputs:
@@ -15,1125 +14,1053 @@ on:
   push:
     tags:
       - 'v*.*.*'
-
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v4
-    - name: Set Env Push
-      if: ${{ github.event_name == 'push' }}
-      run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-    - name: Set Env Dispatch
-      if: ${{ github.event_name == 'workflow_dispatch' }}
-      run: echo "RELEASE_VERSION=${{ inputs.version }}" >> $GITHUB_ENV
-    - name: Set Env Other
-      if: ${{ github.event_name != 'workflow_dispatch' && github.event_name != 'push' }}
-      run: echo "RELEASE_VERSION=none" >> $GITHUB_ENV
-    - name: Test
-      run: |
-        echo $RELEASE_VERSION
-        echo ${{ env.RELEASE_VERSION }}
-        
-
-    - name: Set up JDK 21
-      uses: actions/setup-java@v4
-      with:
-        java-version: '21'
-        distribution: 'temurin'
-    
-    - name: Setup Gradle
-      uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
-
-    - name: Make gradlew executable
-      run: chmod +x ./gradlew
-
-    - name: Build with Gradle Wrapper
-      run: ./gradlew build -x test
-
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.CR_PAT }}
-      
-    - name: Set up QEMU
-      uses: docker/setup-qemu-action@v3
-      
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
-
-
-    - name: Build and push noagent Ubuntu
-      uses: docker/build-push-action@v5
-      with:
-        context: ./noagent
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/java-noagent:latest
-          ghcr.io/ihudak/java-noagent:noble
-          ghcr.io/ihudak/java-noagent:${{ env.RELEASE_VERSION }}
-          ghcr.io/ihudak/java-noagent:build_${{ github.run_number }}
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          VER=21
-          FLAVOR=noble
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push noagent Alpine
-      uses: docker/build-push-action@v5
-      with:
-        context: ./noagent
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/java-noagent:alpine
-          ghcr.io/ihudak/java-noagent:${{ env.RELEASE_VERSION }}-alpine
-          ghcr.io/ihudak/java-noagent:build_${{ github.run_number }}-alpine
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          VER=21
-          FLAVOR=alpine
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push agents Ubuntu
-      uses: docker/build-push-action@v5
-      with:
-        context: ./agents
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/java-agents:latest
-          ghcr.io/ihudak/java-agents:noble
-          ghcr.io/ihudak/java-agents:${{ env.RELEASE_VERSION }}
-          ghcr.io/ihudak/java-agents:build_${{ github.run_number }}
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          AGENTS_PRELOAD=false
-          DT_ENV_ID=${{ secrets.DT_ENV_ID }}
-          DT_TOKEN=${{ secrets.DT_TOKEN }}
-          DT_ENV_URL=${{ secrets.DT_ENV_URL }}
-          VER=21
-          FLAVOR=noble
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push agents Alpine
-      uses: docker/build-push-action@v5
-      with:
-        context: ./agents
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/java-agents:alpine
-          ghcr.io/ihudak/java-agents:${{ env.RELEASE_VERSION }}-alpine
-          ghcr.io/ihudak/java-agents:build_${{ github.run_number }}-alpine
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          AGENTS_PRELOAD=false
-          DT_ENV_ID=${{ secrets.DT_ENV_ID }}
-          DT_TOKEN=${{ secrets.DT_TOKEN }}
-          DT_ENV_URL=${{ secrets.DT_ENV_URL }}
-          VER=21
-          FLAVOR=alpine
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push preinstrument Ubuntu
-      uses: docker/build-push-action@v5
-      with:
-        context: ./agents
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/java-preinstrument:latest
-          ghcr.io/ihudak/java-preinstrument:noble
-          ghcr.io/ihudak/java-preinstrument:${{ env.RELEASE_VERSION }}
-          ghcr.io/ihudak/java-preinstrument:build_${{ github.run_number }}
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          AGENTS_PRELOAD=true
-          DT_ENV_ID=${{ secrets.DT_ENV_ID }}
-          DT_TOKEN=${{ secrets.DT_TOKEN }}
-          DT_ENV_URL=${{ secrets.DT_ENV_URL }}
-          VER=21
-          FLAVOR=noble
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push preinstrument Alpine
-      uses: docker/build-push-action@v5
-      with:
-        context: ./agents
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/java-preinstrument:alpine
-          ghcr.io/ihudak/java-preinstrument:${{ env.RELEASE_VERSION }}-alpine
-          ghcr.io/ihudak/java-preinstrument:build_${{ github.run_number }}-alpine
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          AGENTS_PRELOAD=true
-          DT_ENV_ID=${{ secrets.DT_ENV_ID }}
-          DT_TOKEN=${{ secrets.DT_TOKEN }}
-          DT_ENV_URL=${{ secrets.DT_ENV_URL }}
-          VER=21
-          FLAVOR=alpine
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push MySQL
-      uses: docker/build-push-action@v5
-      with:
-        context: ./database/mysql
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/dt-mysql:latest
-          ghcr.io/ihudak/dt-mysql:${{ env.RELEASE_VERSION }}
-          ghcr.io/ihudak/dt-mysql:build_${{ github.run_number }}
-        platforms: linux/amd64,linux/arm64/v8
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push Postgres
-      uses: docker/build-push-action@v5
-      with:
-        context: ./database/pg
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/dt-postgres:latest
-          ghcr.io/ihudak/dt-postgres:${{ env.RELEASE_VERSION }}
-          ghcr.io/ihudak/dt-postgres:build_${{ github.run_number }}
-        platforms: linux/amd64,linux/arm64/v8
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-
-    - name: Build and push clients-noagent Ubuntu
-      uses: docker/build-push-action@v5
-      with:
-        context: ./clients
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/clients-noagent:latest
-          ghcr.io/ihudak/clients-noagent:noble
-          ghcr.io/ihudak/clients-noagent:${{ env.RELEASE_VERSION }}
-          ghcr.io/ihudak/clients-noagent:build_${{ github.run_number }}
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}
-          AGENT=noagent
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push clients-noagent Alpine
-      uses: docker/build-push-action@v5
-      with:
-        context: ./clients
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/clients-noagent:alpine
-          ghcr.io/ihudak/clients-noagent:${{ env.RELEASE_VERSION }}-alpine
-          ghcr.io/ihudak/clients-noagent:build_${{ github.run_number }}-alpine
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}-alpine
-          AGENT=noagent
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push clients-agents Ubuntu
-      uses: docker/build-push-action@v5
-      with:
-        context: ./clients
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/clients-agents:latest
-          ghcr.io/ihudak/clients-agents:noble
-          ghcr.io/ihudak/clients-agents:${{ env.RELEASE_VERSION }}
-          ghcr.io/ihudak/clients-agents:build_${{ github.run_number }}
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}
-          AGENT=agents
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push clients-agents Alpine
-      uses: docker/build-push-action@v5
-      with:
-        context: ./clients
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/clients-agents:alpine
-          ghcr.io/ihudak/clients-agents:${{ env.RELEASE_VERSION }}-alpine
-          ghcr.io/ihudak/clients-agents:build_${{ github.run_number }}-alpine
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}-alpine
-          AGENT=agents
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push clients-preinstrument Ubuntu
-      uses: docker/build-push-action@v5
-      with:
-        context: ./clients
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/clients-preinstrument:latest
-          ghcr.io/ihudak/clients-preinstrument:noble
-          ghcr.io/ihudak/clients-preinstrument:${{ env.RELEASE_VERSION }}
-          ghcr.io/ihudak/clients-preinstrument:build_${{ github.run_number }}
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}
-          AGENT=preinstrument
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push clients-preinstrument Alpine
-      uses: docker/build-push-action@v5
-      with:
-        context: ./clients
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/clients-preinstrument:alpine
-          ghcr.io/ihudak/clients-preinstrument:${{ env.RELEASE_VERSION }}-alpine
-          ghcr.io/ihudak/clients-preinstrument:build_${{ github.run_number }}-alpine
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}-alpine
-          AGENT=preinstrument
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-
-    - name: Build and push books-noagent Ubuntu
-      uses: docker/build-push-action@v5
-      with:
-        context: ./books
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/books-noagent:latest
-          ghcr.io/ihudak/books-noagent:noble
-          ghcr.io/ihudak/books-noagent:${{ env.RELEASE_VERSION }}
-          ghcr.io/ihudak/books-noagent:build_${{ github.run_number }}
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}
-          AGENT=noagent
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push books-noagent Alpine
-      uses: docker/build-push-action@v5
-      with:
-        context: ./books
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/books-noagent:alpine
-          ghcr.io/ihudak/books-noagent:${{ env.RELEASE_VERSION }}-alpine
-          ghcr.io/ihudak/books-noagent:build_${{ github.run_number }}-alpine
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}-alpine
-          AGENT=noagent
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push books-agents Ubuntu
-      uses: docker/build-push-action@v5
-      with:
-        context: ./books
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/books-agents:latest
-          ghcr.io/ihudak/books-agents:noble
-          ghcr.io/ihudak/books-agents:${{ env.RELEASE_VERSION }}
-          ghcr.io/ihudak/books-agents:build_${{ github.run_number }}
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}
-          AGENT=agents
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push books-agents Alpine
-      uses: docker/build-push-action@v5
-      with:
-        context: ./books
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/books-agents:alpine
-          ghcr.io/ihudak/books-agents:${{ env.RELEASE_VERSION }}-alpine
-          ghcr.io/ihudak/books-agents:build_${{ github.run_number }}-alpine
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}-alpine
-          AGENT=agents
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push books-preinstrument Ubuntu
-      uses: docker/build-push-action@v5
-      with:
-        context: ./books
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/books-preinstrument:latest
-          ghcr.io/ihudak/books-preinstrument:noble
-          ghcr.io/ihudak/books-preinstrument:${{ env.RELEASE_VERSION }}
-          ghcr.io/ihudak/books-preinstrument:build_${{ github.run_number }}
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}
-          AGENT=preinstrument
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push books-preinstrument Alpine
-      uses: docker/build-push-action@v5
-      with:
-        context: ./books
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/books-preinstrument:alpine
-          ghcr.io/ihudak/books-preinstrument:${{ env.RELEASE_VERSION }}-alpine
-          ghcr.io/ihudak/books-preinstrument:build_${{ github.run_number }}-alpine
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}-alpine
-          AGENT=preinstrument
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-
-    - name: Build and push carts-noagent Ubuntu
-      uses: docker/build-push-action@v5
-      with:
-        context: ./carts
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/carts-noagent:latest
-          ghcr.io/ihudak/carts-noagent:noble
-          ghcr.io/ihudak/carts-noagent:${{ env.RELEASE_VERSION }}
-          ghcr.io/ihudak/carts-noagent:build_${{ github.run_number }}
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}
-          AGENT=noagent
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push carts-noagent Alpine
-      uses: docker/build-push-action@v5
-      with:
-        context: ./carts
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/carts-noagent:alpine
-          ghcr.io/ihudak/carts-noagent:${{ env.RELEASE_VERSION }}-alpine
-          ghcr.io/ihudak/carts-noagent:build_${{ github.run_number }}-alpine
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}-alpine
-          AGENT=noagent
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push carts-agents Ubuntu
-      uses: docker/build-push-action@v5
-      with:
-        context: ./carts
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/carts-agents:latest
-          ghcr.io/ihudak/carts-agents:noble
-          ghcr.io/ihudak/carts-agents:${{ env.RELEASE_VERSION }}
-          ghcr.io/ihudak/carts-agents:build_${{ github.run_number }}
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}
-          AGENT=agents
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push carts-agents Alpine
-      uses: docker/build-push-action@v5
-      with:
-        context: ./carts
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/carts-agents:alpine
-          ghcr.io/ihudak/carts-agents:${{ env.RELEASE_VERSION }}-alpine
-          ghcr.io/ihudak/carts-agents:build_${{ github.run_number }}-alpine
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}-alpine
-          AGENT=agents
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push carts-preinstrument Ubuntu
-      uses: docker/build-push-action@v5
-      with:
-        context: ./carts
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/carts-preinstrument:latest
-          ghcr.io/ihudak/carts-preinstrument:noble
-          ghcr.io/ihudak/carts-preinstrument:${{ env.RELEASE_VERSION }}
-          ghcr.io/ihudak/carts-preinstrument:build_${{ github.run_number }}
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}
-          AGENT=preinstrument
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push carts-preinstrument Alpine
-      uses: docker/build-push-action@v5
-      with:
-        context: ./carts
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/carts-preinstrument:alpine
-          ghcr.io/ihudak/carts-preinstrument:${{ env.RELEASE_VERSION }}-alpine
-          ghcr.io/ihudak/carts-preinstrument:build_${{ github.run_number }}-alpine
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}-alpine
-          AGENT=preinstrument
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-
-    - name: Build and push storage-noagent Ubuntu
-      uses: docker/build-push-action@v5
-      with:
-        context: ./storage
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/storage-noagent:latest
-          ghcr.io/ihudak/storage-noagent:noble
-          ghcr.io/ihudak/storage-noagent:${{ env.RELEASE_VERSION }}
-          ghcr.io/ihudak/storage-noagent:build_${{ github.run_number }}
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}
-          AGENT=noagent
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push storage-noagent Alpine
-      uses: docker/build-push-action@v5
-      with:
-        context: ./storage
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/storage-noagent:alpine
-          ghcr.io/ihudak/storage-noagent:${{ env.RELEASE_VERSION }}-alpine
-          ghcr.io/ihudak/storage-noagent:build_${{ github.run_number }}-alpine
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}-alpine
-          AGENT=noagent
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push storage-agents Ubuntu
-      uses: docker/build-push-action@v5
-      with:
-        context: ./storage
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/storage-agents:latest
-          ghcr.io/ihudak/storage-agents:noble
-          ghcr.io/ihudak/storage-agents:${{ env.RELEASE_VERSION }}
-          ghcr.io/ihudak/storage-agents:build_${{ github.run_number }}
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}
-          AGENT=agents
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push storage-agents Alpine
-      uses: docker/build-push-action@v5
-      with:
-        context: ./storage
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/storage-agents:alpine
-          ghcr.io/ihudak/storage-agents:${{ env.RELEASE_VERSION }}-alpine
-          ghcr.io/ihudak/storage-agents:build_${{ github.run_number }}-alpine
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}-alpine
-          AGENT=agents
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push storage-preinstrument Ubuntu
-      uses: docker/build-push-action@v5
-      with:
-        context: ./storage
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/storage-preinstrument:latest
-          ghcr.io/ihudak/storage-preinstrument:noble
-          ghcr.io/ihudak/storage-preinstrument:${{ env.RELEASE_VERSION }}
-          ghcr.io/ihudak/storage-preinstrument:build_${{ github.run_number }}
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}
-          AGENT=preinstrument
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push storage-preinstrument Alpine
-      uses: docker/build-push-action@v5
-      with:
-        context: ./storage
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/storage-preinstrument:alpine
-          ghcr.io/ihudak/storage-preinstrument:${{ env.RELEASE_VERSION }}-alpine
-          ghcr.io/ihudak/storage-preinstrument:build_${{ github.run_number }}-alpine
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}-alpine
-          AGENT=preinstrument
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-
-    - name: Build and push ratings-noagent Ubuntu
-      uses: docker/build-push-action@v5
-      with:
-        context: ./ratings
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/ratings-noagent:latest
-          ghcr.io/ihudak/ratings-noagent:noble
-          ghcr.io/ihudak/ratings-noagent:${{ env.RELEASE_VERSION }}
-          ghcr.io/ihudak/ratings-noagent:build_${{ github.run_number }}
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}
-          AGENT=noagent
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push ratings-noagent Alpine
-      uses: docker/build-push-action@v5
-      with:
-        context: ./ratings
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/ratings-noagent:alpine
-          ghcr.io/ihudak/ratings-noagent:${{ env.RELEASE_VERSION }}-alpine
-          ghcr.io/ihudak/ratings-noagent:build_${{ github.run_number }}-alpine
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}-alpine
-          AGENT=noagent
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push ratings-agents Ubuntu
-      uses: docker/build-push-action@v5
-      with:
-        context: ./ratings
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/ratings-agents:latest
-          ghcr.io/ihudak/ratings-agents:noble
-          ghcr.io/ihudak/ratings-agents:${{ env.RELEASE_VERSION }}
-          ghcr.io/ihudak/ratings-agents:build_${{ github.run_number }}
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}
-          AGENT=agents
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push ratings-agents Alpine
-      uses: docker/build-push-action@v5
-      with:
-        context: ./ratings
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/ratings-agents:alpine
-          ghcr.io/ihudak/ratings-agents:${{ env.RELEASE_VERSION }}-alpine
-          ghcr.io/ihudak/ratings-agents:build_${{ github.run_number }}-alpine
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}-alpine
-          AGENT=agents
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push ratings-preinstrument Ubuntu
-      uses: docker/build-push-action@v5
-      with:
-        context: ./ratings
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/ratings-preinstrument:latest
-          ghcr.io/ihudak/ratings-preinstrument:noble
-          ghcr.io/ihudak/ratings-preinstrument:${{ env.RELEASE_VERSION }}
-          ghcr.io/ihudak/ratings-preinstrument:build_${{ github.run_number }}
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}
-          AGENT=preinstrument
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push ratings-preinstrument Alpine
-      uses: docker/build-push-action@v5
-      with:
-        context: ./ratings
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/ratings-preinstrument:alpine
-          ghcr.io/ihudak/ratings-preinstrument:${{ env.RELEASE_VERSION }}-alpine
-          ghcr.io/ihudak/ratings-preinstrument:build_${{ github.run_number }}-alpine
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}-alpine
-          AGENT=preinstrument
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-
-    - name: Build and push orders-noagent Ubuntu
-      uses: docker/build-push-action@v5
-      with:
-        context: ./orders
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/orders-noagent:latest
-          ghcr.io/ihudak/orders-noagent:noble
-          ghcr.io/ihudak/orders-noagent:${{ env.RELEASE_VERSION }}
-          ghcr.io/ihudak/orders-noagent:build_${{ github.run_number }}
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}
-          AGENT=noagent
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push orders-noagent Alpine
-      uses: docker/build-push-action@v5
-      with:
-        context: ./orders
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/orders-noagent:alpine
-          ghcr.io/ihudak/orders-noagent:${{ env.RELEASE_VERSION }}-alpine
-          ghcr.io/ihudak/orders-noagent:build_${{ github.run_number }}-alpine
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}-alpine
-          AGENT=noagent
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push orders-agents Ubuntu
-      uses: docker/build-push-action@v5
-      with:
-        context: ./orders
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/orders-agents:latest
-          ghcr.io/ihudak/orders-agents:noble
-          ghcr.io/ihudak/orders-agents:${{ env.RELEASE_VERSION }}
-          ghcr.io/ihudak/orders-agents:build_${{ github.run_number }}
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}
-          AGENT=agents
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push orders-agents Alpine
-      uses: docker/build-push-action@v5
-      with:
-        context: ./orders
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/orders-agents:alpine
-          ghcr.io/ihudak/orders-agents:${{ env.RELEASE_VERSION }}-alpine
-          ghcr.io/ihudak/orders-agents:build_${{ github.run_number }}-alpine
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}-alpine
-          AGENT=agents
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push orders-preinstrument Ubuntu
-      uses: docker/build-push-action@v5
-      with:
-        context: ./orders
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/orders-preinstrument:latest
-          ghcr.io/ihudak/orders-preinstrument:noble
-          ghcr.io/ihudak/orders-preinstrument:${{ env.RELEASE_VERSION }}
-          ghcr.io/ihudak/orders-preinstrument:build_${{ github.run_number }}
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}
-          AGENT=preinstrument
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push orders-preinstrument Alpine
-      uses: docker/build-push-action@v5
-      with:
-        context: ./orders
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/orders-preinstrument:alpine
-          ghcr.io/ihudak/orders-preinstrument:${{ env.RELEASE_VERSION }}-alpine
-          ghcr.io/ihudak/orders-preinstrument:build_${{ github.run_number }}-alpine
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}-alpine
-          AGENT=preinstrument
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-
-    - name: Build and push payments-noagent Ubuntu
-      uses: docker/build-push-action@v5
-      with:
-        context: ./payments
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/payments-noagent:latest
-          ghcr.io/ihudak/payments-noagent:noble
-          ghcr.io/ihudak/payments-noagent:${{ env.RELEASE_VERSION }}
-          ghcr.io/ihudak/payments-noagent:build_${{ github.run_number }}
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}
-          AGENT=noagent
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push payments-noagent Alpine
-      uses: docker/build-push-action@v5
-      with:
-        context: ./payments
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/payments-noagent:alpine
-          ghcr.io/ihudak/payments-noagent:${{ env.RELEASE_VERSION }}-alpine
-          ghcr.io/ihudak/payments-noagent:build_${{ github.run_number }}-alpine
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}-alpine
-          AGENT=noagent
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push payments-agents Ubuntu
-      uses: docker/build-push-action@v5
-      with:
-        context: ./payments
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/payments-agents:latest
-          ghcr.io/ihudak/payments-agents:noble
-          ghcr.io/ihudak/payments-agents:${{ env.RELEASE_VERSION }}
-          ghcr.io/ihudak/payments-agents:build_${{ github.run_number }}
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}
-          AGENT=agents
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push payments-agents Alpine
-      uses: docker/build-push-action@v5
-      with:
-        context: ./payments
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/payments-agents:alpine
-          ghcr.io/ihudak/payments-agents:${{ env.RELEASE_VERSION }}-alpine
-          ghcr.io/ihudak/payments-agents:build_${{ github.run_number }}-alpine
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}-alpine
-          AGENT=agents
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push payments-preinstrument Ubuntu
-      uses: docker/build-push-action@v5
-      with:
-        context: ./payments
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/payments-preinstrument:latest
-          ghcr.io/ihudak/payments-preinstrument:noble
-          ghcr.io/ihudak/payments-preinstrument:${{ env.RELEASE_VERSION }}
-          ghcr.io/ihudak/payments-preinstrument:build_${{ github.run_number }}
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}
-          AGENT=preinstrument
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push payments-preinstrument Alpine
-      uses: docker/build-push-action@v5
-      with:
-        context: ./payments
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/payments-preinstrument:alpine
-          ghcr.io/ihudak/payments-preinstrument:${{ env.RELEASE_VERSION }}-alpine
-          ghcr.io/ihudak/payments-preinstrument:build_${{ github.run_number }}-alpine
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}-alpine
-          AGENT=preinstrument
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-
-    - name: Build and push dynapay-noagent Ubuntu
-      uses: docker/build-push-action@v5
-      with:
-        context: ./dynapay
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/dynapay-noagent:latest
-          ghcr.io/ihudak/dynapay-noagent:noble
-          ghcr.io/ihudak/dynapay-noagent:${{ env.RELEASE_VERSION }}
-          ghcr.io/ihudak/dynapay-noagent:build_${{ github.run_number }}
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}
-          AGENT=noagent
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push dynapay-noagent Alpine
-      uses: docker/build-push-action@v5
-      with:
-        context: ./dynapay
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/dynapay-noagent:alpine
-          ghcr.io/ihudak/dynapay-noagent:${{ env.RELEASE_VERSION }}-alpine
-          ghcr.io/ihudak/dynapay-noagent:build_${{ github.run_number }}-alpine
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}-alpine
-          AGENT=noagent
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push dynapay-agents Ubuntu
-      uses: docker/build-push-action@v5
-      with:
-        context: ./dynapay
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/dynapay-agents:latest
-          ghcr.io/ihudak/dynapay-agents:noble
-          ghcr.io/ihudak/dynapay-agents:${{ env.RELEASE_VERSION }}
-          ghcr.io/ihudak/dynapay-agents:build_${{ github.run_number }}
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}
-          AGENT=agents
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push dynapay-agents Alpine
-      uses: docker/build-push-action@v5
-      with:
-        context: ./dynapay
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/dynapay-agents:alpine
-          ghcr.io/ihudak/dynapay-agents:${{ env.RELEASE_VERSION }}-alpine
-          ghcr.io/ihudak/dynapay-agents:build_${{ github.run_number }}-alpine
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}-alpine
-          AGENT=agents
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push dynapay-preinstrument Ubuntu
-      uses: docker/build-push-action@v5
-      with:
-        context: ./dynapay
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/dynapay-preinstrument:latest
-          ghcr.io/ihudak/dynapay-preinstrument:noble
-          ghcr.io/ihudak/dynapay-preinstrument:${{ env.RELEASE_VERSION }}
-          ghcr.io/ihudak/dynapay-preinstrument:build_${{ github.run_number }}
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}
-          AGENT=preinstrument
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push dynapay-preinstrument Alpine
-      uses: docker/build-push-action@v5
-      with:
-        context: ./dynapay
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/dynapay-preinstrument:alpine
-          ghcr.io/ihudak/dynapay-preinstrument:${{ env.RELEASE_VERSION }}-alpine
-          ghcr.io/ihudak/dynapay-preinstrument:build_${{ github.run_number }}-alpine
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}-alpine
-          AGENT=preinstrument
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push ingest-noagent Ubuntu
-      uses: docker/build-push-action@v5
-      with:
-        context: ./ingest
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/ingest-noagent:latest
-          ghcr.io/ihudak/ingest-noagent:noble
-          ghcr.io/ihudak/ingest-noagent:${{ env.RELEASE_VERSION }}
-          ghcr.io/ihudak/ingest-noagent:build_${{ github.run_number }}
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}
-          AGENT=noagent
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push ingest-noagent Alpine
-      uses: docker/build-push-action@v5
-      with:
-        context: ./ingest
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/ingest-noagent:alpine
-          ghcr.io/ihudak/ingest-noagent:${{ env.RELEASE_VERSION }}-alpine
-          ghcr.io/ihudak/ingest-noagent:build_${{ github.run_number }}-alpine
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}-alpine
-          AGENT=noagent
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push ingest-agents Ubuntu
-      uses: docker/build-push-action@v5
-      with:
-        context: ./ingest
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/ingest-agents:latest
-          ghcr.io/ihudak/ingest-agents:noble
-          ghcr.io/ihudak/ingest-agents:${{ env.RELEASE_VERSION }}
-          ghcr.io/ihudak/ingest-agents:build_${{ github.run_number }}
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}
-          AGENT=agents
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push ingest-agents Alpine
-      uses: docker/build-push-action@v5
-      with:
-        context: ./ingest
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/ingest-agents:alpine
-          ghcr.io/ihudak/ingest-agents:${{ env.RELEASE_VERSION }}-alpine
-          ghcr.io/ihudak/ingest-agents:build_${{ github.run_number }}-alpine
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}-alpine
-          AGENT=agents
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push ingest-preinstrument Ubuntu
-      uses: docker/build-push-action@v5
-      with:
-        context: ./ingest
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/ingest-preinstrument:latest
-          ghcr.io/ihudak/ingest-preinstrument:noble
-          ghcr.io/ihudak/ingest-preinstrument:${{ env.RELEASE_VERSION }}
-          ghcr.io/ihudak/ingest-preinstrument:build_${{ github.run_number }}
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}
-          AGENT=preinstrument
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push ingest-preinstrument Alpine
-      uses: docker/build-push-action@v5
-      with:
-        context: ./ingest
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/ingest-preinstrument:alpine
-          ghcr.io/ihudak/ingest-preinstrument:${{ env.RELEASE_VERSION }}-alpine
-          ghcr.io/ihudak/ingest-preinstrument:build_${{ github.run_number }}-alpine
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}-alpine
-          AGENT=preinstrument
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-
-    - name: Build and push WebApp Base docker image
-      uses: docker/build-push-action@v5
-      with:
-        context: ./web/base/noagent
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/node-angular-noagent:latest
-          ghcr.io/ihudak/node-angular-noagent:alpine
-          ghcr.io/ihudak/node-angular-noagent:${{ env.RELEASE_VERSION }}
-          ghcr.io/ihudak/node-angular-noagent:build_${{ github.run_number }}
-        platforms: linux/amd64,linux/arm64/v8
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-    - name: Build and push web app image
-      uses: docker/build-push-action@v5
-      with:
-        context: ./web
-        push: ${{ github.event_name == 'push' || inputs.publish }}
-        tags: |
-          ghcr.io/ihudak/web-noagent:latest
-          ghcr.io/ihudak/web-noagent:alpine
-          ghcr.io/ihudak/web-noagent:${{ env.RELEASE_VERSION }}
-          ghcr.io/ihudak/web-noagent:build_${{ github.run_number }}
-        platforms: linux/amd64,linux/arm64/v8
-        build-args: |
-          BASE_IMG_TAG=build_${{ github.run_number }}
-          AGENT=noagent
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+      - uses: plengauer/opentelemetry-github/actions/instrument/job@v5.21.0
+        env:
+          OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: ${{ secrets.DT_ENV_URL }}/api/v2/otlp/v1/traces
+          OTEL_EXPORTER_OTLP_METRICS_ENDPOINT: ${{ secrets.DT_ENV_URL }}/api/v2/otlp/v1/metrics
+          OTEL_EXPORTER_OTLP_LOGS_ENDPOINT: ${{ secrets.DT_ENV_URL }}/api/v2/otlp/v1/logs
+          OTEL_EXPORTER_OTLP_TRACES_HEADERS: Api-Token ${{ secrets.DT_TOKEN }}
+          OTEL_EXPORTER_OTLP_METRICS_HEADERS: Api-Token ${{ secrets.DT_TOKEN }}
+          OTEL_EXPORTER_OTLP_LOGS_HEADERS: Api-Token ${{ secrets.DT_TOKEN }}
+        with:
+          secrets_to_redact: '["${{ github.token }}","${{ secrets.CR_PAT }}","${{ secrets.DT_ENV_ID }}","${{ secrets.DT_ENV_URL }}","${{ secrets.DT_TOKEN }}"]'
+      - uses: actions/checkout@v4
+      - name: Set Env Push
+        if: ${{ github.event_name == 'push' }}
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+      - name: Set Env Dispatch
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        run: echo "RELEASE_VERSION=${{ inputs.version }}" >> $GITHUB_ENV
+      - name: Set Env Other
+        if: ${{ github.event_name != 'workflow_dispatch' && github.event_name != 'push' }}
+        run: echo "RELEASE_VERSION=none" >> $GITHUB_ENV
+      - name: Test
+        run: |
+          echo $RELEASE_VERSION
+          echo ${{ env.RELEASE_VERSION }}
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+      - name: Build with Gradle Wrapper
+        run: ./gradlew build -x test
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.CR_PAT }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build and push noagent Ubuntu
+        uses: docker/build-push-action@v5
+        with:
+          context: ./noagent
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/java-noagent:latest
+            ghcr.io/ihudak/java-noagent:noble
+            ghcr.io/ihudak/java-noagent:${{ env.RELEASE_VERSION }}
+            ghcr.io/ihudak/java-noagent:build_${{ github.run_number }}
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            VER=21
+            FLAVOR=noble
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push noagent Alpine
+        uses: docker/build-push-action@v5
+        with:
+          context: ./noagent
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/java-noagent:alpine
+            ghcr.io/ihudak/java-noagent:${{ env.RELEASE_VERSION }}-alpine
+            ghcr.io/ihudak/java-noagent:build_${{ github.run_number }}-alpine
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            VER=21
+            FLAVOR=alpine
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push agents Ubuntu
+        uses: docker/build-push-action@v5
+        with:
+          context: ./agents
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/java-agents:latest
+            ghcr.io/ihudak/java-agents:noble
+            ghcr.io/ihudak/java-agents:${{ env.RELEASE_VERSION }}
+            ghcr.io/ihudak/java-agents:build_${{ github.run_number }}
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            AGENTS_PRELOAD=false
+            DT_ENV_ID=${{ secrets.DT_ENV_ID }}
+            DT_TOKEN=${{ secrets.DT_TOKEN }}
+            DT_ENV_URL=${{ secrets.DT_ENV_URL }}
+            VER=21
+            FLAVOR=noble
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push agents Alpine
+        uses: docker/build-push-action@v5
+        with:
+          context: ./agents
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/java-agents:alpine
+            ghcr.io/ihudak/java-agents:${{ env.RELEASE_VERSION }}-alpine
+            ghcr.io/ihudak/java-agents:build_${{ github.run_number }}-alpine
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            AGENTS_PRELOAD=false
+            DT_ENV_ID=${{ secrets.DT_ENV_ID }}
+            DT_TOKEN=${{ secrets.DT_TOKEN }}
+            DT_ENV_URL=${{ secrets.DT_ENV_URL }}
+            VER=21
+            FLAVOR=alpine
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push preinstrument Ubuntu
+        uses: docker/build-push-action@v5
+        with:
+          context: ./agents
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/java-preinstrument:latest
+            ghcr.io/ihudak/java-preinstrument:noble
+            ghcr.io/ihudak/java-preinstrument:${{ env.RELEASE_VERSION }}
+            ghcr.io/ihudak/java-preinstrument:build_${{ github.run_number }}
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            AGENTS_PRELOAD=true
+            DT_ENV_ID=${{ secrets.DT_ENV_ID }}
+            DT_TOKEN=${{ secrets.DT_TOKEN }}
+            DT_ENV_URL=${{ secrets.DT_ENV_URL }}
+            VER=21
+            FLAVOR=noble
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push preinstrument Alpine
+        uses: docker/build-push-action@v5
+        with:
+          context: ./agents
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/java-preinstrument:alpine
+            ghcr.io/ihudak/java-preinstrument:${{ env.RELEASE_VERSION }}-alpine
+            ghcr.io/ihudak/java-preinstrument:build_${{ github.run_number }}-alpine
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            AGENTS_PRELOAD=true
+            DT_ENV_ID=${{ secrets.DT_ENV_ID }}
+            DT_TOKEN=${{ secrets.DT_TOKEN }}
+            DT_ENV_URL=${{ secrets.DT_ENV_URL }}
+            VER=21
+            FLAVOR=alpine
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push MySQL
+        uses: docker/build-push-action@v5
+        with:
+          context: ./database/mysql
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/dt-mysql:latest
+            ghcr.io/ihudak/dt-mysql:${{ env.RELEASE_VERSION }}
+            ghcr.io/ihudak/dt-mysql:build_${{ github.run_number }}
+          platforms: linux/amd64,linux/arm64/v8
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push Postgres
+        uses: docker/build-push-action@v5
+        with:
+          context: ./database/pg
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/dt-postgres:latest
+            ghcr.io/ihudak/dt-postgres:${{ env.RELEASE_VERSION }}
+            ghcr.io/ihudak/dt-postgres:build_${{ github.run_number }}
+          platforms: linux/amd64,linux/arm64/v8
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push clients-noagent Ubuntu
+        uses: docker/build-push-action@v5
+        with:
+          context: ./clients
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/clients-noagent:latest
+            ghcr.io/ihudak/clients-noagent:noble
+            ghcr.io/ihudak/clients-noagent:${{ env.RELEASE_VERSION }}
+            ghcr.io/ihudak/clients-noagent:build_${{ github.run_number }}
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}
+            AGENT=noagent
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push clients-noagent Alpine
+        uses: docker/build-push-action@v5
+        with:
+          context: ./clients
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/clients-noagent:alpine
+            ghcr.io/ihudak/clients-noagent:${{ env.RELEASE_VERSION }}-alpine
+            ghcr.io/ihudak/clients-noagent:build_${{ github.run_number }}-alpine
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}-alpine
+            AGENT=noagent
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push clients-agents Ubuntu
+        uses: docker/build-push-action@v5
+        with:
+          context: ./clients
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/clients-agents:latest
+            ghcr.io/ihudak/clients-agents:noble
+            ghcr.io/ihudak/clients-agents:${{ env.RELEASE_VERSION }}
+            ghcr.io/ihudak/clients-agents:build_${{ github.run_number }}
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}
+            AGENT=agents
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push clients-agents Alpine
+        uses: docker/build-push-action@v5
+        with:
+          context: ./clients
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/clients-agents:alpine
+            ghcr.io/ihudak/clients-agents:${{ env.RELEASE_VERSION }}-alpine
+            ghcr.io/ihudak/clients-agents:build_${{ github.run_number }}-alpine
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}-alpine
+            AGENT=agents
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push clients-preinstrument Ubuntu
+        uses: docker/build-push-action@v5
+        with:
+          context: ./clients
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/clients-preinstrument:latest
+            ghcr.io/ihudak/clients-preinstrument:noble
+            ghcr.io/ihudak/clients-preinstrument:${{ env.RELEASE_VERSION }}
+            ghcr.io/ihudak/clients-preinstrument:build_${{ github.run_number }}
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}
+            AGENT=preinstrument
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push clients-preinstrument Alpine
+        uses: docker/build-push-action@v5
+        with:
+          context: ./clients
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/clients-preinstrument:alpine
+            ghcr.io/ihudak/clients-preinstrument:${{ env.RELEASE_VERSION }}-alpine
+            ghcr.io/ihudak/clients-preinstrument:build_${{ github.run_number }}-alpine
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}-alpine
+            AGENT=preinstrument
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push books-noagent Ubuntu
+        uses: docker/build-push-action@v5
+        with:
+          context: ./books
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/books-noagent:latest
+            ghcr.io/ihudak/books-noagent:noble
+            ghcr.io/ihudak/books-noagent:${{ env.RELEASE_VERSION }}
+            ghcr.io/ihudak/books-noagent:build_${{ github.run_number }}
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}
+            AGENT=noagent
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push books-noagent Alpine
+        uses: docker/build-push-action@v5
+        with:
+          context: ./books
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/books-noagent:alpine
+            ghcr.io/ihudak/books-noagent:${{ env.RELEASE_VERSION }}-alpine
+            ghcr.io/ihudak/books-noagent:build_${{ github.run_number }}-alpine
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}-alpine
+            AGENT=noagent
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push books-agents Ubuntu
+        uses: docker/build-push-action@v5
+        with:
+          context: ./books
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/books-agents:latest
+            ghcr.io/ihudak/books-agents:noble
+            ghcr.io/ihudak/books-agents:${{ env.RELEASE_VERSION }}
+            ghcr.io/ihudak/books-agents:build_${{ github.run_number }}
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}
+            AGENT=agents
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push books-agents Alpine
+        uses: docker/build-push-action@v5
+        with:
+          context: ./books
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/books-agents:alpine
+            ghcr.io/ihudak/books-agents:${{ env.RELEASE_VERSION }}-alpine
+            ghcr.io/ihudak/books-agents:build_${{ github.run_number }}-alpine
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}-alpine
+            AGENT=agents
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push books-preinstrument Ubuntu
+        uses: docker/build-push-action@v5
+        with:
+          context: ./books
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/books-preinstrument:latest
+            ghcr.io/ihudak/books-preinstrument:noble
+            ghcr.io/ihudak/books-preinstrument:${{ env.RELEASE_VERSION }}
+            ghcr.io/ihudak/books-preinstrument:build_${{ github.run_number }}
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}
+            AGENT=preinstrument
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push books-preinstrument Alpine
+        uses: docker/build-push-action@v5
+        with:
+          context: ./books
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/books-preinstrument:alpine
+            ghcr.io/ihudak/books-preinstrument:${{ env.RELEASE_VERSION }}-alpine
+            ghcr.io/ihudak/books-preinstrument:build_${{ github.run_number }}-alpine
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}-alpine
+            AGENT=preinstrument
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push carts-noagent Ubuntu
+        uses: docker/build-push-action@v5
+        with:
+          context: ./carts
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/carts-noagent:latest
+            ghcr.io/ihudak/carts-noagent:noble
+            ghcr.io/ihudak/carts-noagent:${{ env.RELEASE_VERSION }}
+            ghcr.io/ihudak/carts-noagent:build_${{ github.run_number }}
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}
+            AGENT=noagent
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push carts-noagent Alpine
+        uses: docker/build-push-action@v5
+        with:
+          context: ./carts
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/carts-noagent:alpine
+            ghcr.io/ihudak/carts-noagent:${{ env.RELEASE_VERSION }}-alpine
+            ghcr.io/ihudak/carts-noagent:build_${{ github.run_number }}-alpine
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}-alpine
+            AGENT=noagent
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push carts-agents Ubuntu
+        uses: docker/build-push-action@v5
+        with:
+          context: ./carts
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/carts-agents:latest
+            ghcr.io/ihudak/carts-agents:noble
+            ghcr.io/ihudak/carts-agents:${{ env.RELEASE_VERSION }}
+            ghcr.io/ihudak/carts-agents:build_${{ github.run_number }}
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}
+            AGENT=agents
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push carts-agents Alpine
+        uses: docker/build-push-action@v5
+        with:
+          context: ./carts
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/carts-agents:alpine
+            ghcr.io/ihudak/carts-agents:${{ env.RELEASE_VERSION }}-alpine
+            ghcr.io/ihudak/carts-agents:build_${{ github.run_number }}-alpine
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}-alpine
+            AGENT=agents
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push carts-preinstrument Ubuntu
+        uses: docker/build-push-action@v5
+        with:
+          context: ./carts
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/carts-preinstrument:latest
+            ghcr.io/ihudak/carts-preinstrument:noble
+            ghcr.io/ihudak/carts-preinstrument:${{ env.RELEASE_VERSION }}
+            ghcr.io/ihudak/carts-preinstrument:build_${{ github.run_number }}
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}
+            AGENT=preinstrument
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push carts-preinstrument Alpine
+        uses: docker/build-push-action@v5
+        with:
+          context: ./carts
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/carts-preinstrument:alpine
+            ghcr.io/ihudak/carts-preinstrument:${{ env.RELEASE_VERSION }}-alpine
+            ghcr.io/ihudak/carts-preinstrument:build_${{ github.run_number }}-alpine
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}-alpine
+            AGENT=preinstrument
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push storage-noagent Ubuntu
+        uses: docker/build-push-action@v5
+        with:
+          context: ./storage
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/storage-noagent:latest
+            ghcr.io/ihudak/storage-noagent:noble
+            ghcr.io/ihudak/storage-noagent:${{ env.RELEASE_VERSION }}
+            ghcr.io/ihudak/storage-noagent:build_${{ github.run_number }}
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}
+            AGENT=noagent
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push storage-noagent Alpine
+        uses: docker/build-push-action@v5
+        with:
+          context: ./storage
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/storage-noagent:alpine
+            ghcr.io/ihudak/storage-noagent:${{ env.RELEASE_VERSION }}-alpine
+            ghcr.io/ihudak/storage-noagent:build_${{ github.run_number }}-alpine
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}-alpine
+            AGENT=noagent
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push storage-agents Ubuntu
+        uses: docker/build-push-action@v5
+        with:
+          context: ./storage
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/storage-agents:latest
+            ghcr.io/ihudak/storage-agents:noble
+            ghcr.io/ihudak/storage-agents:${{ env.RELEASE_VERSION }}
+            ghcr.io/ihudak/storage-agents:build_${{ github.run_number }}
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}
+            AGENT=agents
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push storage-agents Alpine
+        uses: docker/build-push-action@v5
+        with:
+          context: ./storage
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/storage-agents:alpine
+            ghcr.io/ihudak/storage-agents:${{ env.RELEASE_VERSION }}-alpine
+            ghcr.io/ihudak/storage-agents:build_${{ github.run_number }}-alpine
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}-alpine
+            AGENT=agents
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push storage-preinstrument Ubuntu
+        uses: docker/build-push-action@v5
+        with:
+          context: ./storage
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/storage-preinstrument:latest
+            ghcr.io/ihudak/storage-preinstrument:noble
+            ghcr.io/ihudak/storage-preinstrument:${{ env.RELEASE_VERSION }}
+            ghcr.io/ihudak/storage-preinstrument:build_${{ github.run_number }}
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}
+            AGENT=preinstrument
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push storage-preinstrument Alpine
+        uses: docker/build-push-action@v5
+        with:
+          context: ./storage
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/storage-preinstrument:alpine
+            ghcr.io/ihudak/storage-preinstrument:${{ env.RELEASE_VERSION }}-alpine
+            ghcr.io/ihudak/storage-preinstrument:build_${{ github.run_number }}-alpine
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}-alpine
+            AGENT=preinstrument
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push ratings-noagent Ubuntu
+        uses: docker/build-push-action@v5
+        with:
+          context: ./ratings
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/ratings-noagent:latest
+            ghcr.io/ihudak/ratings-noagent:noble
+            ghcr.io/ihudak/ratings-noagent:${{ env.RELEASE_VERSION }}
+            ghcr.io/ihudak/ratings-noagent:build_${{ github.run_number }}
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}
+            AGENT=noagent
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push ratings-noagent Alpine
+        uses: docker/build-push-action@v5
+        with:
+          context: ./ratings
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/ratings-noagent:alpine
+            ghcr.io/ihudak/ratings-noagent:${{ env.RELEASE_VERSION }}-alpine
+            ghcr.io/ihudak/ratings-noagent:build_${{ github.run_number }}-alpine
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}-alpine
+            AGENT=noagent
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push ratings-agents Ubuntu
+        uses: docker/build-push-action@v5
+        with:
+          context: ./ratings
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/ratings-agents:latest
+            ghcr.io/ihudak/ratings-agents:noble
+            ghcr.io/ihudak/ratings-agents:${{ env.RELEASE_VERSION }}
+            ghcr.io/ihudak/ratings-agents:build_${{ github.run_number }}
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}
+            AGENT=agents
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push ratings-agents Alpine
+        uses: docker/build-push-action@v5
+        with:
+          context: ./ratings
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/ratings-agents:alpine
+            ghcr.io/ihudak/ratings-agents:${{ env.RELEASE_VERSION }}-alpine
+            ghcr.io/ihudak/ratings-agents:build_${{ github.run_number }}-alpine
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}-alpine
+            AGENT=agents
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push ratings-preinstrument Ubuntu
+        uses: docker/build-push-action@v5
+        with:
+          context: ./ratings
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/ratings-preinstrument:latest
+            ghcr.io/ihudak/ratings-preinstrument:noble
+            ghcr.io/ihudak/ratings-preinstrument:${{ env.RELEASE_VERSION }}
+            ghcr.io/ihudak/ratings-preinstrument:build_${{ github.run_number }}
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}
+            AGENT=preinstrument
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push ratings-preinstrument Alpine
+        uses: docker/build-push-action@v5
+        with:
+          context: ./ratings
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/ratings-preinstrument:alpine
+            ghcr.io/ihudak/ratings-preinstrument:${{ env.RELEASE_VERSION }}-alpine
+            ghcr.io/ihudak/ratings-preinstrument:build_${{ github.run_number }}-alpine
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}-alpine
+            AGENT=preinstrument
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push orders-noagent Ubuntu
+        uses: docker/build-push-action@v5
+        with:
+          context: ./orders
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/orders-noagent:latest
+            ghcr.io/ihudak/orders-noagent:noble
+            ghcr.io/ihudak/orders-noagent:${{ env.RELEASE_VERSION }}
+            ghcr.io/ihudak/orders-noagent:build_${{ github.run_number }}
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}
+            AGENT=noagent
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push orders-noagent Alpine
+        uses: docker/build-push-action@v5
+        with:
+          context: ./orders
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/orders-noagent:alpine
+            ghcr.io/ihudak/orders-noagent:${{ env.RELEASE_VERSION }}-alpine
+            ghcr.io/ihudak/orders-noagent:build_${{ github.run_number }}-alpine
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}-alpine
+            AGENT=noagent
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push orders-agents Ubuntu
+        uses: docker/build-push-action@v5
+        with:
+          context: ./orders
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/orders-agents:latest
+            ghcr.io/ihudak/orders-agents:noble
+            ghcr.io/ihudak/orders-agents:${{ env.RELEASE_VERSION }}
+            ghcr.io/ihudak/orders-agents:build_${{ github.run_number }}
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}
+            AGENT=agents
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push orders-agents Alpine
+        uses: docker/build-push-action@v5
+        with:
+          context: ./orders
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/orders-agents:alpine
+            ghcr.io/ihudak/orders-agents:${{ env.RELEASE_VERSION }}-alpine
+            ghcr.io/ihudak/orders-agents:build_${{ github.run_number }}-alpine
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}-alpine
+            AGENT=agents
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push orders-preinstrument Ubuntu
+        uses: docker/build-push-action@v5
+        with:
+          context: ./orders
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/orders-preinstrument:latest
+            ghcr.io/ihudak/orders-preinstrument:noble
+            ghcr.io/ihudak/orders-preinstrument:${{ env.RELEASE_VERSION }}
+            ghcr.io/ihudak/orders-preinstrument:build_${{ github.run_number }}
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}
+            AGENT=preinstrument
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push orders-preinstrument Alpine
+        uses: docker/build-push-action@v5
+        with:
+          context: ./orders
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/orders-preinstrument:alpine
+            ghcr.io/ihudak/orders-preinstrument:${{ env.RELEASE_VERSION }}-alpine
+            ghcr.io/ihudak/orders-preinstrument:build_${{ github.run_number }}-alpine
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}-alpine
+            AGENT=preinstrument
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push payments-noagent Ubuntu
+        uses: docker/build-push-action@v5
+        with:
+          context: ./payments
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/payments-noagent:latest
+            ghcr.io/ihudak/payments-noagent:noble
+            ghcr.io/ihudak/payments-noagent:${{ env.RELEASE_VERSION }}
+            ghcr.io/ihudak/payments-noagent:build_${{ github.run_number }}
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}
+            AGENT=noagent
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push payments-noagent Alpine
+        uses: docker/build-push-action@v5
+        with:
+          context: ./payments
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/payments-noagent:alpine
+            ghcr.io/ihudak/payments-noagent:${{ env.RELEASE_VERSION }}-alpine
+            ghcr.io/ihudak/payments-noagent:build_${{ github.run_number }}-alpine
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}-alpine
+            AGENT=noagent
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push payments-agents Ubuntu
+        uses: docker/build-push-action@v5
+        with:
+          context: ./payments
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/payments-agents:latest
+            ghcr.io/ihudak/payments-agents:noble
+            ghcr.io/ihudak/payments-agents:${{ env.RELEASE_VERSION }}
+            ghcr.io/ihudak/payments-agents:build_${{ github.run_number }}
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}
+            AGENT=agents
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push payments-agents Alpine
+        uses: docker/build-push-action@v5
+        with:
+          context: ./payments
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/payments-agents:alpine
+            ghcr.io/ihudak/payments-agents:${{ env.RELEASE_VERSION }}-alpine
+            ghcr.io/ihudak/payments-agents:build_${{ github.run_number }}-alpine
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}-alpine
+            AGENT=agents
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push payments-preinstrument Ubuntu
+        uses: docker/build-push-action@v5
+        with:
+          context: ./payments
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/payments-preinstrument:latest
+            ghcr.io/ihudak/payments-preinstrument:noble
+            ghcr.io/ihudak/payments-preinstrument:${{ env.RELEASE_VERSION }}
+            ghcr.io/ihudak/payments-preinstrument:build_${{ github.run_number }}
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}
+            AGENT=preinstrument
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push payments-preinstrument Alpine
+        uses: docker/build-push-action@v5
+        with:
+          context: ./payments
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/payments-preinstrument:alpine
+            ghcr.io/ihudak/payments-preinstrument:${{ env.RELEASE_VERSION }}-alpine
+            ghcr.io/ihudak/payments-preinstrument:build_${{ github.run_number }}-alpine
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}-alpine
+            AGENT=preinstrument
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push dynapay-noagent Ubuntu
+        uses: docker/build-push-action@v5
+        with:
+          context: ./dynapay
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/dynapay-noagent:latest
+            ghcr.io/ihudak/dynapay-noagent:noble
+            ghcr.io/ihudak/dynapay-noagent:${{ env.RELEASE_VERSION }}
+            ghcr.io/ihudak/dynapay-noagent:build_${{ github.run_number }}
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}
+            AGENT=noagent
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push dynapay-noagent Alpine
+        uses: docker/build-push-action@v5
+        with:
+          context: ./dynapay
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/dynapay-noagent:alpine
+            ghcr.io/ihudak/dynapay-noagent:${{ env.RELEASE_VERSION }}-alpine
+            ghcr.io/ihudak/dynapay-noagent:build_${{ github.run_number }}-alpine
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}-alpine
+            AGENT=noagent
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push dynapay-agents Ubuntu
+        uses: docker/build-push-action@v5
+        with:
+          context: ./dynapay
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/dynapay-agents:latest
+            ghcr.io/ihudak/dynapay-agents:noble
+            ghcr.io/ihudak/dynapay-agents:${{ env.RELEASE_VERSION }}
+            ghcr.io/ihudak/dynapay-agents:build_${{ github.run_number }}
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}
+            AGENT=agents
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push dynapay-agents Alpine
+        uses: docker/build-push-action@v5
+        with:
+          context: ./dynapay
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/dynapay-agents:alpine
+            ghcr.io/ihudak/dynapay-agents:${{ env.RELEASE_VERSION }}-alpine
+            ghcr.io/ihudak/dynapay-agents:build_${{ github.run_number }}-alpine
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}-alpine
+            AGENT=agents
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push dynapay-preinstrument Ubuntu
+        uses: docker/build-push-action@v5
+        with:
+          context: ./dynapay
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/dynapay-preinstrument:latest
+            ghcr.io/ihudak/dynapay-preinstrument:noble
+            ghcr.io/ihudak/dynapay-preinstrument:${{ env.RELEASE_VERSION }}
+            ghcr.io/ihudak/dynapay-preinstrument:build_${{ github.run_number }}
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}
+            AGENT=preinstrument
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push dynapay-preinstrument Alpine
+        uses: docker/build-push-action@v5
+        with:
+          context: ./dynapay
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/dynapay-preinstrument:alpine
+            ghcr.io/ihudak/dynapay-preinstrument:${{ env.RELEASE_VERSION }}-alpine
+            ghcr.io/ihudak/dynapay-preinstrument:build_${{ github.run_number }}-alpine
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}-alpine
+            AGENT=preinstrument
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push ingest-noagent Ubuntu
+        uses: docker/build-push-action@v5
+        with:
+          context: ./ingest
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/ingest-noagent:latest
+            ghcr.io/ihudak/ingest-noagent:noble
+            ghcr.io/ihudak/ingest-noagent:${{ env.RELEASE_VERSION }}
+            ghcr.io/ihudak/ingest-noagent:build_${{ github.run_number }}
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}
+            AGENT=noagent
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push ingest-noagent Alpine
+        uses: docker/build-push-action@v5
+        with:
+          context: ./ingest
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/ingest-noagent:alpine
+            ghcr.io/ihudak/ingest-noagent:${{ env.RELEASE_VERSION }}-alpine
+            ghcr.io/ihudak/ingest-noagent:build_${{ github.run_number }}-alpine
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}-alpine
+            AGENT=noagent
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push ingest-agents Ubuntu
+        uses: docker/build-push-action@v5
+        with:
+          context: ./ingest
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/ingest-agents:latest
+            ghcr.io/ihudak/ingest-agents:noble
+            ghcr.io/ihudak/ingest-agents:${{ env.RELEASE_VERSION }}
+            ghcr.io/ihudak/ingest-agents:build_${{ github.run_number }}
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}
+            AGENT=agents
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push ingest-agents Alpine
+        uses: docker/build-push-action@v5
+        with:
+          context: ./ingest
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/ingest-agents:alpine
+            ghcr.io/ihudak/ingest-agents:${{ env.RELEASE_VERSION }}-alpine
+            ghcr.io/ihudak/ingest-agents:build_${{ github.run_number }}-alpine
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}-alpine
+            AGENT=agents
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push ingest-preinstrument Ubuntu
+        uses: docker/build-push-action@v5
+        with:
+          context: ./ingest
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/ingest-preinstrument:latest
+            ghcr.io/ihudak/ingest-preinstrument:noble
+            ghcr.io/ihudak/ingest-preinstrument:${{ env.RELEASE_VERSION }}
+            ghcr.io/ihudak/ingest-preinstrument:build_${{ github.run_number }}
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}
+            AGENT=preinstrument
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push ingest-preinstrument Alpine
+        uses: docker/build-push-action@v5
+        with:
+          context: ./ingest
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/ingest-preinstrument:alpine
+            ghcr.io/ihudak/ingest-preinstrument:${{ env.RELEASE_VERSION }}-alpine
+            ghcr.io/ihudak/ingest-preinstrument:build_${{ github.run_number }}-alpine
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}-alpine
+            AGENT=preinstrument
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push WebApp Base docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./web/base/noagent
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/node-angular-noagent:latest
+            ghcr.io/ihudak/node-angular-noagent:alpine
+            ghcr.io/ihudak/node-angular-noagent:${{ env.RELEASE_VERSION }}
+            ghcr.io/ihudak/node-angular-noagent:build_${{ github.run_number }}
+          platforms: linux/amd64,linux/arm64/v8
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push web app image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./web
+          push: ${{ github.event_name == 'push' || inputs.publish }}
+          tags: |
+            ghcr.io/ihudak/web-noagent:latest
+            ghcr.io/ihudak/web-noagent:alpine
+            ghcr.io/ihudak/web-noagent:${{ env.RELEASE_VERSION }}
+            ghcr.io/ihudak/web-noagent:build_${{ github.run_number }}
+          platforms: linux/amd64,linux/arm64/v8
+          build-args: |
+            BASE_IMG_TAG=build_${{ github.run_number }}
+            AGENT=noagent
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+    permissions:
+      actions: read
