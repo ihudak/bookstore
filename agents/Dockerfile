@@ -40,7 +40,7 @@ RUN echo ${FLAVOR}
 
 # install unzip and curl
 RUN if [ "$FLAVOR" = "alpine" ]; then \
-      apk add --no-cache --update zip curl jq python3 python3-pip python3-venv strace; \
+      apk add --no-cache --update zip curl jq python3 py3-pip py3-virtualenv strace; \
       echo "$FLAVOR" = "alpine" ; \
       echo "alpine" ; \
     else \
