@@ -55,8 +55,11 @@ ENV JAVA_TOOL_OPTIONS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,addr
 # oneAgent.sh will set tenant-specific settings on deploy
 RUN if [ ${AGENTS_PRELOAD} = true ]; then \
       if [ -n "${DT_ENV_URL+x}" ] && [ -n "${DT_TOKEN+x}" ]; then \
-          DT_TOKEN=$(echo $DT_TOKEN | base64 -d); \
-          export DT_TOKEN; \
+          # check if the token is base64-ed. If yes, unbase
+          if [ "$(echo $DT_TOKEN | cut -c 1-7)" != "dt0c01." ]; then \
+            DT_TOKEN=$(echo "$DT_TOKEN" | base64 -d); \
+            export DT_TOKEN; \
+          fi; \
           /opt/get_otel.sh ; \
           /opt/get_oa.sh ; \
       fi; \

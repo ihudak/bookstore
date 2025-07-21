@@ -18,17 +18,39 @@ data:
   DT_RATINGS_SERVER: "ratings-svc:88"
   DT_INGEST_SERVER: "ingest-svc:89"
   DT_SERVER_PORT: "8080"
-  DT_ENV_ID: "<tenant-id>"
-  DT_ENV_URL: "<tenant-url>"
+  DT_ENV_ID: "aa5170aa-3c64-47de-abc5-5980b3f144a1"
+  DT_ENV_URL: "https://latest.managed-dev.dynalabs.io/e/aa5170aa-3c64-47de-abc5-5980b3f144a1"
   APP_NAME: "BookStore"
   SVC_SUFFIX: "dev"
   SECURITY_CONTEXT: "Buch"
   COST_CENTER: "BuchSales"
   COST_PRODUCT: "BookStore"
-  DT_BANK_CHECK: "rand" # lambda | rand
+  DT_BANK_CHECK: "lambda" # lambda | rand
   OTEL_JAVAAGENT_DEBUG: "false"
   GIT_REPO: "https://github.com/ihudak/bookstore"
   DT_BOOKSTORE_PROFILE: "prod" # prod | stage | dev -- logging levels -- prod:ERROR; stage:INFO; dev:DEBUG
   DT_ACTIVE_WEB_ENV: "custom" # production|staging|development|custom -- production (k8s docker desktop w Ingress) | staging (k8s docker desktop w/o Ingress) | development (w/o kubernetes)
-  BOOKSTORE_BASE_SRV_URL: "http://kubernetes.docker.internal/api" # if web_app_profile==custom, this is the base EXTERNAL URL where microservices APIs can be found by the web app
-  AWS_LAMBDA_URL: "<URL to the Lambda function>"
+  BOOKSTORE_BASE_SRV_URL: "http://bookstore-arm.germanywestcentral.cloudapp.azure.com/api" # if web_app_profile==custom, this is the base EXTERNAL URL where microservices APIs can be found by the web app
+  #  BOOKSTORE_BASE_SRV_URL: "http://bookstore.arm.jri72203.7e67696080e440428308.westeurope.aksapp.io/api" # if web_app_profile==custom, this is the base EXTERNAL URL where microservices APIs can be found by the web app
+  #  BOOKSTORE_BASE_SRV_URL: "http://bookstore-wis70100.7e67696080e440428308.westeurope.aksapp.io/api" # if web_app_profile==custom, this is the base EXTERNAL URL where microservices APIs can be found by the web app
+  AWS_LAMBDA_URL: "https://asuhvv0hv1.execute-api.us-east-1.amazonaws.com/default/bookstore-bankinfo-qwh76454"
+
+  #  DT_ACTIVE_WEB_ENV: custom # production|staging|development|custom -- production (k8s docker desktop w Ingress) | staging (k8s docker desktop w/o Ingress) | development (w/o kubernetes)
+  #  BOOKSTORE_BASE_SRV_URL: http://demo.localdev.me:8080/api # if web_app_profile==custom, this is the base EXTERNAL URL where microservices APIs can be found by the web app
+  #  AWS_LAMBDA_URL: https://8nf7419l19.execute-api.us-east-1.amazonaws.com/default/bookstore-owl60965
+  #qwh tenant: https://asuhvv0hv1.execute-api.us-east-1.amazonaws.com/default/bookstore-bankinfo-qwh76454
+  ###########  http://bookstore-qwh76454.7e67696080e440428308.westeurope.aksapp.io/api
+
+  #bob tenant: https://7bmj6lq8cg.execute-api.us-east-1.amazonaws.com/default/bookstore-bankinfo-bob24744
+
+  #inx tenant: https://4kocimk7hb.execute-api.us-east-1.amazonaws.com/default/bookstore-inx16596
+
+  #owl tenant: https://8nf7419l19.execute-api.us-east-1.amazonaws.com/default/bookstore-owl60965
+  ###########  http://bookstore-owl60965.7e67696080e440428308.westeurope.aksapp.io/api
+
+  #jkm tenant: bob lambda
+  ###########  http://bookstore-jkm19288.7e67696080e440428308.westeurope.aksapp.io/api
+
+  #rvq tenant: !!! AZURE !!!
+  ###########  http://bookstore-rvq58374.7e67696080e440428308.westeurope.aksapp.io/api
+  ###########  https://4kocimk7hb.execute-api.us-east-1.amazonaws.com/default/bookstore-inx16596

@@ -10,7 +10,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: kubernetes.docker.internal
+    - host: bookstore-arm.germanywestcentral.cloudapp.azure.com
       http:
         paths:
           - path: /api/ingest/?(.*)
