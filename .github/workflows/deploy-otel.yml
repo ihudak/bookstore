@@ -1,18 +1,26 @@
 name: 'Deploy OpenTelemetry'
-
 on:
   push:
     branches: master
     paths:
       - .github/workflows/**
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
     concurrency:
       group: otel-deploy-job
     steps:
-      - uses: plengauer/Thoth/actions/instrument/deploy@v5.21.0
+      - uses: plengauer/opentelemetry-github/actions/instrument/job@v5.21.0
+        env:
+          OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: ${{ secrets.DT_ENV_URL }}/api/v2/otlp/v1/traces
+          OTEL_EXPORTER_OTLP_METRICS_ENDPOINT: ${{ secrets.DT_ENV_URL }}/api/v2/otlp/v1/metrics
+          OTEL_EXPORTER_OTLP_LOGS_ENDPOINT: ${{ secrets.DT_ENV_URL }}/api/v2/otlp/v1/logs
+          OTEL_EXPORTER_OTLP_TRACES_HEADERS: Api-Token ${{ secrets.DT_TOKEN }}
+          OTEL_EXPORTER_OTLP_METRICS_HEADERS: Api-Token ${{ secrets.DT_TOKEN }}
+          OTEL_EXPORTER_OTLP_LOGS_HEADERS: Api-Token ${{ secrets.DT_TOKEN }}
+        with:
+          secrets_to_redact: '["${{ github.token }}","${{ secrets.DEPLOY_OBSERVABILITY_TOKEN }}","${{ secrets.DT_ENV_URL }}","${{ secrets.DT_TOKEN }}"]'
+      - uses: plengauer/opentelemetry-github/actions/instrument/deploy@v5.21.0
         env:
           OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: '${{ secrets.DT_ENV_URL }}/api/v2/otlp/v1/traces'
           OTEL_EXPORTER_OTLP_METRICS_ENDPOINT: '${{ secrets.DT_ENV_URL }}/api/v2/otlp/v1/metrics'
@@ -22,3 +30,5 @@ jobs:
           OTEL_EXPORTER_OTLP_LOGS_HEADERS: 'Api-Token ${{ secrets.DT_TOKEN }}'
         with:
           github_token: '${{ secrets.DEPLOY_OBSERVABILITY_TOKEN }}'
+    permissions:
+      actions: read
