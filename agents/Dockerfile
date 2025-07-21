@@ -1,5 +1,6 @@
 ARG VER=21
 ARG FLAVOR=noble
+ENV FLAVOR=$FLAVOR
 
 FROM eclipse-temurin:${VER}-jdk-${FLAVOR}
 MAINTAINER dynatrace.com
