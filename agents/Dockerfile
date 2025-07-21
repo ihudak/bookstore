@@ -34,6 +34,7 @@ COPY scripts/standalone.conf /opt/
 RUN chmod +x /opt/*.sh
 
 RUN echo $FLAVOR
+RUN echo ${FLAVOR}
 
 # install unzip and curl
 RUN if [ "$FLAVOR" = "alpine" ]; then \
