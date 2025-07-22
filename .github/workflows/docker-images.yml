@@ -23,9 +23,9 @@ jobs:
           OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: ${{ secrets.DT_ENV_URL }}/api/v2/otlp/v1/traces
           OTEL_EXPORTER_OTLP_METRICS_ENDPOINT: ${{ secrets.DT_ENV_URL }}/api/v2/otlp/v1/metrics
           OTEL_EXPORTER_OTLP_LOGS_ENDPOINT: ${{ secrets.DT_ENV_URL }}/api/v2/otlp/v1/logs
-          OTEL_EXPORTER_OTLP_TRACES_HEADERS: Api-Token ${{ secrets.DT_TOKEN }}
-          OTEL_EXPORTER_OTLP_METRICS_HEADERS: Api-Token ${{ secrets.DT_TOKEN }}
-          OTEL_EXPORTER_OTLP_LOGS_HEADERS: Api-Token ${{ secrets.DT_TOKEN }}
+          OTEL_EXPORTER_OTLP_TRACES_HEADERS: Authorization=Api-Token ${{ secrets.DT_TOKEN }}
+          OTEL_EXPORTER_OTLP_METRICS_HEADERS: Authorization=Api-Token ${{ secrets.DT_TOKEN }}
+          OTEL_EXPORTER_OTLP_LOGS_HEADERS: Authorization=Api-Token ${{ secrets.DT_TOKEN }}
         with:
           secrets_to_redact: '["${{ github.token }}","${{ secrets.CR_PAT }}","${{ secrets.DT_ENV_ID }}","${{ secrets.DT_ENV_URL }}","${{ secrets.DT_TOKEN }}"]'
       - uses: actions/checkout@v4
