@@ -5,9 +5,10 @@ services:
     image: postgres:13
     container_name: postgres_container
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
+      POSTGRES_USER: pguser
+      POSTGRES_PASSWORD: p@ssw0rD!
     volumes:
       - ./init:/docker-entrypoint-initdb.d
+      - ./data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
