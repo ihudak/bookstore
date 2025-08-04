@@ -29,9 +29,9 @@ reset_settings() {
   sed -i.bak "s/dt-mysql:{FLAVOR}/dt-mysql:latest/g" databases.yaml
 
   # reset settings
-  sed -i.bak "s/-noagent:latest/-{AGENT}:latest/g" *.yaml
-  sed -i.bak "s/-agents:latest/-{AGENT}:latest/g" *.yaml
-  sed -i.bak "s/-preinstrument:latest/-{AGENT}:latest/g" *.yaml
+  sed -i.bak "s/-noagent:{FLAVOR}/-{AGENT}:{FLAVOR}/g" *.yaml
+  sed -i.bak "s/-agents:{FLAVOR}/-{AGENT}:{FLAVOR}/g" *.yaml
+  sed -i.bak "s/-preinstrument:{FLAVOR}/-{AGENT}:{FLAVOR}/g" *.yaml
 #  sed -i.bak "s/bookstore-webapp:latest/bookstore-webapp:latest/g" bookstore.yaml
 
   # web app is available in latest flavor and noagent only
@@ -53,7 +53,7 @@ get_params() {
   ns="bookstore" # default namespace
   rs="no"        # no reset by default
   hl="no"        # help
-  while getopts hg:a:x:p:n:r flag
+  while getopts hg:a:x:p:f:n:r flag
   do
       case "${flag}" in
         h) hl="yes";;
