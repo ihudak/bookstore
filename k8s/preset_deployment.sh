@@ -3,8 +3,8 @@
 display_usage() {
   echo "Sets agent instrumentation in the deployment yaml files"
   echo "Usage:";
-  echo "   ${0} -gyes -pmin -fubuntu -n bookstore  # installs agents on deploy; minimizes external port usage; bookstore namespace";
-  echo "   ${0} -gpre -pall -falpine -n bookstore  # takes agents prebuilt in the docker image; every service will be open (callable from outside of the k8s)";
+  echo "   ${0} -gyes -pmin -fubuntu -nbookstore  # installs agents on deploy; minimizes external port usage; bookstore namespace";
+  echo "   ${0} -gpre -pall -falpine -nbookstore  # takes agents prebuilt in the docker image; every service will be open (callable from outside of the k8s)";
   echo "   ${0} -r                   # resets yamls";
   echo "Flags:";
   echo " -g - agent: yes/no/pre. default = yes - preloads otel and dynatrace java agents. pre - use preinstrumented images";
