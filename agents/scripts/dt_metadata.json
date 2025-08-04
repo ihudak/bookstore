@@ -1,0 +1,7 @@
+{
+  "k8s.cluster.name": "bookstore",
+  "dt.solution": "mgd",
+  "dt.capability": "mgd",
+  "dt.team": "pm",
+  "dt.attr.json": "json"
+}

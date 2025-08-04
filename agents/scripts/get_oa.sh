@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # clear the OA directory
-rm -rf $OA_INSTALL_DIR && mkdir -p $OA_INSTALL_DIR
+rm -rf "$OA_INSTALL_DIR" && mkdir -p "$OA_INSTALL_DIR" && mkdir -p "$OA_INSTALL_DIR"/../enrichment
 
 # MINSIZE is 5 MB
 export MINSIZE=500000
@@ -52,5 +52,7 @@ cd "$OA_INSTALL_DIR" && unzip "$AGENT_ZIP" && rm "$AGENT_ZIP"
 
 # copy the template of the config file
 cp /opt/standalone.conf "$OA_INSTALL_DIR"/agent/conf/
+# copy the enrichment files
+cp /opt/dt_metadata*.* "$OA_INSTALL_DIR"/../enrichment/
 
 echo "OA load done"

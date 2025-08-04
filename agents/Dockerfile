@@ -19,7 +19,7 @@ ENV DT_ENV_ID=$DT_ENV_ID
 ENV DT_ENV_URL=$DT_ENV_URL
 ENV DT_TOKEN=$DT_TOKEN
 
-ENV DOCKER_VER="1.6.0"
+ENV DOCKER_VER="1.7.0"
 
 # Prepare OA config
 ENV OA_INSTALL_DIR=/var/lib/dynatrace/oneagent
@@ -33,6 +33,7 @@ ENV OTEL_EXPORTER_OTLP_TRACES_PROTOCOL=http/protobuf
 
 COPY scripts/*.sh /opt/
 COPY scripts/standalone.conf /opt/
+COPY scripts/dt_metadata*.* /opt/
 RUN chmod +x /opt/*.sh
 
 # install unzip and curl
