@@ -54,8 +54,16 @@ spec:
               value: Ratings
             - name: SERVICE_FULL_NAME
               value: "$(APP_NAME).$(SERVICE_NAME).$(SVC_SUFFIX)"
+            - name: DT_TAGS
+              value: "BookStore MicroService=BookStore.Ratings"
+            - name: DT_CUSTOM_PROPERTIES
+              value: "custom.app.name=BookStore,custom.microservice.name=ratings"
             - name: OTEL_RESOURCE_ATTRIBUTES
               value: "dt.security_context=$(SECURITY_CONTEXT),dt.cost.costcenter=$(COST_CENTER),dt.cost.product=$(COST_PRODUCT),my.resource.attribute=$(GIT_REPO)"
+            - name: DT_SERVICE_NAME
+              value: RatingController
+            - name: DT_HOST_NAME_PREFIX
+              value: ratings
           resources:
             limits:
               cpu: 300m

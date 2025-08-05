@@ -1,42 +1,70 @@
 #!/bin/sh
 
-export ENTITIES_URL="$DT_ENV_URL/api/v2/entities?pageSize=500&entitySelector=type(SERVICE),entityName($SERVICE_FULL_NAME)"
-export EVENTS_URL="$DT_ENV_URL/api/v2/events/ingest"
+EVENTS_URL="$DT_ENV_URL/api/v2/events/ingest"
 
-if [ "$(echo $ENTITIES_TOKEN | cut -c 1-7)" != "dt0c01." ] || [ "$(echo $EVENTS_TOKEN | cut -c 1-7)" != "dt0c01." ]; then
-  echo Tokens for the deployment event are not ready
-  exit 0; # tokens are not provided
+if [ "$(echo "$DT_TOKEN" | cut -c 1-7)" != "dt0c01." ]; then
+  echo "Token for the deployment event is not ready";
+  exit 0; # token is not provided
 fi
 
-# Get entity id for the deployed service
-DT_SERVICE_ID=$(curl --location "$ENTITIES_URL" --header "Authorization: Api-Token $ENTITIES_TOKEN" | jq '.entities[0].entityId' | sed -e s/\"//g)
-export DT_SERVICE_ID
+make_and_send_event() {
+  entitySelector="$1"
+  startTime="$2"
+  endTime="$3"
+  isPreinstrumented="$4"
 
-# Submit deployment event for the service
-EVENT_BODY=$(jq --null-input \
-  --arg deploymentVersion "$DT_RELEASE_VERSION" \
-  --arg deploymentTitle "Deployed version $DT_RELEASE_VERSION" \
-  --arg startTime "$(date +%s%N | cut -b1-11)00" \
-  --arg endTime "$(date +%s%N | cut -b1-11)99" \
-  --arg service "entityId($DT_SERVICE_ID)" \
-  --arg serviceName "$SERVICE_FULL_NAME" \
-  '{
-     "eventType": "CUSTOM_DEPLOYMENT",
-     "title": $deploymentTitle,
-     "startTime": $startTime,
-     "endTime": $endTime,
-     "timeout": 1,
-     "entitySelector": $service,
-     "properties": {
-           "deploymentName":"Bookstore Carts deployment",
-           "deploymentVersion":$deploymentVersion,
-           "deploymentProject":$serviceName
-     }
-   }')
-export EVENT_BODY
+  EVENT_BODY=$(jq --null-input \
+    --arg deploymentVersion "$DT_RELEASE_VERSION" \
+    --arg releaseBuildVersion "$DT_RELEASE_BUILD_VERSION" \
+    --arg deploymentTitle "Deployed version $DT_RELEASE_VERSION" \
+    --arg startTime "$startTime" \
+    --arg endTime "$endTime" \
+    --arg entitySelector "$entitySelector" \
+    --arg serviceName "$SERVICE_FULL_NAME" \
+    --arg instrumentation "$AGENT" \
+    --arg isPreinstrumented "$isPreinstrumented" \
+    --arg deploymentName "Bookstore $SERVICE_FULL_NAME deployment" \
+    '{
+       "eventType": "CUSTOM_DEPLOYMENT",
+       "title": $deploymentTitle,
+       "startTime": $startTime,
+       "endTime": $endTime,
+       "timeout": 7,
+       "entitySelector": $entitySelector,
+       "properties": {
+             "deploymentName":$deploymentName,
+             "deploymentVersion":$deploymentVersion,
+             "releaseBuildVersion":$releaseBuildVersion,
+             "instrumentation":$instrumentation,
+             "isPreinstrumented":$isPreinstrumented,
+             "deploymentProject":$serviceName
+       }
+     }')
 
-curl --location "$EVENTS_URL" \
-  --header 'Content-Type: application/json' \
-  --header "Authorization: Api-Token $EVENTS_TOKEN" \
-  --data "${EVENT_BODY}"
+  curl -X 'POST' "$EVENTS_URL" \
+    -H 'accept: application/json; charset=utf-8' \
+    -H 'Content-Type: application/json; charset=utf-8' \
+    -H "Authorization: Api-Token $DT_TOKEN" \
+    -d "$EVENT_BODY"
+}
 
+
+if [ -z ${AGENT+x} ]; then
+      echo "Not monitored case";
+      exit 0;
+elif [ $AGENT = $ONE_AGENT ] && [ -n "${DT_ENV_URL+x}" ] && [ -n "${DT_TOKEN+x}" ]; then
+      echo "OneAgent case";
+
+      # event for host
+      make_and_send_event "type(HOST),entityName.startsWith($DT_HOST_NAME_PREFIX),state(RUNNING)" "$(date +%s%N | cut -b1-11)00" "$(date +%s%N | cut -b1-11)99" "$AGENTS_PRELOAD";
+
+      # event for service
+      make_and_send_event "type(SERVICE),entityName.startsWith($DT_SERVICE_NAME)" "$(date +%s%N | cut -b1-11)00" "$(date +%s%N | cut -b1-11)99" "$AGENTS_PRELOAD";
+elif [ $AGENT = $OTEL_AGENT ] && [ -n "${DT_ENV_URL+x}" ] && [ -n "${DT_TOKEN+x}" ]; then
+      echo "OpenTelemetry case";
+      # event for service
+      make_and_send_event "type(SERVICE),entityName.startsWith($SERVICE_FULL_NAME)" "$(date +%s%N | cut -b1-11)00" "$(date +%s%N | cut -b1-11)99" "true";
+else
+      echo "Not configured for monitoring";
+      exit 0;
+fi
