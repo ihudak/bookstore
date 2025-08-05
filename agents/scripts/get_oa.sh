@@ -53,6 +53,7 @@ cd "$OA_INSTALL_DIR" && unzip "$AGENT_ZIP" && rm "$AGENT_ZIP"
 # copy the template of the config file
 cp /opt/standalone.conf "$OA_INSTALL_DIR"/agent/conf/
 # copy the enrichment files
-cp /opt/dt_metadata*.* "$OA_INSTALL_DIR"/../enrichment/
+cp /opt/*.properties "$OA_INSTALL_DIR"/../enrichment/
+cp /opt/*.json "$OA_INSTALL_DIR"/../enrichment/
 
 echo "OA load done"

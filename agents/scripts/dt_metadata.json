@@ -3,5 +3,6 @@
   "dt.solution": "mgd",
   "dt.capability": "mgd",
   "dt.team": "pm",
+  "dt.metadata.kind": "generic",
   "dt.attr.json": "json"
 }

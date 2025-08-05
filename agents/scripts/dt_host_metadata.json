@@ -1,0 +1,8 @@
+{
+  "k8s.cluster.name": "bookstore",
+  "dt.host.solution": "mgd-json-host",
+  "dt.host.capability": "mgd-json-host",
+  "dt.host.team": "pm-json-host",
+  "dt.metadata.kind": "host",
+  "dt.host.attr.json": "json-host"
+}

@@ -33,7 +33,8 @@ ENV OTEL_EXPORTER_OTLP_TRACES_PROTOCOL=http/protobuf
 
 COPY scripts/*.sh /opt/
 COPY scripts/standalone.conf /opt/
-COPY scripts/dt_metadata*.* /opt/
+COPY scripts/*.properties /opt/
+COPY scripts/*.json /opt/
 RUN chmod +x /opt/*.sh
 
 # install unzip and curl
