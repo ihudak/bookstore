@@ -3,18 +3,18 @@
 # Check for musl libc
 if ldd --version 2>&1 | grep -qi musl; then
     echo "Running on musl-based system (likely Alpine Linux). Instrumentation is not supported."
-    exit 0
+    return 0
 elif [ -f /etc/os-release ]; then
     # Check for Alpine in os-release
     if grep -qi alpine /etc/os-release; then
         echo "Running on Alpine Linux. Instrumentation is not supported."
-        exit 0
+        return 0
     else
         echo "Not Alpine Linux. Instrumenting..."
     fi
 else
     echo "Unable to determine system type. Exiting"
-    exit 0
+    return 0
 fi
 
 
@@ -24,6 +24,7 @@ if [ -z ${DT_ENV_ID+x} ] || [ -z ${DT_ENV_URL+x} ] || [ -z ${DT_TOKEN+x} ]; then
   export OTEL_SHELL_TRACES_ENABLE=FALSE;
   export OTEL_SHELL_METRICS_ENABLE=FALSE;
   export OTEL_SHELL_LOGS_ENABLE=FALSE;
+  echo "Monitoring is not configured. Exiting"
   return 0
 fi
 
@@ -65,3 +66,13 @@ otel_instrument echo
 # the first echo will give trace a name
 echo "Otel-bash instrumentation complete"
 echo "BookStoreAppDocker: $SERVICE_FULL_NAME:$(uname -p)"
+
+echo $DT_TOKEN | cut -c 1-7)
+echo $OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
+echo $OTEL_EXPORTER_OTLP_METRICS_ENDPOINT
+echo $OTEL_EXPORTER_OTLP_LOGS_ENDPOINT
+echo $OTEL_EXPORTER_OTLP_TRACES_HEADERS
+echo $OTEL_EXPORTER_OTLP_METRICS_HEADERS
+echo $OTEL_EXPORTER_OTLP_LOGS_HEADERS
+
+echo "Exiting the otel instrumentation script"
