@@ -20,7 +20,7 @@ spec:
       namespace: bookstore
       labels:
         app: superpay
-        app.kubernetes.io/version: 1.7.0
+        app.kubernetes.io/version: 1.7.2
         app.kubernetes.io/part-of: BookStore
     spec:
       containers:
@@ -56,7 +56,7 @@ spec:
               value: "$(APP_NAME).$(SERVICE_NAME).$(SVC_SUFFIX)"
             - name: DT_TAGS
               value: "BookStore MicroService=BookStore.DynaPay"
-            - name: DT_CUSTOM_PROPERTIES
+            - name: DT_CUSTOM_PROP
               value: "custom.app.name=BookStore,custom.microservice.name=dynapay"
             - name: OTEL_RESOURCE_ATTRIBUTES
               value: "dt.security_context=$(SECURITY_CONTEXT),dt.cost.costcenter=$(COST_CENTER),dt.cost.product=$(COST_PRODUCT),my.resource.attribute=$(GIT_REPO)"

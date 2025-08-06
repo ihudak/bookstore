@@ -19,7 +19,7 @@ ENV DT_ENV_ID=$DT_ENV_ID
 ENV DT_ENV_URL=$DT_ENV_URL
 ENV DT_TOKEN=$DT_TOKEN
 
-ENV DOCKER_VER="1.7.0"
+ENV DOCKER_VER="1.7.2"
 
 # Prepare OA config
 ENV OA_INSTALL_DIR=/var/lib/dynatrace/oneagent
@@ -55,7 +55,8 @@ ENV JAVA_TOOL_OPTIONS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,addr
 
 # Prepare OA. Download Java Agent
 # oneAgent.sh will set tenant-specific settings on deploy
-RUN if [ ${AGENTS_PRELOAD} = true ]; then \
+RUN /opt/set_bash_instrumentation.sh && \
+    if [ ${AGENTS_PRELOAD} = true ]; then \
       if [ -n "${DT_ENV_URL+x}" ] && [ -n "${DT_TOKEN+x}" ]; then \
           # check if the token is base64-ed. If yes, unbase
           if [ "$(echo $DT_TOKEN | cut -c 1-7)" != "dt0c01." ]; then \
@@ -69,6 +70,8 @@ RUN if [ ${AGENTS_PRELOAD} = true ]; then \
 ENV AGENTS_PRELOAD=$AGENTS_PRELOAD
 
 ENTRYPOINT export OTEL_SERVICE_NAME="$SERVICE_FULL_NAME" && \
+           /opt/set_bash_instrumentation.sh && \
+           /opt/deployment_event.sh && \
            if [ -z ${AGENT+x} ]; then \
                 java -Dotel.service.name=$SERVICE_FULL_NAME -jar /opt/app/app.jar; \
            elif [ $AGENT = $ONE_AGENT ] && [ -n "${DT_ENV_URL+x}" ] && [ -n "${DT_TOKEN+x}" ]; then \
