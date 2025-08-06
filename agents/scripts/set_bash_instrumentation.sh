@@ -1,5 +1,23 @@
 #!/bin/sh
 
+# Check for musl libc
+if ldd --version 2>&1 | grep -qi musl; then
+    echo "Running on musl-based system (likely Alpine Linux). Instrumentation is not supported."
+    exit 0
+elif [ -f /etc/os-release ]; then
+    # Check for Alpine in os-release
+    if grep -qi alpine /etc/os-release; then
+        echo "Running on Alpine Linux. Instrumentation is not supported."
+        exit 0
+    else
+        echo "Not Alpine Linux. Instrumenting..."
+    fi
+else
+    echo "Unable to determine system type. Exiting"
+    exit 0
+fi
+
+
 ## Set Otel env variables that come from the monitoring tenant
 if [ -z ${DT_ENV_ID+x} ] || [ -z ${DT_ENV_URL+x} ] || [ -z ${DT_TOKEN+x} ]; then
   # Cannot monitor
