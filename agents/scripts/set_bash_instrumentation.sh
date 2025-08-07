@@ -67,7 +67,7 @@ otel_instrument echo
 echo "Otel-bash instrumentation complete"
 echo "BookStoreAppDocker: $SERVICE_FULL_NAME:$(uname -p)"
 
-echo $DT_TOKEN | cut -c 1-7)
+echo $DT_TOKEN | cut -c 1-7
 echo $OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
 echo $OTEL_EXPORTER_OTLP_METRICS_ENDPOINT
 echo $OTEL_EXPORTER_OTLP_LOGS_ENDPOINT
