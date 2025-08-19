@@ -20,10 +20,15 @@
 
 
 import json
-import json
+import logging
 import base64
 
-print('Loading function')
+
+# Configure the logger
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)  # Set the desired log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+
+logger.info('Loading function')
 
 
 
@@ -55,7 +60,7 @@ def get_bank_info(event, context):
         "Pursuit Bank Inc."
     ]
     if event.get("isBase64Encoded"):
-        print("got base64 encoded body")
+        logger.warning("got base64 encoded body")
         b64encoded_event_body=event.get("body")
         event_body_bytes = base64.b64decode(b64encoded_event_body)
         event_body_string =  event_body_bytes.decode('utf-8')
@@ -71,15 +76,17 @@ def get_bank_info(event, context):
     if bank_name in allowed_bank_names:
         status_code = 200
         res = bank_name +" bank is allowed"
+        logger.info(f"{bank_name} is allowed")
     else:
         status_code = 400
         res = bank_name +" bank is NOT allowed"
+        logger.error(f"{bank_name} is NOT allowed")
 
     return return_response(res, status_code)
 
 
 def lambda_handler(event, context):
     handler_log = 'lambda_handler: Received event=' + str(event) + " with event body=" + str(event.get("body"))
-    print(handler_log)
+    logger.info(handler_log)
 
     return get_bank_info(event, context)
