@@ -11,7 +11,7 @@ kubectl apply -f secret.yaml
 if [ $# -eq 0 ] || [ $1 != "-nodb" ]; then
   kubectl apply -f databases.yaml;
   read -t 15 -p "Wait till the databases get up and running...";
-  echo
+  echo;
 fi
 
 #kubectl delete deployment clients -n $NS
