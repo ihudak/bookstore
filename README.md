@@ -8,13 +8,12 @@ Bookstore project consists of 8 primary microservices, one web application, and 
 
 # Build
 
-### Prerequisite
-* Docker service (docker desktop) should be running
+## Prerequisite
 
-#### Ingress Controller
+### Ingress Controller
 Install Ingress controller to enable WebApp access all microservices in your deployment
 
-##### Docker Desktop: Using Helm
+#### Docker Desktop: Using Helm
 
     helm upgrade --install ingress-nginx ingress-nginx --repo https://kubernetes.github.io/ingress-nginx --namespace ingress-nginx --create-namespace
 
@@ -28,30 +27,16 @@ Install Ingress controller to enable WebApp access all microservices in your dep
 
 #### Azure Kubernetes Service (AKS)
 
-    helm install ingress-nginx ingress-nginx/ingress-nginx --create-namespace --namespace ingess-nginx `
+    helm install ingress-nginx ingress-nginx/ingress-nginx --create-namespace --namespace ingress-nginx `
     --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-health-probe-request-path"=/healthz
 
 #### Minikube
 
     minikube addons enable ingress
 
-### Build on Linux/MacOS/WLS2
-* Go to `k8s` directory
-* execute, optionally providing otel token with the scopes of `trace_otel_ingest`, `log_otel_ingest`, `metric_otel_ingest`  
-
-        ./build_docker_all.sh [<tenantID>] [dev|sprint] [<otel_ingest_token>]
-  >  _the token can be base64-ed or open_
-
-### Build on Windows
-* Go to `k8s` directory
-* execute, optionally providing otel token with the scopes of `trace_otel_ingest`, `log_otel_ingest`, `metric_otel_ingest`  
-
-         .\build_docker_all.bat [<tenantID>] [dev|sprint] [<otel_ingest_token>]
-
-
 ## Configuration
 ### ingress
-* Set the public host name in `ingress.yaml`
+* Set the public host name in `ingress.yaml` (here is an example for docker desktop)
         
         - host: kubernetes.docker.internal
 
@@ -65,103 +50,45 @@ Install Ingress controller to enable WebApp access all microservices in your dep
         ## if you use Labmda function to randomize payment failure/success, please also set the following:
         DT_BANK_CHECK: "lambda" # lambda | rand
         AWS_LAMBDA_URL: <URL to the Lambda function> ## e.g. AWS_LAMBDA_URL: "https://my-lambla.execute-api.us-east-1.amazonaws.com/default/bookstore-bankinfo"
+        ## Note: You can find the Lambda in the `lambda-bankinfo` module in this repository
 
 * Define instrumentation (OneAgent or Otel) for the microservices in `config_agents.yaml`  
 
         <microservice>_agent: [oneAgent|otelAgent|none] # set for all *_agent records
 
 * Generate Tokens  
-  * OpenIngest token  
+  * Dynatrace token  
     * Open `Dynatrace UI > Manage > Access tokens`  
     * click on `Generate new token`  
-    * select `Ingest OpenTelemetry traces` in the scope  
+    * select `Ingest OpenTelemetry traces` and `PaaS integration - Installer download` in the scope         
     * click `Generate`  
     * convert the token to base64:  
 
             echo -n <token> | base64 -w 0
       > **Note:** on MacOS `-w 0` is not needed
-
-  * OneAgent token  
-    * Open `Dynatrace UI > Manage > Access tokens`  
-    * click on `Generate new token`  
-    * select `PaaS integration - Installer download` in the scope  
-    * click `Generate`  
-    * convert the token to base64:  
-
-            echo -n <token> | base64 -w 0
-      > **Note:** on MacOS `-w 0` is not needed
-
-  * Entities Read token (needed to send deployment events)  
-    * Open `Dynatrace UI > Manage > Access tokens`  
-    * click on `Generate new token`  
-    * select `Read entities` in the scope  
-    * click `Generate`  
-    * convert the token to base64:  
-
-            echo -n <token> | base64 -w 0
-      > **Note:** on MacOS `-w 0` is not needed
-
-  * Events Ingest token (needed for sending deployment events)  
-    * Open `Dynatrace UI > Manage > Access tokens`  
-    * click on `Generate new token`  
-    * select `Ingest events` in the scope  
-    * click `Generate`  
-    * convert the token to base64:  
-
-            echo -n <token> | base64 -w 0
-      > **Note:** on MacOS `-w 0` is not needed
-
+      
 * Put tokens in the secrets, `secret.yaml` file  
 
-      oneagent-token: <base64-ed OneAgent token (make sure you concatenated if it's multiline)>  
-      otel-token: <base64-ed Otel token (make sure you concatenated if it's multiline)>  
+      DT_TOKEN: <base64-ed OneAgent token (make sure you concatenated if it's multiline)>  
 
 ### deployment's yaml files
 the yaml configurations for deployments need to be preconfigured.
 Use `preset_deployment.sh` for that:
 
-* **on-deploy agent installation** images for Intel/AMD architecture, books namespace (default ns is bookstore):
+* **preinstrumented (AppOnly)** images, books namespace (default ns is bookstore):
 ```
-./preset_deployment.sh -gyes -ax64 -n books
-```
-
-* **on-deploy agent installation**  images for ARMv8 architecture, books namespace (default ns is bookstore):
-```
-./preset_deployment.sh -gyes -aarm -n books
+./preset_deployment.sh -gyes -n books
 ```
 
-* **on-build agent installation** images for Intel/AMD architecture, books namespace (default ns is bookstore):
+* **non-instrumented images**, bookstore namespace (-n to override):
 ```
-./preset_deployment.sh -gpre -ax64 -n books
-```
-
-* **on-build agent installation**  images for ARMv8 architecture, books namespace (default ns is bookstore):
-```
-./preset_deployment.sh -gpre -aarm -n books
-```
-
-* use **non-instrumented images** for Intel/AMD architecture, bookstore namespace (-n to override):
-```
-./preset_deployment.sh -gno -ax64
-```
-
-* use **non-instrumented images** for ARMv8 architecture, bookstore namespace (-n to override):
-```
-./preset_deployment.sh -gno -aarm
+./preset_deployment.sh -gno
 ```
 
 * reset the yaml-files:
 ```
 ./preset_deployment.sh -reset
 ```
-
-* "on deploy" vs "on build":
-  * `-gyes` parameter makes OneAgent and Otel to be downloaded and configured on every pod start.
-    * **pros:** you get the latest agent on every pod restart
-    * **cons:** more traffic (download agents); more time for pod to start
-  * `-gpre` parameter makes OneAgent and Otel to be a part of docker image.
-    * **pros:** quicker to start, less traffic (agent is already in the image)
-    * **cons:** to update the Agents you need to rebuild the docker images
 
 ## Deployment
 ### Manual deployment
