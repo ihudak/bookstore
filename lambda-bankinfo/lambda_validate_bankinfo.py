@@ -13,9 +13,22 @@
 
     steps.
     1. create a new function and copy-paste its body and click "Deploy"
-    2. set env vars in the config (Get Data to Dynatrace -> Lambda -> ...
-    3. add an arn layer (AWS Lambda UI -> Layers
+    2. set env vars in the config (Get Data to Dynatrace -> Lambda -> ...)
+    3. add an arn layer (AWS Lambda UI -> Layers)
     4. add trigger -> add API Gateway: HTTP API with Open security
+    5. add env vars for troubleshooting:
+        DT_LOGGING_DESTINATION=stdout
+        DT_LOGGING_NODEJS_FLAGS=Exporter=true
+
+    tests:
+    -- success
+    {
+        "body": "{\"used_bank\": \"Right Bank.\"}"
+    }
+    --fail
+    {
+      "body": "{\"used_bank\": \"Wrong Bank.\"}"
+    }
 """
 
 
@@ -57,7 +70,8 @@ def get_bank_info(event, context):
         "Value Banks Inc.",
         "Concorde Financial Group",
         "Obsidian Trust Corp.",
-        "Pursuit Bank Inc."
+        "Pursuit Bank Inc.",
+        "Right Bank."
     ]
     if event.get("isBase64Encoded"):
         logger.warning("got base64 encoded body")
