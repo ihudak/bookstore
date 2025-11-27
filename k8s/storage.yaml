@@ -59,17 +59,17 @@ spec:
             - name: DT_CUSTOM_PROP
               value: "custom.app.name=BookStore,custom.microservice.name=storage"
             - name: OTEL_RESOURCE_ATTRIBUTES
-              value: "dt.security_context=$(SECURITY_CONTEXT),dt.cost.costcenter=$(COST_CENTER),dt.cost.product=$(COST_PRODUCT),my.resource.attribute=$(GIT_REPO)"
+              value: "dt.security_circle=$(SECURITY_CIRCLE),dt.management_zone=$(MANAGEMENT_ZONE),dt.owner_team=$(OWNER_TEAM),dt.owner=$(OWNER),dt.cost.costcenter=$(COST_CENTER),dt.cost.product=$(COST_PRODUCT),my.resource.attribute=$(GIT_REPO)"
             - name: DT_SERVICE_NAME
               value: StorageController
             - name: DT_HOST_NAME_PREFIX
               value: storage
           resources:
             limits:
-              cpu: 300m
+              cpu: 400m
               memory: 768Mi
             requests:
-              cpu: 300m
+              cpu: 400m
               memory: 768Mi
 ---
 apiVersion: v1

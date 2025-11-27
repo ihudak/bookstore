@@ -6,7 +6,10 @@ metadata:
     metadata.dynatrace.com/boo: foo
     metadata.dynatrace.com/my.annotation: custom_cost_center # mapping rule: my_annotation -> cost_center
     metadata.dynatrace.com/dt.cost.costcenter: fixed_cost_center
-    metadata.dynatrace.com/dt.security_context: fixed_security
+    metadata.dynatrace.com/dt.security_circle: mgd.live.pm
+    metadata.dynatrace.com/dt.management_zone: bookstore.mgd
+    metadata.dynatrace.com/dt.owner_team: mgd-pm
+    metadata.dynatrace.com/dt.owner: alex
     mystuff/my.annotation: ann1
   labels:
     name: bookstore

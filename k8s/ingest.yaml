@@ -59,7 +59,7 @@ spec:
             - name: DT_CUSTOM_PROP
               value: "custom.app.name=BookStore,custom.microservice.name=ingest"
             - name: OTEL_RESOURCE_ATTRIBUTES
-              value: "dt.security_context=$(SECURITY_CONTEXT),dt.cost.costcenter=$(COST_CENTER),dt.cost.product=$(COST_PRODUCT),my.resource.attribute=$(GIT_REPO)"
+              value: "dt.security_circle=$(SECURITY_CIRCLE),dt.management_zone=$(MANAGEMENT_ZONE),dt.owner_team=$(OWNER_TEAM),dt.owner=$(OWNER),dt.cost.costcenter=$(COST_CENTER),dt.cost.product=$(COST_PRODUCT),my.resource.attribute=$(GIT_REPO)"
             - name: DT_SERVICE_NAME
               value: IngestController
             - name: DT_HOST_NAME_PREFIX
@@ -67,10 +67,57 @@ spec:
           resources:
             limits:
               cpu: 500m
-              memory: 1Gi
+              memory: 768Mi
             requests:
               cpu: 500m
-              memory: 1Gi
+              memory: 768Mi
+      initContainers:
+        - name: populate-configs
+          image: alpine:latest
+          restartPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: bookstore-configmap
+          resources:
+            limits:
+              cpu: 100m
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 512Mi
+          command:
+            - sh
+            - -c
+            - |
+              apk add --no-cache curl && \
+              echo "$(date +"%Y-%m-%d-%H:%M:%S")" && \
+              sleep_period=180
+              echo "Waiting for $sleep_period seconds..." && \
+              sleep $sleep_period && \
+              curl -X POST http://$DT_INGEST_SERVER/api/v1/config -H 'Content-Type: application/json' --data-raw '{"serviceId": "all", "id": "dt.work.hard", "loadCPU": 1000000, "loadRAM": 32, "probabilityFailure": 100, "turnedOn": false}' && \
+              curl -X POST http://$DT_INGEST_SERVER/api/v1/config/dynapay -H 'Content-Type: application/json' --data-raw '{"serviceId": "dynapay", "id": "dt.failure.payment.percent", "loadCPU": 1000000, "loadRAM": 32, "probabilityFailure": 20, "turnedOn": true, "propertyStr": "15/25/6"}' && \
+              curl -X POST http://$DT_INGEST_SERVER/api/v1/config/ratings -H 'Content-Type: application/json' --data-raw '{"serviceId": "ratings", "id": "dt.simulate.crash", "loadCPU": 1000000, "loadRAM": 32, "probabilityFailure": 20, "turnedOn": false, "propertyStr": "15/25/6"}' && \
+              echo "" && \
+              echo "Delete Data" && \
+              curl -X DELETE http://$DT_ORDERS_SERVER/api/v1/orders/delete-all && \
+              curl -X DELETE http://$DT_STORAGE_SERVER/api/v1/storage/delete-all && \
+              curl -X DELETE http://$DT_CARTS_SERVER/api/v1/carts/delete-all && \
+              curl -X DELETE http://$DT_RATINGS_SERVER/api/v1/ratings/delete-all && \
+              curl -X DELETE http://$DT_BOOKS_SERVER/api/v1/books/delete-all && \
+              curl -X DELETE http://$DT_CLIENTS_SERVER/api/v1/clients/delete-all && \
+              echo "" && \
+              echo "Waiting for $sleep_period seconds..." && \
+              sleep $sleep_period && \
+              echo "Start data generator" && \
+              curl -X POST http://$DT_INGEST_SERVER/api/v1/ingest -H 'Content-Type: application/json' --data-raw '{"code":0,"message":"generate","numBooksVend":2000,"numBooksNotvend":100,"numBooksRandVend":50,"numClients":1500,"numCarts":1000,"numOrders":500,"numSubmitOrders":455,"numRatings":700,"numStorage":2000,"randomPrice":true,"numBooksPerStorage":0,"numBooksPerOrder":0,"continuousLoad":true}' && \
+              echo "" && \
+              while true; do
+                echo "$(date +"%Y-%m-%d-%H:%M:%S")"
+                echo "Waiting for $VERCALL_TIMEOUT seconds..."
+                sleep $VERCALL_TIMEOUT
+                echo $(curl -s http://$DT_INGEST_SERVER/api/v1/version)
+                echo $(curl -s http://$DT_INGEST_SERVER/api/v1/config)
+              done
 ---
 apiVersion: v1
 kind: Service

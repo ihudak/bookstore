@@ -50,6 +50,41 @@ spec:
             requests:
               cpu: 500m
               memory: 1Gi
+      initContainers:
+        - name: versioncaller
+          image: alpine:latest
+          restartPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: bookstore-configmap
+          resources:
+            limits:
+              cpu: 100m
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 512Mi
+          command:
+            - sh
+            - -c
+            - |
+              apk add --no-cache curl && \
+              echo "Waiting for 360 seconds..." && \
+              sleep 360 && \
+              while true; do
+                echo "$(date +"%Y-%m-%d-%H:%M:%S")"
+                echo "Waiting for $VERCALL_TIMEOUT seconds..."
+                sleep $VERCALL_TIMEOUT
+                echo $(curl -s http://$DT_WEB_SERVER/versions)
+                echo $(curl -s http://$DT_WEB_SERVER/clients)
+                echo $(curl -s http://$DT_WEB_SERVER/books)
+                echo $(curl -s http://$DT_WEB_SERVER/carts)
+                echo $(curl -s http://$DT_WEB_SERVER/storage)
+                echo $(curl -s http://$DT_WEB_SERVER/orders)
+                echo $(curl -s http://$DT_WEB_SERVER/ratings)
+                echo $(curl -s http://$DT_WEB_SERVER/configs)
+                echo $(curl -s http://$DT_WEB_SERVER/ingest)
+              done
 ---
 apiVersion: v1
 kind: Service

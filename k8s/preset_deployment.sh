@@ -27,6 +27,9 @@ reset_settings() {
   # databases can have only latest tag
   sed -i.bak "s/dt-postgres:{FLAVOR}/dt-postgres:latest/g" databases.yaml
   sed -i.bak "s/dt-mysql:{FLAVOR}/dt-mysql:latest/g" databases.yaml
+  # sidecar containers must always be alpine:latest
+  sed -i.bak "s/image: alpine:{FLAVOR}/image: alpine:latest/g" ingest.yaml
+  sed -i.bak "s/image: alpine:{FLAVOR}/image: alpine:latest/g" web.yaml
 
   # reset settings
   sed -i.bak "s/-noagent:{FLAVOR}/-{AGENT}:{FLAVOR}/g" *.yaml

@@ -17,18 +17,23 @@ data:
   DT_DYNAPAY_SERVER: "superpay-svc:87"
   DT_RATINGS_SERVER: "ratings-svc:88"
   DT_INGEST_SERVER: "ingest-svc:89"
+  DT_WEB_SERVER: "web-svc:90"
   DT_SERVER_PORT: "8080"
   DT_ENV_ID: "<tenant-id>"
   DT_ENV_URL: "<tenant-url>"
+  VERCALL_TIMEOUT: "240"
   APP_NAME: "BookStore"
   SVC_SUFFIX: "dev"
-  SECURITY_CONTEXT: "Buch"
+  SECURITY_CIRCLE: "live.mgd.pm"
+  MANAGEMENT_ZONE: "bookstore"
+  OWNER_TEAM: "managed-pm"
+  OWNER: "ivan"
   COST_CENTER: "BuchSales"
   COST_PRODUCT: "BookStore"
   DT_BANK_CHECK: "rand" # lambda | rand
-  OTEL_JAVAAGENT_DEBUG: "false"
+  OTEL_JAVAAGENT_DEBUG: "true"
   GIT_REPO: "https://github.com/ihudak/bookstore"
-  DT_BOOKSTORE_PROFILE: "prod" # prod | stage | dev -- logging levels -- prod:ERROR; stage:INFO; dev:DEBUG
+  DT_BOOKSTORE_PROFILE: "stage" # prod | stage | dev -- logging levels -- prod:ERROR; stage:INFO; dev:DEBUG
   DT_ACTIVE_WEB_ENV: "custom" # production|staging|development|custom -- production (k8s docker desktop w Ingress) | staging (k8s docker desktop w/o Ingress) | development (w/o kubernetes)
   BOOKSTORE_BASE_SRV_URL: "http://kubernetes.docker.internal/api" # if web_app_profile==custom, this is the base EXTERNAL URL where microservices APIs can be found by the web app
   AWS_LAMBDA_URL: "<URL to the Lambda function>"
