@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.18' apply (false)
-    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'io.spring.dependency-management' version '1.1.7'
 }
 
 subprojects {
@@ -122,21 +122,29 @@ allprojects {
     group = 'com.dynatrace'
     version = '0.0.1-SNAPSHOT'
     sourceCompatibility = '21'
+    java {
+        sourceCompatibility = 21
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(21)
+        }
+    }
 
     configurations {
-
+        annotationProcessor
     }
 
     repositories {
         mavenCentral()
     }
 
-    test {
+    tasks.withType(Test).configureEach {
         useJUnitPlatform()
     }
 
-    tasks.withType(JavaCompile) {
+    tasks.withType(JavaCompile).configureEach {
+        options.release = 21
         options.encoding = 'UTF-8'
+        options.annotationProcessorPath = configurations.annotationProcessor
     }
 }
 
