@@ -38,15 +38,18 @@ COPY scripts/*.json /opt/
 RUN chmod +x /opt/*.sh
 
 # install unzip and curl
-RUN if [ "$FLAVOR" = "alpine" ]; then \
-      apk add --no-cache --update zip curl jq python3 py3-pip py3-virtualenv strace icu-libs icu-data-full libiconv libstdc++ gcompat; \
-    else \
-      apt-get update && \
-      apt-get install -y zip unzip vim jq python3 python3-pip python3-venv strace libc-bin locales locales-all && \
-      rm -rf /var/lib/apt/lists/* && \
-      sed -i 's/^# *en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
-      locale-gen && \
-      update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 ; \
+RUN set -eux; \
+        if command -v apk >/dev/null 2>&1; then \
+          apk add --no-cache --update \
+            zip curl jq python3 py3-pip py3-virtualenv strace icu-libs icu-data-full libstdc++ gcompat; \
+        else \
+          apt-get update; \
+          apt-get install -y --no-install-recommends \
+            zip unzip vim jq python3 python3-pip python3-venv strace libc-bin locales locales-all; \
+          rm -rf /var/lib/apt/lists/*; \
+          sed -i 's/^# *en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen; \
+          locale-gen; \
+          update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8; \
       # install otel bash
       wget -O - https://raw.githubusercontent.com/plengauer/opentelemetry-shell/main/INSTALL.sh | sh -E; \
     fi
