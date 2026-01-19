@@ -19,7 +19,7 @@ ENV DT_ENV_ID=$DT_ENV_ID
 ENV DT_ENV_URL=$DT_ENV_URL
 ENV DT_TOKEN=$DT_TOKEN
 
-ENV DOCKER_VER="1.7.5"
+ENV DOCKER_VER="1.7.7"
 
 # Prepare OA config
 ENV OA_INSTALL_DIR=/var/lib/dynatrace/oneagent
@@ -45,7 +45,7 @@ RUN set -eux; \
         else \
           apt-get update; \
           apt-get install -y --no-install-recommends \
-            zip unzip vim jq python3 python3-pip python3-venv strace libc-bin locales locales-all; \
+            zip unzip vim jq xxd python3 python3-pip python3-venv strace libc-bin locales locales-all; \
           rm -rf /var/lib/apt/lists/*; \
           sed -i 's/^# *en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen; \
           locale-gen; \

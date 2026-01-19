@@ -9,11 +9,11 @@ ARG FLAVOR=noble
 RUN set -eux; \
     if command -v apk >/dev/null 2>&1; then \
       apk add --no-cache --update \
-        zip curl jq python3 py3-pip py3-virtualenv strace icu-libs icu-data-full libstdc++ gcompat; \
+        zip curl icu-libs icu-data-full libstdc++ gcompat; \
     else \
       apt-get update; \
       apt-get install -y --no-install-recommends \
-        zip unzip vim jq python3 python3-pip python3-venv strace libc-bin locales locales-all; \
+        zip unzip vim libc-bin locales locales-all; \
       rm -rf /var/lib/apt/lists/*; \
       sed -i 's/^# *en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen; \
       locale-gen; \
@@ -28,7 +28,7 @@ ENV LC_ALL=C.UTF-8
 ENV LC_CTYPE=C.UTF-8
 ENV LANGUAGE=en_US:en
 ENV JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -Dfile.encoding=UTF-8 -Dsun.jnu.encoding=UTF-8"
-ENV DOCKER_VER="1.7.5"
+ENV DOCKER_VER="1.7.7"
 
 ENTRYPOINT export OTEL_SERVICE_NAME="$SERVICE_FULL_NAME" && \
            java -Dotel.service.name=$SERVICE_FULL_NAME -jar /opt/app/app.jar
