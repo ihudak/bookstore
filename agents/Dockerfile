@@ -39,10 +39,10 @@ RUN chmod +x /opt/*.sh
 
 # install unzip and curl
 RUN if [ "$FLAVOR" = "alpine" ]; then \
-      apk add --no-cache --update zip curl jq python3 py3-pip py3-virtualenv strace; \
+      apk add --no-cache --update zip curl jq python3 py3-pip py3-virtualenv strace icu-libs icu-data-full libiconv libstdc++ gcompat; \
     else \
       apt-get update && \
-      apt-get install -y zip unzip vim jq python3 python3-pip python3-venv strace && \
+      apt-get install -y zip unzip vim jq python3 python3-pip python3-venv strace libc-bin locales locales-all && \
       rm -rf /var/lib/apt/lists/* ; \
       # install otel bash
       wget -O - https://raw.githubusercontent.com/plengauer/opentelemetry-shell/main/INSTALL.sh | sh -E; \
@@ -51,7 +51,8 @@ RUN if [ "$FLAVOR" = "alpine" ]; then \
 # create directory for the application
 RUN mkdir -p /opt/app
 
-ENV JAVA_TOOL_OPTIONS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
+ENV JAVA_TOOL_OPTIONS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -Dfile.encoding=UTF-8
 
 # Prepare OA. Download Java Agent
 # oneAgent.sh will set tenant-specific settings on deploy
