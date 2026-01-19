@@ -19,7 +19,7 @@ ENV DT_ENV_ID=$DT_ENV_ID
 ENV DT_ENV_URL=$DT_ENV_URL
 ENV DT_TOKEN=$DT_TOKEN
 
-ENV DOCKER_VER="1.7.3"
+ENV DOCKER_VER="1.7.5"
 
 # Prepare OA config
 ENV OA_INSTALL_DIR=/var/lib/dynatrace/oneagent
@@ -43,7 +43,10 @@ RUN if [ "$FLAVOR" = "alpine" ]; then \
     else \
       apt-get update && \
       apt-get install -y zip unzip vim jq python3 python3-pip python3-venv strace libc-bin locales locales-all && \
-      rm -rf /var/lib/apt/lists/* ; \
+      rm -rf /var/lib/apt/lists/* && \
+      sed -i 's/^# *en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
+      locale-gen && \
+      update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 ; \
       # install otel bash
       wget -O - https://raw.githubusercontent.com/plengauer/opentelemetry-shell/main/INSTALL.sh | sh -E; \
     fi
@@ -51,8 +54,11 @@ RUN if [ "$FLAVOR" = "alpine" ]; then \
 # create directory for the application
 RUN mkdir -p /opt/app
 
-ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
-ENV JAVA_TOOL_OPTIONS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -Dfile.encoding=UTF-8
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
+ENV LC_CTYPE=C.UTF-8
+ENV LANGUAGE=en_US:en
+ENV JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -Dfile.encoding=UTF-8 -Dsun.jnu.encoding=UTF-8"
 
 # Prepare OA. Download Java Agent
 # oneAgent.sh will set tenant-specific settings on deploy
