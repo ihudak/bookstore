@@ -1,3 +1,13 @@
+az aks get-credentials --resource-group <RESOURCE_GROUP_NAME> --name <AKS_CLUSTER_NAME>
+
+helm install dynatrace-operator oci://public.ecr.aws/dynatrace/dynatrace-operator --create-namespace --namespace dynatrace --atomic
+
+kubectl apply -f dynakube.yaml
+
+
+helm install ingress-nginx ingress-nginx/ingress-nginx --create-namespace --namespace ingess-nginx --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-health-probe-request-path"=/healthz
+
+
 kubectl apply -f namespace.yaml
 kubectl apply -f config_agents.yaml
 kubectl apply -f configmap.yaml

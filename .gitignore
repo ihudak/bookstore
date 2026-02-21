@@ -39,7 +39,13 @@ bin/
 
 ### VS Code ###
 .vscode/
+!.vscode/mcp.json
 
 ### Mac OS ###
 .DS_Store
 /.ai/
+!/.ai/mcp/
+!/.ai/mcp/run-dynatrace-managed-mcp.js
+!/.ai/mcp/dt-environments.json
+/.ai/mcp/.env
+dynatrace-managed-mcp.log
