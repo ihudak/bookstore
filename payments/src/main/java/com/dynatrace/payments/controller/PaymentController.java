@@ -1,6 +1,6 @@
 package com.dynatrace.payments.controller;
 
-import com.dynatrace.controller.HardworkingController;
+import com.dynatrace.controller.SecurityController;
 import com.dynatrace.model.DynaPay;
 import com.dynatrace.model.Payment;
 import com.dynatrace.payments.repository.ConfigRepository;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/payment")
-public class PaymentController extends HardworkingController {
+public class PaymentController extends SecurityController {
     @Autowired
     DynaPayRepository dynaPayRepository;
     @Autowired

@@ -1,6 +1,6 @@
 package com.dynatrace.clients.controller;
 
-import com.dynatrace.controller.HardworkingController;
+import com.dynatrace.controller.SecurityController;
 import com.dynatrace.exception.BadRequestException;
 import com.dynatrace.exception.ResourceNotFoundException;
 import com.dynatrace.clients.model.Client;
@@ -19,7 +19,7 @@ import java.util.Optional;
 //@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/v1/clients")
-public class ClientController extends HardworkingController {
+public class ClientController extends SecurityController {
     @Autowired
     private ClientRepository clientRepository;
     @Autowired
@@ -50,8 +50,8 @@ public class ClientController extends HardworkingController {
     @GetMapping("/find")
     @Operation(summary = "Find a client by email address")
     public Client getClientByEmail(@Parameter(name="email", description = "email address", example = "pbrown.gmail.com") @RequestParam String email) {
-        simulateHardWork();
-        simulateCrash();
+        runThreatScan();
+        applySecurityPolicy();
         logger.info("Looking for client " + email);
         Client clientDb = clientRepository.findByEmail(email);
         if (clientDb == null) {
@@ -66,7 +66,7 @@ public class ClientController extends HardworkingController {
     @PostMapping("")
     @Operation(summary = "Create a new client")
     public Client createClient(@RequestBody Client client) {
-        simulateHardWork();
+        runThreatScan();
         logger.debug("Creating Client " + client.getEmail());
         return clientRepository.save(client);
     }

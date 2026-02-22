@@ -1,6 +1,6 @@
 package com.dynatrace.ratings.controller;
 
-import com.dynatrace.controller.HardworkingController;
+import com.dynatrace.controller.SecurityController;
 import com.dynatrace.exception.BadRequestException;
 import com.dynatrace.exception.ResourceNotFoundException;
 import com.dynatrace.model.Book;
@@ -23,7 +23,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/ratings")
-public class RatingController extends HardworkingController {
+public class RatingController extends SecurityController {
     @Autowired
     private RatingRepository ratingRepository;
     @Autowired
@@ -52,7 +52,7 @@ public class RatingController extends HardworkingController {
     @GetMapping("/findByISBN")
     @Operation(summary = "Get all ratings for the given book")
     public List<Rating> getRatingsByISBN(@Parameter(name="isbn", description = "ISBN13, digits only (no dashes, no spaces)", example = "9783161484100") @RequestParam String isbn) {
-        return ratingRepository.findByEmail(isbn);
+        return ratingRepository.findByIsbn(isbn);
     }
 
     // get a rating by id
@@ -72,8 +72,8 @@ public class RatingController extends HardworkingController {
     @PostMapping("")
     @Operation(summary = "Create a rating. This operation does not require client/book to exist")
     public Rating createRating(@RequestBody Rating rating) {
-        simulateHardWork();
-        simulateCrash();
+        runThreatScan();
+        applySecurityPolicy();
         this.verifyBook(rating.getIsbn());
         this.verifyClient(rating.getEmail());
         logger.debug("Creating Rating for book " + rating.getIsbn() + " from user " + rating.getEmail());

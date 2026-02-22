@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/dynapay")
-public class DynaPayController extends HardworkingController {
+public class DynaPayController extends SecurityController {
     @Value("${dynapay.bankcheck}")
     private String lambdaCall;
     private final String lambdaExpr = "lambda";
@@ -30,8 +30,8 @@ public class DynaPayController extends HardworkingController {
     @PostMapping("")
     @Operation(summary = "Make a bank payment (i.e. payment gateway)")
     public DynaPay createBankPayment(@RequestBody DynaPay dynaPay) {
-        simulateHardWork();
-        simulateCrash();
+        runThreatScan();
+        applySecurityPolicy();
 
         LambdaValidator bankValid = this.callLambda() ? bankInfoController.validateBankInformation() : LambdaValidator.NONE;
         final String paymentSucceed = "Payment succeeded";
@@ -51,9 +51,9 @@ public class DynaPayController extends HardworkingController {
                 break;
             case NONE:
                 double rand = Math.random();
-                logger.info("Processing Payment... Rand = " + rand + " probability to fail = " + getPercentFailure() + "%");
+                logger.info("Processing Payment... Rand = " + rand + " probability to fail = " + getPaymentRiskThreshold() + "%");
 
-                if (rand >= getPercentFailure() / 100.0) {
+                if (rand >= getPaymentRiskThreshold() / 100.0) {
                     // successful payment
                     dynaPay.setSucceeded(true);
                     dynaPay.setMessage(paymentSucceed);

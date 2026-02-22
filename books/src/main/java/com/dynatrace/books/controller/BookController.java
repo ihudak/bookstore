@@ -5,7 +5,7 @@ import com.dynatrace.exception.ResourceNotFoundException;
 import com.dynatrace.books.model.Book;
 import com.dynatrace.books.repository.BookRepository;
 import com.dynatrace.books.repository.ConfigRepository;
-import com.dynatrace.controller.HardworkingController;
+import com.dynatrace.controller.SecurityController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.slf4j.Logger;
@@ -19,7 +19,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/books")
-public class BookController extends HardworkingController {
+public class BookController extends SecurityController {
     @Autowired
     private BookRepository bookRepository;
     @Autowired
@@ -37,8 +37,8 @@ public class BookController extends HardworkingController {
     @GetMapping("/{id}")
     @Operation(summary = "Get a book by its id")
     public Book getBookById(@PathVariable Long id) {
-        simulateHardWork();
-        simulateCrash();
+        runThreatScan();
+        applySecurityPolicy();
         Optional<Book> book = bookRepository.findById(id);
         if (book.isEmpty()) {
             ResourceNotFoundException ex = new ResourceNotFoundException("Book not found");
@@ -52,8 +52,8 @@ public class BookController extends HardworkingController {
     @GetMapping("/find")
     @Operation(summary = "Get a book by its ISBN13 code")
     public Book getBookByIsbn(@Parameter(name="isbn", description = "ISBN13, digits only (no dashes, no spaces)", example = "9783161484100") @RequestParam String isbn) {
-        simulateHardWork();
-        simulateCrash();
+        runThreatScan();
+        applySecurityPolicy();
         logger.info("Looking for book " + isbn);
         Book bookDb = bookRepository.findByIsbn(isbn);
         if (bookDb == null) {
@@ -69,7 +69,7 @@ public class BookController extends HardworkingController {
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Create a book")
     public Book ingestBook(@RequestBody Book book) {
-        simulateHardWork();
+        runThreatScan();
         logger.debug("Creating book " + book.getIsbn());
         return bookRepository.save(book);
     }
@@ -113,8 +113,8 @@ public class BookController extends HardworkingController {
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Toggle vendible status for an ISBN (vendible => the book can be purchased)")
     public Book vendBookByIsbn(@Parameter(name="isbn", description = "ISBN13, digits only (no dashes, no spaces)", example = "9783161484100") @RequestParam String isbn) {
-        simulateHardWork();
-        simulateCrash();
+        runThreatScan();
+        applySecurityPolicy();
         Book book = bookRepository.findByIsbn(isbn);
         if (book == null) {
             ResourceNotFoundException ex = new ResourceNotFoundException("Book not found, ISBN: " + isbn);
@@ -132,8 +132,8 @@ public class BookController extends HardworkingController {
     @Operation(summary = "Make all books vendible")
     public void vendAllBooks() {
         // empty loop to simulate hard work
-        simulateHardWork();
-        simulateCrash();
+        runThreatScan();
+        applySecurityPolicy();
 
 //        bookRepository.bulkBookVending(true);
         this.bulkVending(true);

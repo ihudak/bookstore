@@ -1,7 +1,7 @@
 package com.dynatrace.carts.controller;
 
 import com.dynatrace.carts.model.Cart;
-import com.dynatrace.controller.HardworkingController;
+import com.dynatrace.controller.SecurityController;
 import com.dynatrace.exception.BadRequestException;
 import com.dynatrace.exception.ResourceNotFoundException;
 import com.dynatrace.model.Book;
@@ -24,7 +24,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/carts")
-public class CartController extends HardworkingController {
+public class CartController extends SecurityController {
     @Autowired
     private CartRepository cartRepository;
     @Autowired
@@ -46,7 +46,7 @@ public class CartController extends HardworkingController {
     @GetMapping("/{id}")
     @Operation(summary = "Get a cart by ID")
     public Cart getCartById(@PathVariable Long id) {
-        simulateCrash();
+        applySecurityPolicy();
         Optional<Cart> cart = cartRepository.findById(id);
         if (cart.isEmpty()) {
             ResourceNotFoundException ex = new ResourceNotFoundException("Cart not found");
@@ -60,7 +60,7 @@ public class CartController extends HardworkingController {
     @GetMapping("/findByEmail")
     @Operation(summary = "Get all carts for the given client")
     public List<Cart> getCartsByEmail(@Parameter(name="email", description = "email of an existing client", example = "pbrown.gmail.com") @RequestParam String email) {
-        simulateCrash();
+        applySecurityPolicy();
         this.verifyClient(email);
         return cartRepository.findByEmail(email);
     }
@@ -69,17 +69,17 @@ public class CartController extends HardworkingController {
     @GetMapping("/findByISBN")
     @Operation(summary = "Get all carts for the given book")
     public List<Cart> getCartsByISBN(@Parameter(name="isbn", description = "ISBN13, digits only (no dashes, no spaces)", example = "9783161484100") @RequestParam String isbn) {
-        simulateCrash();
+        applySecurityPolicy();
         this.verifyBook(isbn);
-        return cartRepository.findByEmail(isbn);
+        return cartRepository.findByIsbn(isbn);
     }
 
     // add a book to the cart
     @PostMapping("")
     @Operation(summary = "Add books to a potentially existing cart (will create one if does not exist)")
     public Cart addToCart(@RequestBody Cart cart) {
-        simulateHardWork();
-        simulateCrash();
+        runThreatScan();
+        applySecurityPolicy();
         this.verifyClient(cart.getEmail());
         this.verifyBook(cart.getIsbn());
         Cart cartDB = cartRepository.findByEmailAndIsbn(cart.getEmail(), cart.getIsbn());
@@ -97,8 +97,8 @@ public class CartController extends HardworkingController {
     @PutMapping("")
     @Operation(summary = "Update a cart (must exist)")
     public Cart updateCart(@RequestBody Cart cart) {
-        simulateHardWork();
-        simulateCrash();
+        runThreatScan();
+        applySecurityPolicy();
         this.verifyClient(cart.getEmail());
         this.verifyBook(cart.getIsbn());
         Cart cartByEmailIsbn = cartRepository.findByEmailAndIsbn(cart.getEmail(), cart.getIsbn());

@@ -1,6 +1,6 @@
 package com.dynatrace.storage.controller;
 
-import com.dynatrace.controller.HardworkingController;
+import com.dynatrace.controller.SecurityController;
 import com.dynatrace.exception.InsufficientResourcesException;
 import com.dynatrace.exception.ResourceNotFoundException;
 import com.dynatrace.model.Book;
@@ -19,7 +19,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/storage")
-public class StorageController extends HardworkingController {
+public class StorageController extends SecurityController {
     @Autowired
     private StorageRepository storageRepository;
     @Autowired
@@ -57,23 +57,23 @@ public class StorageController extends HardworkingController {
     // create a book in storage
     @PostMapping("")
     public Storage createStorage(@RequestBody Storage storage) {
-        simulateHardWork();
-        simulateCrash();
+        runThreatScan();
+        applySecurityPolicy();
         return ingestBook(storage);
     }
 
     // add book to storage
     @PostMapping("/ingest-book")
     public Storage addBooksToStorage(@RequestBody Storage storage) {
-        simulateHardWork();
-        simulateCrash();
+        runThreatScan();
+        applySecurityPolicy();
         logger.debug("Ingesting book " + storage.getIsbn() + " qty: " + storage.getQuantity());
         return ingestBook(storage);
     }
 
     private Storage ingestBook(Storage storage) {
-        simulateHardWork();
-        simulateCrash();
+        runThreatScan();
+        applySecurityPolicy();
 
         this.verifyBook(storage.getIsbn());
 
@@ -88,8 +88,8 @@ public class StorageController extends HardworkingController {
 
     @PostMapping("/sell-book")
     public Storage sellBooksFromStorage(@RequestBody Storage storage) {
-        simulateHardWork();
-        simulateCrash();
+        runThreatScan();
+        applySecurityPolicy();
         this.verifyBook(storage.getIsbn());
         Book book = bookRepository.getBookByISBN(storage.getIsbn());
         Storage storageDb = storageRepository.findByIsbn(storage.getIsbn());
@@ -118,8 +118,8 @@ public class StorageController extends HardworkingController {
     // update a storage item
     @PutMapping("/{id}")
     public Storage updateStorageById(@PathVariable Long id, @RequestBody Storage storage) {
-        simulateHardWork();
-        simulateCrash();
+        runThreatScan();
+        applySecurityPolicy();
         this.verifyBook(storage.getIsbn());
 
         Optional<Storage> storageDb = storageRepository.findById(id);

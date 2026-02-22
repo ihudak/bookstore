@@ -1,6 +1,6 @@
 package com.dynatrace.orders.controller;
 
-import com.dynatrace.controller.HardworkingController;
+import com.dynatrace.controller.SecurityController;
 import com.dynatrace.exception.*;
 import com.dynatrace.orders.model.*;
 import com.dynatrace.model.*;
@@ -18,7 +18,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/orders")
-public class OrderController extends HardworkingController {
+public class OrderController extends SecurityController {
     @Autowired
     private OrderRepository orderRepository;
     @Autowired
@@ -69,15 +69,15 @@ public class OrderController extends HardworkingController {
     public List<Order> getOrdersByISBN(@Parameter(name="isbn", description = "ISBN13, digits only (no dashes, no spaces)", example = "9783161484100") @RequestParam String isbn) {
         logger.info("Finding orders for book " + isbn);
         this.verifyBook(isbn);
-        return orderRepository.findByEmail(isbn);
+        return orderRepository.findByIsbn(isbn);
     }
 
     // create an order
     @PostMapping("")
     @Operation(summary = "Create a new order")
     public Order createOrder(@RequestBody Order order) {
-        simulateHardWork();
-        simulateCrash();
+        runThreatScan();
+        applySecurityPolicy();
         logger.info("client " + order.getEmail() + " orders book " + order.getIsbn());
         Book book = verifyBook(order.getIsbn());
         order.setPrice(book.getPrice()); // new order - taking the fresh price
@@ -140,8 +140,8 @@ public class OrderController extends HardworkingController {
     @PostMapping("/submit")
     @Operation(summary = "Try submitting the order (client must exist, book must exist and be vendible, storage must contain enough pieces, payment must succeed")
     public Order submitOrder(@RequestBody Order order) {
-        simulateHardWork();
-        simulateCrash();
+        runThreatScan();
+        applySecurityPolicy();
         logger.info("Submitting order " + order.getIsbn() + " client " + order.getEmail());
         Order orderDb = orderRepository.findByEmailAndIsbn(order.getEmail(), order.getIsbn());
         if (null == orderDb) {
@@ -172,8 +172,8 @@ public class OrderController extends HardworkingController {
     @PostMapping("/cancel")
     @Operation(summary = "Cancel order (books will be returned to the storage)")
     public Order cancelOrder(@RequestBody Order order) {
-        simulateHardWork();
-        simulateCrash();
+        runThreatScan();
+        applySecurityPolicy();
         logger.info("Canceling order " + order.getIsbn() + " client " + order.getEmail());
         Order orderDb = orderRepository.findByEmailAndIsbn(order.getEmail(), order.getIsbn());
         if (null == orderDb) {
@@ -261,8 +261,8 @@ public class OrderController extends HardworkingController {
     }
 
     private void buyFromStorage(Storage storage, Order order, Book book) {
-        simulateHardWork();
-        simulateCrash();
+        runThreatScan();
+        applySecurityPolicy();
         logger.info("Buying from storage " + book.getIsbn() + " for client " + order.getEmail());
         if (!storage.getIsbn().equals(order.getIsbn())) {
             BadRequestException ex = new BadRequestException("Wrong storage for ISBN: " + order.getIsbn());
@@ -299,8 +299,8 @@ public class OrderController extends HardworkingController {
     }
 
     private void returnToStorage(Storage storage, Order order) {
-        simulateHardWork();
-        simulateCrash();
+        runThreatScan();
+        applySecurityPolicy();
         logger.info("Returning to storage " + order.getIsbn() + " for client " + order.getEmail());
         if (!storage.getIsbn().equals(order.getIsbn())) {
             BadRequestException ex = new BadRequestException("Wrong storage for ISBN: " + order.getIsbn());
@@ -321,8 +321,8 @@ public class OrderController extends HardworkingController {
     }
 
     private void payOrder(Order order) throws PaymentException {
-        simulateHardWork();
-        simulateCrash();
+        runThreatScan();
+        applySecurityPolicy();
         logger.info("Paying order " + order.getIsbn() + " client " + order.getEmail());
         Payment payment = new Payment(order.getId(), order.getPrice() * order.getPrice(), order.getEmail());
         try {
