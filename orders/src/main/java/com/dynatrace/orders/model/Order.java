@@ -2,7 +2,9 @@ package com.dynatrace.orders.model;
 
 import com.dynatrace.exception.BadRequestException;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 
 @Entity
@@ -23,7 +25,7 @@ public class Order {
     private int quantity;
 
     @Column(name="price", nullable = false, precision = 10, scale = 2)
-    private double price;
+    private BigDecimal price;
 
     @Column(name="completed", nullable = false)
     private boolean completed;
@@ -40,7 +42,7 @@ public class Order {
         this.updatedAt = this.createdAt = new Date();
     }
 
-    public Order(long id, String email, String isbn, int quantity, double price, boolean completed) {
+    public Order(long id, String email, String isbn, int quantity, BigDecimal price, boolean completed) {
         this.id = id;
         this.setEmail(email);
         this.setIsbn(isbn);
@@ -95,13 +97,14 @@ public class Order {
         this.updatedAt = new Date();
     }
 
-    public double getPrice() {
-        return (double) Math.round(this.price * 100.0) / 100.0;
+    public BigDecimal getPrice() {
+        return this.price.setScale(2, RoundingMode.HALF_UP);
     }
 
-    public void setPrice(double price) {
-        price = (double) Math.round(price * 100.0) / 100.0;
-        if (price < 0 || price >= 1000000 || this.completed && price == 0) {
+    public void setPrice(BigDecimal price) {
+        price = price.setScale(2, RoundingMode.HALF_UP);
+        if (price.compareTo(BigDecimal.ZERO) < 0 || price.compareTo(new BigDecimal("1000000")) >= 0
+                || this.completed && price.compareTo(BigDecimal.ZERO) == 0) {
             throw new BadRequestException("Invalid price. Must be between 0 and 1 million. Got: " + price);
         }
         this.price = price;
@@ -113,7 +116,7 @@ public class Order {
     }
 
     public void setCompleted(boolean completed) {
-        if (this.price <= 0 && completed) {
+        if (this.price.compareTo(BigDecimal.ZERO) <= 0 && completed) {
             throw new BadRequestException("Cannot complete the order while price is 0");
         }
         this.completed = completed;

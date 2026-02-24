@@ -1,6 +1,6 @@
 package com.dynatrace.books.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name="authors", uniqueConstraints = @UniqueConstraint(columnNames = "name"))

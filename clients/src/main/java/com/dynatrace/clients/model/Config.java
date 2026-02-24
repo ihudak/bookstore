@@ -3,7 +3,7 @@ package com.dynatrace.clients.model;
 import com.dynatrace.model.ConfigModel;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name="configs")

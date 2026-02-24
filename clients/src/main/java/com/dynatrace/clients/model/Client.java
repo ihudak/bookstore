@@ -3,8 +3,8 @@ package com.dynatrace.clients.model;
 import com.dynatrace.exception.BadRequestException;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-import javax.persistence.*;
-import javax.validation.constraints.Pattern;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 
 @Entity
 @Table(name="clients", uniqueConstraints = @UniqueConstraint(columnNames = "email"))

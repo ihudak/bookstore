@@ -64,6 +64,8 @@ spec:
               value: RatingController
             - name: DT_HOST_NAME_PREFIX
               value: ratings
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Xmx512m"
           resources:
             limits:
               cpu: 400m

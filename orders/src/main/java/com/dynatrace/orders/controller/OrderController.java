@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -80,7 +81,7 @@ public class OrderController extends SecurityController {
         applySecurityPolicy();
         logger.info("client " + order.getEmail() + " orders book " + order.getIsbn());
         Book book = verifyBook(order.getIsbn());
-        order.setPrice(book.getPrice()); // new order - taking the fresh price
+        order.setPrice(BigDecimal.valueOf(book.getPrice())); // new order - taking the fresh price
         verifyClient(order.getEmail());
         Storage storage;
         try {
@@ -273,12 +274,12 @@ public class OrderController extends SecurityController {
         if (!order.isCompleted()) {
             order.setCompleted(true);
         }
-        if (book.getPrice() > order.getPrice()) {
+        if (BigDecimal.valueOf(book.getPrice()).compareTo(order.getPrice()) > 0) {
             PurchaseForbiddenException ex = new PurchaseForbiddenException("Price changed for book ISBN: " + book.getIsbn());
             logger.error(ex.getMessage());
             throw ex;
-        } else if (book.getPrice() < order.getPrice()) {
-            order.setPrice(book.getPrice());
+        } else if (BigDecimal.valueOf(book.getPrice()).compareTo(order.getPrice()) < 0) {
+            order.setPrice(BigDecimal.valueOf(book.getPrice()));
         }
         try {
             storageRepository.buyBook(storage);
@@ -324,7 +325,7 @@ public class OrderController extends SecurityController {
         runThreatScan();
         applySecurityPolicy();
         logger.info("Paying order " + order.getIsbn() + " client " + order.getEmail());
-        Payment payment = new Payment(order.getId(), order.getPrice() * order.getPrice(), order.getEmail());
+        Payment payment = new Payment(order.getId(), order.getPrice().multiply(BigDecimal.valueOf(order.getQuantity())).doubleValue(), order.getEmail());
         try {
             payment = paymentRepository.submitPayment(payment);
         } catch (RuntimeException ex) {

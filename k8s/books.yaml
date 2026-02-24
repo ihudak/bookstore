@@ -64,6 +64,8 @@ spec:
               value: BookController
             - name: DT_HOST_NAME_PREFIX
               value: books
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Xmx768m"
           resources:
             limits:
               cpu: 550m

@@ -4,7 +4,7 @@ import com.dynatrace.ingest.model.Model;
 import com.github.javafaker.Faker;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-import javax.validation.constraints.Pattern;
+import jakarta.validation.constraints.Pattern;
 import java.util.Random;
 
 public class Rating implements Model {

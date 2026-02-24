@@ -3,8 +3,10 @@ package com.dynatrace.books.model;
 import com.dynatrace.exception.BadRequestException;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-import javax.persistence.*;
-import javax.validation.constraints.*;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @Entity
 @Table(name="books", uniqueConstraints = @UniqueConstraint(columnNames = "isbn"))
@@ -40,11 +42,10 @@ public class Book {
     private String author;
 
     @Column(name="price", nullable = false, precision = 10, scale = 2)
-    @NotBlank
     @DecimalMin("0.01")
     @DecimalMax("999999.99")
     @Schema(name = "price", example = "32.12", requiredMode = Schema.RequiredMode.REQUIRED, description = "price (greater than 0; less than 1,000,000; 2 decimals)")
-    private double price;
+    private BigDecimal price;
 
 //    @ManyToOne(fetch = FetchType.EAGER, optional = false)
 //    @JoinColumn(name="author_id", nullable = false)
@@ -60,7 +61,7 @@ public class Book {
     public Book() {
     }
 
-    public Book(long id, String isbn, String title, String author, String language, double price, boolean published) {
+    public Book(long id, String isbn, String title, String author, String language, BigDecimal price, boolean published) {
         this.id = id;
         this.setIsbn(isbn);
         this.setLanguage(language);
@@ -105,13 +106,13 @@ public class Book {
         this.author = author;
     }
 
-    public double getPrice() {
-        return (double) Math.round(this.price * 100.0) / 100.0;
+    public BigDecimal getPrice() {
+        return this.price.setScale(2, RoundingMode.HALF_UP);
     }
 
-    public void setPrice(double price) {
-        price = (double) Math.round(price * 100.0) / 100.0;
-        if (price <= 0 || price >= 1000000) {
+    public void setPrice(BigDecimal price) {
+        price = price.setScale(2, RoundingMode.HALF_UP);
+        if (price.compareTo(BigDecimal.ZERO) <= 0 || price.compareTo(new BigDecimal("1000000")) >= 0) {
             throw new BadRequestException("Invalid price. Must be between 0 and 1 million. Got: " + price);
         }
         this.price = price;

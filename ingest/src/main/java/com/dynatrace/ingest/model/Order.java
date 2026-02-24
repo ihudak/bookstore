@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.validation.constraints.*;
+import jakarta.validation.constraints.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;

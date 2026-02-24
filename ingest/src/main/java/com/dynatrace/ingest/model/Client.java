@@ -3,7 +3,7 @@ package com.dynatrace.ingest.model;
 import com.github.javafaker.Faker;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-import javax.validation.constraints.Pattern;
+import jakarta.validation.constraints.Pattern;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;

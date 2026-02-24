@@ -2,7 +2,7 @@ package com.dynatrace.ratings.model;
 
 import com.dynatrace.exception.BadRequestException;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity

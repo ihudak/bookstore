@@ -64,6 +64,8 @@ spec:
               value: CartController
             - name: DT_HOST_NAME_PREFIX
               value: carts
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Xmx512m"
           resources:
             limits:
               cpu: 400m
