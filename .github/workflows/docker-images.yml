@@ -33,7 +33,7 @@ jobs:
           OTEL_EXPORTER_OTLP_LOGS_HEADERS: Authorization=Api-Token ${{ secrets.DT_TOKEN }}
         with:
           secrets_to_redact: '["${{ github.token }}","${{ secrets.CR_PAT }}","${{ secrets.DT_ENV_ID }}","${{ secrets.DT_ENV_URL }}","${{ secrets.DT_TOKEN }}"]'
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Set Env Push
         if: ${{ github.event_name == 'push' }}
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
@@ -48,12 +48,12 @@ jobs:
           echo $RELEASE_VERSION
           echo ${{ env.RELEASE_VERSION }}
       - name: Set up JDK 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: '21'
           distribution: 'temurin'
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
+        uses: gradle/actions/setup-gradle@v5
       - name: Make gradlew executable
         run: chmod +x ./gradlew
       - name: Build with Gradle Wrapper
@@ -69,7 +69,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Build and push noagent Ubuntu
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./noagent
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -85,7 +85,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push noagent Alpine
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./noagent
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -100,7 +100,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push agents Ubuntu
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./agents
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -120,7 +120,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push agents Alpine
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./agents
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -139,7 +139,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push preinstrument Ubuntu
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./agents
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -159,7 +159,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push preinstrument Alpine
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./agents
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -178,7 +178,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push MySQL
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./database/mysql
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -190,7 +190,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push Postgres
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./database/pg
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -202,7 +202,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push clients-noagent Ubuntu
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./clients
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -218,7 +218,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push clients-noagent Alpine
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./clients
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -233,7 +233,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push clients-agents Ubuntu
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./clients
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -249,7 +249,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push clients-agents Alpine
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./clients
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -264,7 +264,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push clients-preinstrument Ubuntu
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./clients
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -280,7 +280,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push clients-preinstrument Alpine
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./clients
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -295,7 +295,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push books-noagent Ubuntu
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./books
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -311,7 +311,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push books-noagent Alpine
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./books
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -326,7 +326,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push books-agents Ubuntu
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./books
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -342,7 +342,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push books-agents Alpine
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./books
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -357,7 +357,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push books-preinstrument Ubuntu
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./books
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -373,7 +373,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push books-preinstrument Alpine
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./books
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -388,7 +388,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push carts-noagent Ubuntu
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./carts
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -404,7 +404,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push carts-noagent Alpine
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./carts
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -419,7 +419,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push carts-agents Ubuntu
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./carts
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -435,7 +435,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push carts-agents Alpine
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./carts
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -450,7 +450,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push carts-preinstrument Ubuntu
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./carts
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -466,7 +466,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push carts-preinstrument Alpine
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./carts
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -481,7 +481,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push storage-noagent Ubuntu
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./storage
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -497,7 +497,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push storage-noagent Alpine
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./storage
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -512,7 +512,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push storage-agents Ubuntu
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./storage
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -528,7 +528,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push storage-agents Alpine
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./storage
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -543,7 +543,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push storage-preinstrument Ubuntu
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./storage
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -559,7 +559,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push storage-preinstrument Alpine
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./storage
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -574,7 +574,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push ratings-noagent Ubuntu
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./ratings
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -590,7 +590,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push ratings-noagent Alpine
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./ratings
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -605,7 +605,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push ratings-agents Ubuntu
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./ratings
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -621,7 +621,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push ratings-agents Alpine
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./ratings
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -636,7 +636,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push ratings-preinstrument Ubuntu
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./ratings
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -652,7 +652,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push ratings-preinstrument Alpine
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./ratings
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -667,7 +667,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push orders-noagent Ubuntu
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./orders
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -683,7 +683,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push orders-noagent Alpine
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./orders
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -698,7 +698,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push orders-agents Ubuntu
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./orders
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -714,7 +714,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push orders-agents Alpine
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./orders
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -729,7 +729,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push orders-preinstrument Ubuntu
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./orders
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -745,7 +745,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push orders-preinstrument Alpine
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./orders
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -760,7 +760,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push payments-noagent Ubuntu
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./payments
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -776,7 +776,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push payments-noagent Alpine
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./payments
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -791,7 +791,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push payments-agents Ubuntu
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./payments
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -807,7 +807,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push payments-agents Alpine
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./payments
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -822,7 +822,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push payments-preinstrument Ubuntu
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./payments
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -838,7 +838,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push payments-preinstrument Alpine
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./payments
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -853,7 +853,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push dynapay-noagent Ubuntu
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./dynapay
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -869,7 +869,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push dynapay-noagent Alpine
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./dynapay
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -884,7 +884,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push dynapay-agents Ubuntu
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./dynapay
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -900,7 +900,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push dynapay-agents Alpine
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./dynapay
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -915,7 +915,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push dynapay-preinstrument Ubuntu
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./dynapay
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -931,7 +931,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push dynapay-preinstrument Alpine
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./dynapay
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -946,7 +946,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push ingest-noagent Ubuntu
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./ingest
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -962,7 +962,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push ingest-noagent Alpine
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./ingest
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -977,7 +977,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push ingest-agents Ubuntu
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./ingest
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -993,7 +993,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push ingest-agents Alpine
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./ingest
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -1008,7 +1008,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push ingest-preinstrument Ubuntu
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./ingest
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -1024,7 +1024,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push ingest-preinstrument Alpine
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./ingest
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -1039,7 +1039,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push WebApp Base docker image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./web/base/noagent
           push: ${{ github.event_name == 'push' || inputs.publish }}
@@ -1052,7 +1052,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push web app image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./web
           push: ${{ github.event_name == 'push' || inputs.publish }}

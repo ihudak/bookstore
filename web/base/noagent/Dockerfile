@@ -1,5 +1,5 @@
 # choose base image to build off of
-FROM node:lts-alpine
+FROM node:22-alpine
 MAINTAINER dynatrace.com
 
 ENV DOCKER_VER=1.7.3
