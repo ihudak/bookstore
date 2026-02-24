@@ -1,29 +1,31 @@
 <h2>Carts List</h2>
 <table class="table table-striped">
   <thead>
-  <tr>
-    <th>email</th>
-    <th>ISBN</th>
-    <th>Qty</th>
-    <th>LastUpdated</th>
-    <th>Actions</th>
-  </tr>
+    <tr>
+      <th>email</th>
+      <th>ISBN</th>
+      <th>Qty</th>
+      <th>LastUpdated</th>
+      <th>Actions</th>
+    </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let cart of carts">
-    <td>{{cart.email}}</td>
-    <td>{{cart.isbn}}</td>
-    <td>{{cart.quantity}}</td>
-    <td>{{cart.updatedAt}}</td>
-    <td>
-      <button (click) = "updateCart(cart.id)" class="btn btn-info" style="margin-left: 10px">Update</button>
-      <button (click) = "deleteCart(cart)" class="btn btn-danger" style="margin-left: 10px">Delete</button>
-      <button (click) = "cartDetails(cart.id)" class="btn btn-info" style="margin-left: 10px">Details</button>
-    </td>
-  </tr>
+    @for (cart of carts; track cart) {
+      <tr>
+        <td>{{cart.email}}</td>
+        <td>{{cart.isbn}}</td>
+        <td>{{cart.quantity}}</td>
+        <td>{{cart.updatedAt}}</td>
+        <td>
+          <button (click) = "updateCart(cart.id)" class="btn btn-info" style="margin-left: 10px">Update</button>
+          <button (click) = "deleteCart(cart)" class="btn btn-danger" style="margin-left: 10px">Delete</button>
+          <button (click) = "cartDetails(cart.id)" class="btn btn-info" style="margin-left: 10px">Details</button>
+        </td>
+      </tr>
+    }
   </tbody>
 </table>
 
 <br>
-<a routerLink="/create-cart"   routerLinkActive="active" class="btn btn-primary">New Cart</a>
-<button (click) = "deleteAllCarts()" class="btn btn-danger" style="margin-left: 10px">Delete All</button>
+  <a routerLink="/create-cart"   routerLinkActive="active" class="btn btn-primary">New Cart</a>
+  <button (click) = "deleteAllCarts()" class="btn btn-danger" style="margin-left: 10px">Delete All</button>

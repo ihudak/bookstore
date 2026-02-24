@@ -4,9 +4,10 @@ import {Storage} from "../storage";
 import {StorageService} from "../storage.service";
 
 @Component({
-  selector: 'app-ingest-storage',
-  templateUrl: './ingest-storage.component.html',
-  styleUrls: ['./ingest-storage.component.css']
+    selector: 'app-ingest-storage',
+    templateUrl: './ingest-storage.component.html',
+    styleUrls: ['./ingest-storage.component.css'],
+    standalone: false
 })
 export class IngestStorageComponent {
   isbn: string = '';

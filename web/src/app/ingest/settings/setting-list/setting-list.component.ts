@@ -4,9 +4,10 @@ import {SettingService} from "../setting.service";
 import {Router} from "@angular/router";
 
 @Component({
-  selector: 'app-setting-list',
-  templateUrl: './setting-list.component.html',
-  styleUrls: ['./setting-list.component.css']
+    selector: 'app-setting-list',
+    templateUrl: './setting-list.component.html',
+    styleUrls: ['./setting-list.component.css'],
+    standalone: false
 })
 export class SettingListComponent implements OnInit {
   settings: Setting[] = [];

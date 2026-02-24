@@ -4,9 +4,10 @@ import {BookService} from "../book.service";
 import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
-  selector: 'app-update-book',
-  templateUrl: './update-book.component.html',
-  styleUrls: ['./update-book.component.css']
+    selector: 'app-update-book',
+    templateUrl: './update-book.component.html',
+    styleUrls: ['./update-book.component.css'],
+    standalone: false
 })
 export class UpdateBookComponent {
 

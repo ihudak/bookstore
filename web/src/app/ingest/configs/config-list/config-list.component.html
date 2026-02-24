@@ -1,8 +1,8 @@
 <h2>Configurations</h2>
 <!--<div *ngFor="let service of configs | keyvalue">-->
 <!--  <h3>{{service.key}}</h3>-->
-  <table class="table table-striped table-bordered">
-    <thead>
+<table class="table table-striped table-bordered">
+  <thead>
     <tr>
       <th class="text-center">Service ID</th>
       <th class="text-center">Config ID</th>
@@ -13,29 +13,31 @@
       <th class="text-center">ON/OFF</th>
       <th class="text-center">Actions</th>
     </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let config of configsArray">
-      <td class="fw-bold text-start">{{config.serviceId}}</td>
-      <td class="text-start">{{config.id}}</td>
-      <td class="text-end">{{config.loadCPU}}</td>
-      <td class="text-end">{{config.loadRAM}}</td>
-      <td class="text-end">{{config.probabilityFailure}}</td>
-      <td class="text-end">{{config.propertyStr}}</td>
-      <td class="text-center">
-        <button (click) = "toggleConfig(config)" class="btn btn-{{config.turnedOn ? 'danger' : 'secondary'}}" style="margin-left: 10px">{{config.turnedOn ? 'ON' : 'OFF'}}</button>
-      </td>
-      <td>
-        <button (click) = "updateConfig(config.serviceId, config.id)" class="btn btn-info">Update</button>
-      </td>
-    </tr>
-    </tbody>
-  </table>
-  <br>
+  </thead>
+  <tbody>
+    @for (config of configsArray; track config) {
+      <tr>
+        <td class="fw-bold text-start">{{config.serviceId}}</td>
+        <td class="text-start">{{config.id}}</td>
+        <td class="text-end">{{config.loadCPU}}</td>
+        <td class="text-end">{{config.loadRAM}}</td>
+        <td class="text-end">{{config.probabilityFailure}}</td>
+        <td class="text-end">{{config.propertyStr}}</td>
+        <td class="text-center">
+          <button (click) = "toggleConfig(config)" class="btn btn-{{config.turnedOn ? 'danger' : 'secondary'}}" style="margin-left: 10px">{{config.turnedOn ? 'ON' : 'OFF'}}</button>
+        </td>
+        <td>
+          <button (click) = "updateConfig(config.serviceId, config.id)" class="btn btn-info">Update</button>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
+<br>
 <!--</div>-->
 
 
 <br>
-<hr>
-<a routerLink="/create-config" routerLinkActive="active" class="btn btn-primary">New Config</a>
-<!--<button (click) = "deleteAllClients()" class="btn btn-danger" style="margin-left: 10px">Delete All</button>-->
+  <hr>
+    <a routerLink="/create-config" routerLinkActive="active" class="btn btn-primary">New Config</a>
+    <!--<button (click) = "deleteAllClients()" class="btn btn-danger" style="margin-left: 10px">Delete All</button>-->

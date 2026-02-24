@@ -4,9 +4,10 @@ import {Cart} from "../cart";
 import {CartService} from "../cart.service";
 
 @Component({
-  selector: 'app-cart-details',
-  templateUrl: './cart-details.component.html',
-  styleUrls: ['./cart-details.component.css']
+    selector: 'app-cart-details',
+    templateUrl: './cart-details.component.html',
+    styleUrls: ['./cart-details.component.css'],
+    standalone: false
 })
 export class CartDetailsComponent {
   id: number = 0;

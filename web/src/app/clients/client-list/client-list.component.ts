@@ -4,9 +4,10 @@ import {ClientService} from "../client.service";
 import {Router} from "@angular/router";
 
 @Component({
-  selector: 'app-client-list',
-  templateUrl: './client-list.component.html',
-  styleUrls: ['./client-list.component.css']
+    selector: 'app-client-list',
+    templateUrl: './client-list.component.html',
+    styleUrls: ['./client-list.component.css'],
+    standalone: false
 })
 export class ClientListComponent implements OnInit {
 

@@ -9,19 +9,21 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let client of clients">
-      <td>{{client.firstName}}</td>
-      <td>{{client.lastName}}</td>
-      <td>{{client.email}}</td>
-      <td>
-        <button (click) = "updateClient(client.id)" class="btn btn-info">Update</button>
-        <button (click) = "deleteClient(client.id)" class="btn btn-danger" style="margin-left: 10px">Delete</button>
-        <button (click) = "clientDetails(client.id)" class="btn btn-info" style="margin-left: 10px">Details</button>
-      </td>
-    </tr>
+    @for (client of clients; track client) {
+      <tr>
+        <td>{{client.firstName}}</td>
+        <td>{{client.lastName}}</td>
+        <td>{{client.email}}</td>
+        <td>
+          <button (click) = "updateClient(client.id)" class="btn btn-info">Update</button>
+          <button (click) = "deleteClient(client.id)" class="btn btn-danger" style="margin-left: 10px">Delete</button>
+          <button (click) = "clientDetails(client.id)" class="btn btn-info" style="margin-left: 10px">Details</button>
+        </td>
+      </tr>
+    }
   </tbody>
 </table>
 
 <br>
-<a routerLink="/create-client" routerLinkActive="active" class="btn btn-primary">New Client</a>
-<button (click) = "deleteAllClients()" class="btn btn-danger" style="margin-left: 10px">Delete All</button>
+  <a routerLink="/create-client" routerLinkActive="active" class="btn btn-primary">New Client</a>
+  <button (click) = "deleteAllClients()" class="btn btn-danger" style="margin-left: 10px">Delete All</button>

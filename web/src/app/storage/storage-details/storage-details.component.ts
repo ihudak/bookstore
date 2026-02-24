@@ -4,9 +4,10 @@ import {Storage} from "../storage";
 import {StorageService} from "../storage.service";
 
 @Component({
-  selector: 'app-storage-details',
-  templateUrl: './storage-details.component.html',
-  styleUrls: ['./storage-details.component.css']
+    selector: 'app-storage-details',
+    templateUrl: './storage-details.component.html',
+    styleUrls: ['./storage-details.component.css'],
+    standalone: false
 })
 export class StorageDetailsComponent {
   id: number = 0;

@@ -1,27 +1,29 @@
 <h2>Services Versions</h2>
 <table class="table table-striped">
   <thead>
-  <tr>
-    <th>Service ID</th>
-    <th>Version</th>
-    <th>Build Date</th>
-    <th>Docker Ver</th>
-    <th>Status</th>
-    <th>Message</th>
-    <th>Agent</th>
-    <th>Agent Preload</th>
-  </tr>
+    <tr>
+      <th>Service ID</th>
+      <th>Version</th>
+      <th>Build Date</th>
+      <th>Docker Ver</th>
+      <th>Status</th>
+      <th>Message</th>
+      <th>Agent</th>
+      <th>Agent Preload</th>
+    </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let version of versions">
-    <td>{{version.serviceId}}</td>
-    <td>{{version.ver}}</td>
-    <td>{{version.date}}</td>
-    <td>{{version.verDocker}}</td>
-    <td>{{version.status}}</td>
-    <td>{{version.message}}</td>
-    <td>{{version.agent}}</td>
-    <td>{{version.agentPreload}}</td>
-  </tr>
+    @for (version of versions; track version) {
+      <tr>
+        <td>{{version.serviceId}}</td>
+        <td>{{version.ver}}</td>
+        <td>{{version.date}}</td>
+        <td>{{version.verDocker}}</td>
+        <td>{{version.status}}</td>
+        <td>{{version.message}}</td>
+        <td>{{version.agent}}</td>
+        <td>{{version.agentPreload}}</td>
+      </tr>
+    }
   </tbody>
 </table>

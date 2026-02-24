@@ -4,9 +4,10 @@ import {ActivatedRoute} from "@angular/router";
 import {ClientService} from "../client.service";
 
 @Component({
-  selector: 'app-client-details',
-  templateUrl: './client-details.component.html',
-  styleUrls: ['./client-details.component.css']
+    selector: 'app-client-details',
+    templateUrl: './client-details.component.html',
+    styleUrls: ['./client-details.component.css'],
+    standalone: false
 })
 export class ClientDetailsComponent {
   id: number = 0;

@@ -4,9 +4,10 @@ import {Rating} from "../rating";
 import {RatingService} from "../rating.service";
 
 @Component({
-  selector: 'app-create-rating',
-  templateUrl: './create-rating.component.html',
-  styleUrls: ['./create-rating.component.css']
+    selector: 'app-create-rating',
+    templateUrl: './create-rating.component.html',
+    styleUrls: ['./create-rating.component.css'],
+    standalone: false
 })
 export class CreateRatingComponent {
   rating: Rating = new Rating();

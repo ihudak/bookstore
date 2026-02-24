@@ -4,9 +4,10 @@ import {Config} from "../config";
 import {ConfigService} from "../config.service";
 
 @Component({
-  selector: 'app-update-config',
-  templateUrl: './update-config.component.html',
-  styleUrls: ['./update-config.component.css']
+    selector: 'app-update-config',
+    templateUrl: './update-config.component.html',
+    styleUrls: ['./update-config.component.css'],
+    standalone: false
 })
 export class UpdateConfigComponent implements OnInit {
   serviceId = '';

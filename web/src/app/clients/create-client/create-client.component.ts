@@ -4,9 +4,10 @@ import {ClientService} from "../client.service";
 import {Router} from "@angular/router";
 
 @Component({
-  selector: 'app-create-client',
-  templateUrl: './create-client.component.html',
-  styleUrls: ['./create-client.component.css']
+    selector: 'app-create-client',
+    templateUrl: './create-client.component.html',
+    styleUrls: ['./create-client.component.css'],
+    standalone: false
 })
 export class CreateClientComponent {
   client: Client = new Client();

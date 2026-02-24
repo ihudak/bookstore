@@ -4,9 +4,10 @@ import {Order} from "../order";
 import {OrderService} from "../order.service";
 
 @Component({
-  selector: 'app-create-order',
-  templateUrl: './create-order.component.html',
-  styleUrls: ['./create-order.component.css']
+    selector: 'app-create-order',
+    templateUrl: './create-order.component.html',
+    styleUrls: ['./create-order.component.css'],
+    standalone: false
 })
 export class CreateOrderComponent {
   order: Order = new Order();

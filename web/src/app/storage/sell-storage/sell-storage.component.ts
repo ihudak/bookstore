@@ -4,9 +4,10 @@ import {StorageService} from "../storage.service";
 import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
-  selector: 'app-sell-storage',
-  templateUrl: './sell-storage.component.html',
-  styleUrls: ['./sell-storage.component.css']
+    selector: 'app-sell-storage',
+    templateUrl: './sell-storage.component.html',
+    styleUrls: ['./sell-storage.component.css'],
+    standalone: false
 })
 export class SellStorageComponent {
   isbn: string = '';

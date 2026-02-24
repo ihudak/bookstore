@@ -4,9 +4,10 @@ import {SettingService} from "../setting.service";
 import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
-  selector: 'app-update-setting',
-  templateUrl: './update-setting.component.html',
-  styleUrls: ['./update-setting.component.css']
+    selector: 'app-update-setting',
+    templateUrl: './update-setting.component.html',
+    styleUrls: ['./update-setting.component.css'],
+    standalone: false
 })
 export class UpdateSettingComponent implements OnInit {
   id: string = "";

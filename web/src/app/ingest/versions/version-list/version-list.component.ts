@@ -4,9 +4,10 @@ import {VersionService} from "../version.service";
 import {Router} from "@angular/router";
 
 @Component({
-  selector: 'app-version-list',
-  templateUrl: './version-list.component.html',
-  styleUrls: ['./version-list.component.css']
+    selector: 'app-version-list',
+    templateUrl: './version-list.component.html',
+    styleUrls: ['./version-list.component.css'],
+    standalone: false
 })
 export class VersionListComponent implements OnInit {
   versions: Version[] = [];

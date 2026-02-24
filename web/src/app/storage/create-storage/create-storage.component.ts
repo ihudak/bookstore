@@ -4,9 +4,10 @@ import {StorageService} from "../storage.service";
 import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
-  selector: 'app-create-storage',
-  templateUrl: './create-storage.component.html',
-  styleUrls: ['./create-storage.component.css']
+    selector: 'app-create-storage',
+    templateUrl: './create-storage.component.html',
+    styleUrls: ['./create-storage.component.css'],
+    standalone: false
 })
 export class CreateStorageComponent {
   storage: Storage = new Storage();

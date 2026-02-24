@@ -4,9 +4,10 @@ import {Order} from "../order";
 import {OrderService} from "../order.service";
 
 @Component({
-  selector: 'app-update-order',
-  templateUrl: './update-order.component.html',
-  styleUrls: ['./update-order.component.css']
+    selector: 'app-update-order',
+    templateUrl: './update-order.component.html',
+    styleUrls: ['./update-order.component.css'],
+    standalone: false
 })
 export class UpdateOrderComponent {
   id: number = 0;

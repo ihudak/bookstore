@@ -4,9 +4,10 @@ import {Storage} from "../storage";
 import {StorageService} from "../storage.service";
 
 @Component({
-  selector: 'app-update-storage',
-  templateUrl: './update-storage.component.html',
-  styleUrls: ['./update-storage.component.css']
+    selector: 'app-update-storage',
+    templateUrl: './update-storage.component.html',
+    styleUrls: ['./update-storage.component.css'],
+    standalone: false
 })
 export class UpdateStorageComponent {
   id: number = 0;

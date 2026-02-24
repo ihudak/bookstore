@@ -4,9 +4,10 @@ import {Router} from "@angular/router";
 import {StorageService} from "../storage.service";
 
 @Component({
-  selector: 'app-storage-list',
-  templateUrl: './storage-list.component.html',
-  styleUrls: ['./storage-list.component.css']
+    selector: 'app-storage-list',
+    templateUrl: './storage-list.component.html',
+    styleUrls: ['./storage-list.component.css'],
+    standalone: false
 })
 export class StorageListComponent {
   storages: Storage[] = [];

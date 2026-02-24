@@ -4,9 +4,10 @@ import {CartService} from "../cart.service";
 import {Cart} from "../cart";
 
 @Component({
-  selector: 'app-create-cart',
-  templateUrl: './create-cart.component.html',
-  styleUrls: ['./create-cart.component.css']
+    selector: 'app-create-cart',
+    templateUrl: './create-cart.component.html',
+    styleUrls: ['./create-cart.component.css'],
+    standalone: false
 })
 export class CreateCartComponent {
   cart: Cart = new Cart();

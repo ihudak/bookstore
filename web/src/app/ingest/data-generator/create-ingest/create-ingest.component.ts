@@ -6,9 +6,10 @@ import {Version} from "../../versions/version";
 import {VersionService} from "../../versions/version.service";
 
 @Component({
-  selector: 'app-create-ingest',
-  templateUrl: './create-ingest.component.html',
-  styleUrls: ['./create-ingest.component.css']
+    selector: 'app-create-ingest',
+    templateUrl: './create-ingest.component.html',
+    styleUrls: ['./create-ingest.component.css'],
+    standalone: false
 })
 export class CreateIngestComponent implements OnInit {
 

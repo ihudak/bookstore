@@ -4,9 +4,10 @@ import {ConfigService} from "../config.service";
 import {Router} from "@angular/router";
 
 @Component({
-  selector: 'app-create-config',
-  templateUrl: './create-config.component.html',
-  styleUrls: ['./create-config.component.css']
+    selector: 'app-create-config',
+    templateUrl: './create-config.component.html',
+    styleUrls: ['./create-config.component.css'],
+    standalone: false
 })
 export class CreateConfigComponent {
 

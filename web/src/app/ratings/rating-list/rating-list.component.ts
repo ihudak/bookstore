@@ -4,9 +4,10 @@ import {Rating} from "../rating";
 import {RatingService} from "../rating.service";
 
 @Component({
-  selector: 'app-rating-list',
-  templateUrl: './rating-list.component.html',
-  styleUrls: ['./rating-list.component.css']
+    selector: 'app-rating-list',
+    templateUrl: './rating-list.component.html',
+    styleUrls: ['./rating-list.component.css'],
+    standalone: false
 })
 export class RatingListComponent {
   ratings: Rating[] = [];

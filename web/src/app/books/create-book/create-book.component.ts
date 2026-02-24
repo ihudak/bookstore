@@ -4,9 +4,10 @@ import {Book} from "../book";
 import {BookService} from "../book.service";
 
 @Component({
-  selector: 'app-create-book',
-  templateUrl: './create-book.component.html',
-  styleUrls: ['./create-book.component.css']
+    selector: 'app-create-book',
+    templateUrl: './create-book.component.html',
+    styleUrls: ['./create-book.component.css'],
+    standalone: false
 })
 export class CreateBookComponent {
   book: Book = new Book();

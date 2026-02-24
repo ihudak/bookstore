@@ -4,9 +4,10 @@ import {SettingService} from "../setting.service";
 import {Router} from "@angular/router";
 
 @Component({
-  selector: 'app-create-setting',
-  templateUrl: './create-setting.component.html',
-  styleUrls: ['./create-setting.component.css']
+    selector: 'app-create-setting',
+    templateUrl: './create-setting.component.html',
+    styleUrls: ['./create-setting.component.css'],
+    standalone: false
 })
 export class CreateSettingComponent {
 

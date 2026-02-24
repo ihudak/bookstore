@@ -4,9 +4,10 @@ import {ConfigService} from "../config.service";
 import {Router} from "@angular/router";
 
 @Component({
-  selector: 'app-config-list',
-  templateUrl: './config-list.component.html',
-  styleUrls: ['./config-list.component.css']
+    selector: 'app-config-list',
+    templateUrl: './config-list.component.html',
+    styleUrls: ['./config-list.component.css'],
+    standalone: false
 })
 export class ConfigListComponent implements OnInit {
   configs: { [key: string]: Config[]; } = {};

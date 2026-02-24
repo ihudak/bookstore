@@ -4,9 +4,10 @@ import {CartService} from "../cart.service";
 import {Cart} from "../cart";
 
 @Component({
-  selector: 'app-cart-list',
-  templateUrl: './cart-list.component.html',
-  styleUrls: ['./cart-list.component.css']
+    selector: 'app-cart-list',
+    templateUrl: './cart-list.component.html',
+    styleUrls: ['./cart-list.component.css'],
+    standalone: false
 })
 export class CartListComponent {
   carts: Cart[] = [];

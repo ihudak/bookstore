@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import {AppComponent} from './app.component';
 import {ClientListComponent} from './clients/client-list/client-list.component';
-import {HttpClientModule} from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import {AppRoutingModule} from "./app-routing.module";
 import {CreateClientComponent} from './clients/create-client/create-client.component';
 import {FormsModule} from "@angular/forms";
@@ -40,51 +40,44 @@ import { SettingListComponent } from './ingest/settings/setting-list/setting-lis
 import { CreateSettingComponent } from './ingest/settings/create-setting/create-setting.component';
 import { UpdateSettingComponent } from './ingest/settings/update-setting/update-setting.component';
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    ClientListComponent,
-    CreateClientComponent,
-    UpdateClientComponent,
-    ClientDetailsComponent,
-    BookListComponent,
-    CreateBookComponent,
-    BookDetailsComponent,
-    UpdateBookComponent,
-    CartListComponent,
-    CreateCartComponent,
-    UpdateCartComponent,
-    StorageListComponent,
-    IngestStorageComponent,
-    SellStorageComponent,
-    CreateStorageComponent,
-    OrderListComponent,
-    OrderDetailsComponent,
-    CreateOrderComponent,
-    UpdateOrderComponent,
-    RatingListComponent,
-    RatingDetailsComponent,
-    CreateRatingComponent,
-    UpdateRatingComponent,
-    CartDetailsComponent,
-    StorageDetailsComponent,
-    UpdateStorageComponent,
-    ConfigListComponent,
-    VersionListComponent,
-    CreateConfigComponent,
-    UpdateConfigComponent,
-    CreateIngestComponent,
-    SettingListComponent,
-    CreateSettingComponent,
-    UpdateSettingComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    FormsModule
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
-})
+@NgModule({ declarations: [
+        AppComponent,
+        ClientListComponent,
+        CreateClientComponent,
+        UpdateClientComponent,
+        ClientDetailsComponent,
+        BookListComponent,
+        CreateBookComponent,
+        BookDetailsComponent,
+        UpdateBookComponent,
+        CartListComponent,
+        CreateCartComponent,
+        UpdateCartComponent,
+        StorageListComponent,
+        IngestStorageComponent,
+        SellStorageComponent,
+        CreateStorageComponent,
+        OrderListComponent,
+        OrderDetailsComponent,
+        CreateOrderComponent,
+        UpdateOrderComponent,
+        RatingListComponent,
+        RatingDetailsComponent,
+        CreateRatingComponent,
+        UpdateRatingComponent,
+        CartDetailsComponent,
+        StorageDetailsComponent,
+        UpdateStorageComponent,
+        ConfigListComponent,
+        VersionListComponent,
+        CreateConfigComponent,
+        UpdateConfigComponent,
+        CreateIngestComponent,
+        SettingListComponent,
+        CreateSettingComponent,
+        UpdateSettingComponent
+    ],
+    bootstrap: [AppComponent], imports: [BrowserModule,
+        AppRoutingModule,
+        FormsModule], providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class AppModule { }
