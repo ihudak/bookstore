@@ -64,8 +64,6 @@ spec:
               value: ClientController
             - name: DT_HOST_NAME_PREFIX
               value: clients
-            - name: JAVA_TOOL_OPTIONS
-              value: "-Xmx512m"
           resources:
             limits:
               cpu: 450m

@@ -64,8 +64,6 @@ spec:
               value: IngestController
             - name: DT_HOST_NAME_PREFIX
               value: ingest
-            - name: JAVA_TOOL_OPTIONS
-              value: "-Xmx512m"
           resources:
             limits:
               cpu: 500m
