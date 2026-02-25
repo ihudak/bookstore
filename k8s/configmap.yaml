@@ -14,7 +14,7 @@ data:
   DT_STORAGE_SERVER: "storage-svc:84"
   DT_ORDERS_SERVER: "orders-svc:85"
   DT_PAYMENTS_SERVER: "payments-svc:86"
-  DT_DYNAPAY_SERVER: "superpay-svc:87"
+  DT_DYNAPAY_SERVER: "dynapay-svc:87"
   DT_RATINGS_SERVER: "ratings-svc:88"
   DT_INGEST_SERVER: "ingest-svc:89"
   DT_WEB_SERVER: "web-svc:90"

@@ -24,7 +24,6 @@ fi
 #kubectl delete deployment payments -n $NS
 #kubectl delete deployment ratings -n $NS
 #kubectl delete deployment dynapay -n $NS
-#kubectl delete deployment superpay -n $NS
 #kubectl delete deployment ingest -n $NS
 
 kubectl apply -f clients.yaml

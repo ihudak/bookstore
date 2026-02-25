@@ -212,7 +212,7 @@ public class ConfigController {
             case "storage", "inventory", "storages", "inventories" -> storageConfigRepository;
             case "orders", "order"                                 -> orderConfigRepository;
             case "payments", "payment"                             -> paymentConfigRepository;
-            case "dynapay", "superpay", "dynapays", "superpays"    -> dynapayConfigRepository;
+            case "dynapay", "dynapays"                             -> dynapayConfigRepository;
             case "ratings", "rating"                               -> ratingConfigRepository;
             default -> null;
         };

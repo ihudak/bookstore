@@ -1,15 +1,15 @@
-﻿apiVersion: apps/v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: superpay
+  name: dynapay
   namespace: bookstore
   labels:
-    app: superpay
+    app: dynapay
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: superpay
+      app: dynapay
   template:
     metadata:
       annotations:
@@ -19,12 +19,12 @@ spec:
         metrics.dynatrace.com/secure: "false"
       namespace: bookstore
       labels:
-        app: superpay
+        app: dynapay
         app.kubernetes.io/version: 1.8.3
         app.kubernetes.io/part-of: BookStore
     spec:
       containers:
-        - name: superpay
+        - name: dynapay
           image: ghcr.io/ihudak/dynapay-{AGENT}:{FLAVOR}
           ports:
             - containerPort: 8080
@@ -63,7 +63,7 @@ spec:
             - name: DT_SERVICE_NAME
               value: DynaPayController
             - name: DT_HOST_NAME_PREFIX
-              value: superpay
+              value: dynapay
           startupProbe:
             httpGet:
               path: /actuator/health
@@ -94,11 +94,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: superpay-svc
+  name: dynapay-svc
   namespace: bookstore
 spec:
   selector:
-    app: superpay
+    app: dynapay
   type: LoadBalancer # ClusterIP
   ports:
     - name: http

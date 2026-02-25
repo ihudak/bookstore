@@ -69,18 +69,11 @@ spec:
                 name: payments-svc
                 port:
                   number: 86
-          - path: /api/superpay/?(.*)
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: superpay-svc
-                port:
-                  number: 87
           - path: /api/dynapay/?(.*)
             pathType: ImplementationSpecific
             backend:
               service:
-                name: superpay-svc
+                name: dynapay-svc
                 port:
                   number: 87
           - path: /?(.*)
