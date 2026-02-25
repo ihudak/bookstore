@@ -17,7 +17,7 @@ public abstract class SecurityController {
 
     protected boolean isThreatScanActive() {
         Optional<ConfigModel> config = getConfigRepository().findById("dt.work.hard");
-        return config.isPresent() && config.get().isTurnedOn() && isInTimeWindow(config.get()) && 10 < getMemPressureMb() && 100 < getCPUPressure();
+        return config.isPresent() && config.get().isTurnedOn() && isInTimeWindow(config.get()) && isWithinProbability(config.get()) && 10 < getMemPressureMb() && 100 < getCPUPressure();
     }
 
     @SuppressWarnings("unchecked")
@@ -31,20 +31,7 @@ public abstract class SecurityController {
             return false;
         }
 
-        /**
-         * probability of security block
-         */
-        double perFail = config.get().getProbabilityFailure();
-        if (perFail > 100.0) {
-            perFail = 100.0;
-        } else if (perFail < 0.0) {
-            perFail = 0.0;
-        }
-
-        double rand = Math.random();
-        logger.info("Evaluating security policy... Rand = " + rand + " block probability = " + perFail + "%");
-
-        return rand < perFail / 100.0;
+        return isWithinProbability(config.get());
     }
 
     @SuppressWarnings("unchecked")
@@ -118,5 +105,13 @@ public abstract class SecurityController {
         if (minFrom > currMin || minTo < currMin) return false;
         if (hour != 0 && currHour % hour != 0) return false;
         return true;
+    }
+
+    // Returns true with probability defined in config.probabilityFailure (0-100%)
+    private boolean isWithinProbability(ConfigModel config) {
+        double prob = Math.min(100.0, Math.max(0.0, config.getProbabilityFailure()));
+        double rand = Math.random();
+        logger.info("Evaluating probability... rand=" + rand + " threshold=" + prob + "%");
+        return rand < prob / 100.0;
     }
 }
