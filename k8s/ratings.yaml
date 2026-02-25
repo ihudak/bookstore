@@ -1,4 +1,4 @@
-apiVersion: apps/v1
+﻿apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ratings
@@ -20,7 +20,7 @@ spec:
       namespace: bookstore
       labels:
         app: ratings
-        app.kubernetes.io/version: 1.7.3
+        app.kubernetes.io/version: 1.8.3
         app.kubernetes.io/part-of: BookStore
     spec:
       containers:
@@ -40,7 +40,7 @@ spec:
                 fieldRef:
                   fieldPath: metadata.labels['app.kubernetes.io/version']
             - name: DT_RELEASE_BUILD_VERSION
-              value: "2025-08-04-15:38:43"
+              value: "2026-02-25-15:38:43"
             - name: DT_MYSQL_DBNAME
               value: dt_books_ratings # DB NAME HERE
             - name: DT_PG_DBNAME
@@ -64,6 +64,25 @@ spec:
               value: RatingController
             - name: DT_HOST_NAME_PREFIX
               value: ratings
+          startupProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            failureThreshold: 18
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            periodSeconds: 30
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            periodSeconds: 10
+            failureThreshold: 3
           resources:
             limits:
               cpu: 400m

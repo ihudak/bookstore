@@ -9,7 +9,7 @@ public class Version implements Model {
     private String ver;
     @Schema(name = "verDocker", example = "1.0.0", requiredMode = Schema.RequiredMode.AUTO, description = "the version of the Docker Config")
     private String verDocker;
-    @Schema(name = "date", example = "Jul 12, 2025", requiredMode = Schema.RequiredMode.AUTO, description = "the release date")
+    @Schema(name = "date", example = "Jul 12, 2026", requiredMode = Schema.RequiredMode.AUTO, description = "the release date")
     private String date;
     @Schema(name = "status", example = "Healthy", requiredMode = Schema.RequiredMode.AUTO, description = "the status of the service or number of records in its DB")
     private String status;

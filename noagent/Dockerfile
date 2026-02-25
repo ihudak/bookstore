@@ -29,7 +29,7 @@ ENV LC_CTYPE=C.UTF-8
 ENV LANGUAGE=en_US:en
 ENV JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -Dfile.encoding=UTF-8 -Dsun.jnu.encoding=UTF-8"
 ENV JVM_XMX=512m
-ENV DOCKER_VER="1.7.7"
+ENV DOCKER_VER="1.8.3"
 
 ENTRYPOINT export JAVA_TOOL_OPTIONS="${JAVA_TOOL_OPTIONS} -Xmx${JVM_XMX}" && \
            export OTEL_SERVICE_NAME="$SERVICE_FULL_NAME" && \

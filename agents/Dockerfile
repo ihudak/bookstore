@@ -19,7 +19,7 @@ ENV DT_ENV_ID=$DT_ENV_ID
 ENV DT_ENV_URL=$DT_ENV_URL
 ENV DT_TOKEN=$DT_TOKEN
 
-ENV DOCKER_VER="1.7.7"
+ENV DOCKER_VER="1.8.3"
 
 # Prepare OA config
 ENV OA_INSTALL_DIR=/var/lib/dynatrace/oneagent

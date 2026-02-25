@@ -1,3 +1,27 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pvc
+  namespace: bookstore
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+  namespace: bookstore
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -20,7 +44,7 @@ spec:
       namespace: bookstore
       labels:
         app: mysql
-        app.kubernetes.io/version: 1.7.3
+        app.kubernetes.io/version: 1.8.3
         app.kubernetes.io/part-of: BookStore
     spec:
       containers:
@@ -39,6 +63,9 @@ spec:
                 secretKeyRef:
                   name: bookstore-secret
                   key: DT_MYSQL_PASS
+          volumeMounts:
+            - name: mysql-data
+              mountPath: /var/lib/mysql
           resources:
             limits:
               cpu: 500m
@@ -46,6 +73,10 @@ spec:
             requests:
               cpu: 500m
               memory: 1Gi
+      volumes:
+        - name: mysql-data
+          persistentVolumeClaim:
+            claimName: mysql-pvc
 ---
 apiVersion: v1
 kind: Service
@@ -84,7 +115,7 @@ spec:
       namespace: bookstore
       labels:
         app: postgres
-        app.kubernetes.io/version: 1.7.3
+        app.kubernetes.io/version: 1.8.3
         app.kubernetes.io/part-of: BookStore
     spec:
       containers:
@@ -103,6 +134,9 @@ spec:
                 secretKeyRef:
                   name: bookstore-secret
                   key: DT_PG_PASS
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
           resources:
             limits:
               cpu: 500m
@@ -110,6 +144,10 @@ spec:
             requests:
               cpu: 500m
               memory: 1Gi
+      volumes:
+        - name: postgres-data
+          persistentVolumeClaim:
+            claimName: postgres-pvc
 ---
 apiVersion: v1
 kind: Service
