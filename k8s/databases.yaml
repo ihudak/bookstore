@@ -136,7 +136,7 @@ spec:
                   key: DT_PG_PASS
           volumeMounts:
             - name: postgres-data
-              mountPath: /var/lib/postgresql/data
+              mountPath: /var/lib/postgresql
           resources:
             limits:
               cpu: 500m
