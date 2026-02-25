@@ -110,7 +110,7 @@ spec:
             - |
               apk add --no-cache curl && \
               echo "$(date +"%Y-%m-%d-%H:%M:%S")" && \
-              sleep_period=180
+              sleep_period=360
               echo "Waiting for $sleep_period seconds..." && \
               sleep $sleep_period && \
               curl -X POST http://$DT_INGEST_SERVER/api/v1/config -H 'Content-Type: application/json' --data-raw '{"serviceId": "all", "id": "dt.work.hard", "loadCPU": 1000000, "loadRAM": 32, "probabilityFailure": 100, "turnedOn": false}' && \
