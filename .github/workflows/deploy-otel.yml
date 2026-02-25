@@ -19,7 +19,7 @@ jobs:
           OTEL_EXPORTER_OTLP_METRICS_HEADERS: Authorization=Api-Token ${{ secrets.DT_TOKEN }}
           OTEL_EXPORTER_OTLP_LOGS_HEADERS: Authorization=Api-Token ${{ secrets.DT_TOKEN }}
         with:
-          secrets_to_redact: '["${{ github.token }}","${{ secrets.DT_ENV_URL }}","${{ secrets.DT_TOKEN }}"]'
+          secrets_to_redact: '["${{ github.token }}","${{ secrets.DEPLOY_OBSERVABILITY_TOKEN }}","${{ secrets.DT_ENV_URL }}","${{ secrets.DT_TOKEN }}"]'
       - uses: plengauer/opentelemetry-github/actions/instrument/deploy@v5.21.0
         env:
           OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: '${{ secrets.DT_ENV_URL }}/api/v2/otlp/v1/traces'
@@ -29,9 +29,8 @@ jobs:
           OTEL_EXPORTER_OTLP_METRICS_HEADERS: 'Authorization=Api-Token ${{ secrets.DT_TOKEN }}'
           OTEL_EXPORTER_OTLP_LOGS_HEADERS: 'Authorization=Api-Token ${{ secrets.DT_TOKEN }}'
         with:
-          github_token: '${{ github.token }}'
+          github_token: '${{ secrets.DEPLOY_OBSERVABILITY_TOKEN }}'
     permissions:
       actions: read
       contents: write
-      workflows: write
       pull-requests: write
