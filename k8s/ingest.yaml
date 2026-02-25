@@ -143,6 +143,7 @@ spec:
               curl -X DELETE http://$DT_RATINGS_SERVER/api/v1/ratings/delete-all && \
               curl -X DELETE http://$DT_BOOKS_SERVER/api/v1/books/delete-all && \
               curl -X DELETE http://$DT_CLIENTS_SERVER/api/v1/clients/delete-all && \
+              curl -X DELETE http://$DT_INGEST_SERVER/api/v1/ingest && \
               echo "" && \
               echo "Waiting for $sleep_period seconds..." && \
               sleep $sleep_period && \
