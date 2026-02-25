@@ -17,7 +17,7 @@ public abstract class SecurityController {
 
     protected boolean isThreatScanActive() {
         Optional<ConfigModel> config = getConfigRepository().findById("dt.work.hard");
-        return config.isPresent() && config.get().isTurnedOn() && 10 < getMemPressureMb() && 100 < getCPUPressure();
+        return config.isPresent() && config.get().isTurnedOn() && isInTimeWindow(config.get()) && 10 < getMemPressureMb() && 100 < getCPUPressure();
     }
 
     @SuppressWarnings("unchecked")
@@ -27,43 +27,8 @@ public abstract class SecurityController {
             return false;
         }
 
-        /**
-         * timeToCrash is fromMin/toMin/everyNhour
-         * for instance, 15/22/4, means between 15 and 22 min every 4th hour of the day
-         * 22/15/4 means the whole hour (every 4th still)
-         * empty string or unparseable string means - crash regardless of time
-         */
-        String timeToCrash = config.get().getPropertyStr();
-        if (!timeToCrash.isEmpty()) {
-            String[] timesToParse = timeToCrash.split("/");
-            int minFrom = -1, minTo = -1, hour = -1; // wrong numbers
-            try {
-                minFrom = Integer.parseInt(timesToParse[0]);
-                minTo   = Integer.parseInt(timesToParse[1]);
-                hour    = Integer.parseInt(timesToParse[2]);
-            } catch (NumberFormatException | ArrayIndexOutOfBoundsException exception) {
-                logger.info(exception.getMessage());
-            }
-
-            if (minFrom > minTo) {
-                minFrom = 0;
-                minTo = 59;
-            }
-            LocalDateTime now = LocalDateTime.now();
-            int currMin = now.getMinute();
-            int currHour = now.getHour();
-
-            // the time to block hasn't yet come
-            if (minFrom > currMin) {
-                return false;
-            }
-            // the time to block has already passed
-            if (minTo < currMin) {
-                return false;
-            }
-            if (hour != 0 && currHour % hour != 0) {
-                return false;
-            }
+        if (!isInTimeWindow(config.get())) {
+            return false;
         }
 
         /**
@@ -127,5 +92,31 @@ public abstract class SecurityController {
                 }
             } catch (Exception ignored) {};
         }
+    }
+
+    // timeWindow: fromMin/toMin/everyNhour (e.g. 15/22/4 = min 15-22, every 4th hour)
+    // fromMin > toMin means the whole hour; empty/unparseable = always active
+    private boolean isInTimeWindow(ConfigModel config) {
+        String timeWindow = config.getPropertyStr();
+        if (timeWindow == null || timeWindow.isEmpty()) {
+            return true;
+        }
+        String[] parts = timeWindow.split("/");
+        int minFrom = -1, minTo = -1, hour = -1;
+        try {
+            minFrom = Integer.parseInt(parts[0]);
+            minTo   = Integer.parseInt(parts[1]);
+            hour    = Integer.parseInt(parts[2]);
+        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+            logger.info(e.getMessage());
+            return true;
+        }
+        if (minFrom > minTo) { minFrom = 0; minTo = 59; }
+        LocalDateTime now = LocalDateTime.now();
+        int currMin = now.getMinute();
+        int currHour = now.getHour();
+        if (minFrom > currMin || minTo < currMin) return false;
+        if (hour != 0 && currHour % hour != 0) return false;
+        return true;
     }
 }
