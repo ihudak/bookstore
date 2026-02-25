@@ -33,3 +33,5 @@ jobs:
     permissions:
       actions: read
       contents: write
+      workflows: write
+      pull-requests: write
