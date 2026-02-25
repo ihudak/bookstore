@@ -16,4 +16,8 @@ export class IngestService {
     let url: string = serviceId == 'all' ? `${this.baseURL}` : `${this.baseURL}/${serviceId}`;
     return this.httpClient.post(url, ingest);
   }
+
+  deleteData(): Observable<Object> {
+    return this.httpClient.delete(this.baseURL);
+  }
 }

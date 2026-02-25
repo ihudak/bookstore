@@ -62,4 +62,11 @@ export class CreateIngestComponent implements OnInit {
   onSubmitService(serviceId: string) {
     this.startIngest(serviceId);
   }
+
+  cleanUp() {
+    this.ingestService.deleteData().subscribe(
+      data => { console.log('Data cleaned up'); this.goToVersionList(); },
+      error => { console.log(error); alert(error.error?.message || error.message); }
+    );
+  }
 }
