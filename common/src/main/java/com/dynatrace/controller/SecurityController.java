@@ -83,7 +83,7 @@ public abstract class SecurityController {
 
     // timeWindow: fromMin/toMin/everyNhour (e.g. 15/22/4 = min 15-22, every 4th hour)
     // fromMin > toMin means the whole hour; empty/unparseable = always active
-    private boolean isInTimeWindow(ConfigModel config) {
+    protected boolean isInTimeWindow(ConfigModel config) {
         String timeWindow = config.getPropertyStr();
         if (timeWindow == null || timeWindow.isEmpty()) {
             return true;

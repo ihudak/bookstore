@@ -11,6 +11,9 @@ public abstract class SecurityController extends com.dynatrace.controller.Securi
         if (config.isEmpty() || !config.get().isTurnedOn()) {
             return 0.0;
         }
+        if (!isInTimeWindow(config.get())) {
+            return 0.0;
+        }
         double perFail = config.get().getProbabilityFailure();
         if (perFail > 100.0) {
             return 100.0;
