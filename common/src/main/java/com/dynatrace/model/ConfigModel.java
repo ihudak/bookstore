@@ -8,7 +8,7 @@ public interface ConfigModel {
     void setLoadCPU(long loadCPU);
     long getLoadRAM();
     void setLoadRAM(long loadRAM);
-    double getProbabilityFailure();
+    double getProbabilityCheck();
     void setProbabilityFailure(double propertyDouble);
     String getPropertyStr();
     void setPropertyStr(String propertyStr);

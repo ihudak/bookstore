@@ -68,7 +68,7 @@ public class Config implements ConfigModel {
         this.loadRAM = loadRAM;
     }
 
-    public double getProbabilityFailure() {
+    public double getProbabilityCheck() {
         return probabilityFailure;
     }
 

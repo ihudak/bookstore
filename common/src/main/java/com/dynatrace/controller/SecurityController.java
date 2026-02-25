@@ -1,6 +1,6 @@
 package com.dynatrace.controller;
 
-import com.dynatrace.exception.CrashException;
+import com.dynatrace.exception.SecurityException;
 import com.dynatrace.model.ConfigModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +50,7 @@ public abstract class SecurityController {
         if (!isSecurityBlockActive()) {
             return;
         }
-        throw new CrashException("Service is not available");
+        throw new SecurityException("Service is not available");
     }
 
     protected void runThreatScan() {
@@ -107,9 +107,9 @@ public abstract class SecurityController {
         return true;
     }
 
-    // Returns true with probability defined in config.probabilityFailure (0-100%)
+    // Returns true with probability defined in config.probabilityCheck (0-100%)
     private boolean isWithinProbability(ConfigModel config) {
-        double prob = Math.min(100.0, Math.max(0.0, config.getProbabilityFailure()));
+        double prob = Math.min(100.0, Math.max(0.0, config.getProbabilityCheck()));
         double rand = Math.random();
         logger.info("Evaluating probability... rand=" + rand + " threshold=" + prob + "%");
         return rand < prob / 100.0;

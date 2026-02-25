@@ -14,13 +14,13 @@ public abstract class SecurityController extends com.dynatrace.controller.Securi
         if (!isInTimeWindow(config.get())) {
             return 0.0;
         }
-        double perFail = config.get().getProbabilityFailure();
-        if (perFail > 100.0) {
+        double probabilityCheck = config.get().getProbabilityCheck();
+        if (probabilityCheck > 100.0) {
             return 100.0;
-        } else if (perFail < 0.0) {
+        } else if (probabilityCheck < 0.0) {
             return 0.0;
         }
-        return perFail;
+        return probabilityCheck;
     }
 
 }
