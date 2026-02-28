@@ -2,7 +2,7 @@
 FROM node:22-alpine
 MAINTAINER dynatrace.com
 
-ENV DOCKER_VER=1.8.3
+ENV DOCKER_VER=1.8.7
 
 # set the current working directory for all commands
 WORKDIR /usr/src/app

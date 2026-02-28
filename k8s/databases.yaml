@@ -44,7 +44,7 @@ spec:
       namespace: bookstore
       labels:
         app: mysql
-        app.kubernetes.io/version: 1.8.3
+        app.kubernetes.io/version: 1.8.7
         app.kubernetes.io/part-of: BookStore
     spec:
       containers:
@@ -115,7 +115,7 @@ spec:
       namespace: bookstore
       labels:
         app: postgres
-        app.kubernetes.io/version: 1.8.3
+        app.kubernetes.io/version: 1.8.7
         app.kubernetes.io/part-of: BookStore
     spec:
       containers:

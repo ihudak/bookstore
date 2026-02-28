@@ -19,7 +19,7 @@ ENV DT_ENV_ID=$DT_ENV_ID
 ENV DT_ENV_URL=$DT_ENV_URL
 ENV DT_TOKEN=$DT_TOKEN
 
-ENV DOCKER_VER="1.8.3"
+ENV DOCKER_VER="1.8.7"
 
 # Prepare OA config
 ENV OA_INSTALL_DIR=/var/lib/dynatrace/oneagent
@@ -61,8 +61,7 @@ ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8
 ENV LC_CTYPE=C.UTF-8
 ENV LANGUAGE=en_US:en
-ENV JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -Dfile.encoding=UTF-8 -Dsun.jnu.encoding=UTF-8"
-ENV JVM_XMX=512m
+ENV JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -Dfile.encoding=UTF-8 -Dsun.jnu.encoding=UTF-8 -XX:MaxRAMPercentage=75"
 
 # Prepare OA. Download Java Agent
 # oneAgent.sh will set tenant-specific settings on deploy
@@ -80,8 +79,7 @@ RUN . /opt/set_bash_instrumentation.sh && \
     fi
 ENV AGENTS_PRELOAD=$AGENTS_PRELOAD
 
-ENTRYPOINT export JAVA_TOOL_OPTIONS="${JAVA_TOOL_OPTIONS} -Xmx${JVM_XMX}" && \
-           export OTEL_SERVICE_NAME="$SERVICE_FULL_NAME" && \
+ENTRYPOINT export OTEL_SERVICE_NAME="$SERVICE_FULL_NAME" && \
            . /opt/set_bash_instrumentation.sh && \
            /opt/deployment_event.sh && \
            if [ -z ${AGENT+x} ]; then \

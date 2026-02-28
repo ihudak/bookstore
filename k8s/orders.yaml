@@ -20,7 +20,7 @@ spec:
       namespace: bookstore
       labels:
         app: orders
-        app.kubernetes.io/version: 1.8.3
+        app.kubernetes.io/version: 1.8.7
         app.kubernetes.io/part-of: BookStore
     spec:
       containers:
@@ -40,7 +40,7 @@ spec:
                 fieldRef:
                   fieldPath: metadata.labels['app.kubernetes.io/version']
             - name: DT_RELEASE_BUILD_VERSION
-              value: "2026-02-25-15:38:43"
+              value: "2026-02-28-15:38:43"
             - name: DT_MYSQL_DBNAME
               value: none # DB NAME HERE
             - name: DT_PG_DBNAME
@@ -64,13 +64,11 @@ spec:
               value: OrderController
             - name: DT_HOST_NAME_PREFIX
               value: orders
-            - name: JVM_XMX
-              value: "768m"
           startupProbe:
             httpGet:
               path: /actuator/health
               port: 8080
-            initialDelaySeconds: 15
+            initialDelaySeconds: 95
             periodSeconds: 10
             failureThreshold: 18
           livenessProbe:
