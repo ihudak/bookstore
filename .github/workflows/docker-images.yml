@@ -1118,3 +1118,5 @@ jobs:
             AGENT=noagent
           cache-from: type=gha
           cache-to: type=gha,mode=max
+    permissions:
+      actions: read
