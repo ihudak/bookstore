@@ -14,12 +14,11 @@ on:
   push:
     tags:
       - 'v*.*.*'
-
 permissions:
   contents: write
   packages: write
   pull-requests: write
-
+  actions: read
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -33,7 +32,7 @@ jobs:
           OTEL_EXPORTER_OTLP_METRICS_HEADERS: Authorization=Api-Token ${{ secrets.DT_TOKEN }}
           OTEL_EXPORTER_OTLP_LOGS_HEADERS: Authorization=Api-Token ${{ secrets.DT_TOKEN }}
         with:
-          secrets_to_redact: '["${{ github.token }}","${{ secrets.CR_PAT }}","${{ secrets.DT_ENV_ID }}","${{ secrets.DT_ENV_URL }}","${{ secrets.DT_TOKEN }}"]'
+          secrets_to_redact: '["${{ github.token }}","${{ secrets.DT_ENV_ID }}","${{ secrets.DT_ENV_URL }}","${{ secrets.DT_TOKEN }}","${{ secrets.GITHUB_TOKEN }}"]'
       - uses: actions/checkout@v6
       - name: Set Env Push
         if: ${{ github.event_name == 'push' }}
@@ -73,7 +72,6 @@ jobs:
 
           # k8s/README.adoc: version + date header
           sed -i "s/^[0-9]*\.[0-9]*\.[0-9]*, [A-Za-z]* [0-9]*, [0-9]*: Kubernetes Deployment/$VERSION, $LONG_DATE: Kubernetes Deployment/" k8s/README.adoc
-
       - name: Commit version bump
         if: ${{ env.RELEASE_VERSION != 'none' }}
         env:
