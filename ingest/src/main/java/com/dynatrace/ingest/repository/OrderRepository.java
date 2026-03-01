@@ -54,6 +54,18 @@ public class OrderRepository implements IngestRepository {
         this.create(null);
     }
 
+    public void create(int booksPerOrder, boolean randomPrice) {
+        logger.info("Creating Order");
+        logger.info(baseURL);
+        try {
+            Object order = Order.generate(booksPerOrder, randomPrice);
+            logger.info(order.toString());
+            restTemplate.postForObject(baseURL, order, Order.class);
+        } catch (Exception exception){
+            logger.error(exception.getMessage());
+        }
+    }
+
     @Override
     public void update(Object object) {
         Order order = (Order) object;

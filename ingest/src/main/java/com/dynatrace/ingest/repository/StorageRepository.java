@@ -94,6 +94,18 @@ public class StorageRepository implements IngestRepository {
         this.create(null);
     }
 
+    public void create(int quantity) {
+        logger.info("Creating Storage Item");
+        logger.info(baseURL);
+        try {
+            Object book = Storage.generate(quantity);
+            logger.info(book.toString());
+            restTemplate.postForObject(baseURL, book, Storage.class);
+        } catch (Exception exception){
+            logger.error(exception.getMessage());
+        }
+    }
+
     @Override
     public void update(Object object) {
         if (null != object) {

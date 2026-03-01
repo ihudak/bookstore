@@ -25,11 +25,15 @@ public class Storage implements Model {
     }
 
     public static Storage generate() {
+        return generate(0);
+    }
+
+    public static Storage generate(int quantity) {
         String isbn = Book.getRandomISBN();
         if (isbn == null) {
             return null;
         }
-        return new Storage(0, isbn, random.nextInt(100) + 1);
+        return new Storage(0, isbn, quantity > 0 ? quantity : random.nextInt(100) + 1);
     }
 
     public static void reset() {}

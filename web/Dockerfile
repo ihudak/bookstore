@@ -10,4 +10,4 @@ WORKDIR /usr/src/app
 
 # copy over all code files
 COPY . .
-RUN npm install && /usr/src/app/node_modules/.bin/ng build
+RUN npm install

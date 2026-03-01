@@ -63,6 +63,7 @@ EXPOSE 4200
 ENTRYPOINT . /opt/set_bash_instrumentation.sh && \
            if [ "$AGENTS_PRELOAD" = false ]; then /opt/get_oa.sh; fi && \
            if [ -z ${BOOKSTORE_BASE_SRV_URL+x} ] || [ "$DT_ACTIVE_WEB_ENV" != custom ] ; then \
+               /usr/src/app/node_modules/.bin/ng build ; \
                /usr/src/app/node_modules/.bin/ng serve --host 0.0.0.0 -c ${DT_ACTIVE_WEB_ENV}; \
            else \
                sed -i "s|http://kubernetes.docker.internal/api|$BOOKSTORE_BASE_SRV_URL|g" ./src/environments/* ; \

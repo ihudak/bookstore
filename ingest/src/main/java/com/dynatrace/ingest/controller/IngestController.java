@@ -94,7 +94,7 @@ public class IngestController {
         }
         logger.info("Generate storage");
         for (int i = 0; i < ingest.getNumStorage(); i++) {
-            storageRepository.create();
+            storageRepository.create(ingest.getNumBooksPerStorage());
         }
         ingest.setMessage("Ok");
         return ingest;
@@ -128,7 +128,7 @@ public class IngestController {
         }
         logger.info("Generate orders");
         for (int i = 0; i < ingest.getNumOrders(); i++) {
-            orderRepository.create();
+            orderRepository.create(ingest.getNumBooksPerOrder(), ingest.isRandomPrice());
         }
         ingest.setCode(200);
         ingest.setMessage("Ok");
@@ -230,22 +230,21 @@ public class IngestController {
 
         private void booksGenerator(@RequestBody Ingest ingest) {
             logger.info("Generate Books");
-            // always generate one extra book ( i <= .. in the for loops)
-            for (int i = 0; i <= ingest.getNumBooksVend(); i++) {
+            for (int i = 0; i < ingest.getNumBooksVend(); i++) {
                 if (ingest.isRandomPrice()) {
                     bookRepository.create(true);
                 } else {
                     bookRepository.create(true, 12);
                 }
             }
-            for (int i = 0; i <= ingest.getNumBooksNotvend(); i++) {
+            for (int i = 0; i < ingest.getNumBooksNotvend(); i++) {
                 if (ingest.isRandomPrice()) {
                     bookRepository.create(false);
                 } else {
                     bookRepository.create(false, 12);
                 }
             }
-            for (int i = 0; i <= ingest.getNumBooksRandVend(); i++) {
+            for (int i = 0; i < ingest.getNumBooksRandVend(); i++) {
                 if (ingest.isRandomPrice()) {
                     bookRepository.create();
                 } else {
@@ -323,11 +322,11 @@ public class IngestController {
             }
             for (int i = 0; IngestController.isWorking && i < ingest.getNumStorage(); i++) {
                 logger.info("storage");
-                storageRepository.create();
+                storageRepository.create(ingest.getNumBooksPerStorage());
             }
             for (int i = 0; IngestController.isWorking && i < ingest.getNumOrders(); i++) {
                 logger.info("orders");
-                orderRepository.create();
+                orderRepository.create(ingest.getNumBooksPerOrder(), ingest.isRandomPrice());
             }
             for (int i = 0; IngestController.isWorking && i < ingest.getNumSubmitOrders(); i++) {
                 logger.info("pay orders");

@@ -46,6 +46,10 @@ public class Order implements Model {
     }
 
     public static Order generate() {
+        return generate(0, true);
+    }
+
+    public static Order generate(int booksPerOrder, boolean randomPrice) {
         String email = Client.getRandomEmail();
         String isbn = Book.getRandomISBN();
         logger.info("GENERATING ORDER");
@@ -55,7 +59,9 @@ public class Order implements Model {
             logger.info("GENERATING ORDER FAILED");
             return null;
         }
-        Order order = new Order(0, email, isbn, random.nextInt(3) + 1, 12.0, false);
+        int qty = booksPerOrder > 0 ? booksPerOrder : random.nextInt(3) + 1;
+        double price = randomPrice ? 33.0 : 12.0;
+        Order order = new Order(0, email, isbn, qty, price, false);
         orders.add(order);
         logger.info(order.toString());
         return order;
