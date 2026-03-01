@@ -19,5 +19,5 @@ export const environment = {
   ingestSrvUrl: `${baseSrvUrl}:89`,
   selectedTenant: '',
   verGUI: '1.8.7.stage',
-  dateGUI: 'Feb-28-2026'
+  dateGUI: 'Mar-01-2026'
 };
