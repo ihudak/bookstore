@@ -16,7 +16,7 @@ on:
       - 'v*.*.*'
 
 permissions:
-  contents: read
+  contents: write
   packages: write
 
 jobs:
@@ -43,6 +43,44 @@ jobs:
       - name: Set Env Other
         if: ${{ github.event_name != 'workflow_dispatch' && github.event_name != 'push' }}
         run: echo "RELEASE_VERSION=none" >> $GITHUB_ENV
+      - name: Bump version and date
+        if: ${{ env.RELEASE_VERSION != 'none' }}
+        run: |
+          VERSION="${RELEASE_VERSION#v}"
+          DATE=$(date +'%b-%d-%Y')
+          LONG_DATE=$(date +'%B %d, %Y')
+          TIMESTAMP=$(date +'%Y-%m-%d-%H:%M:%S')
+
+          # Dockerfiles (quoted: agents, noagent)
+          sed -i "s/ENV DOCKER_VER=\"[0-9]*\.[0-9]*\.[0-9]*\"/ENV DOCKER_VER=\"$VERSION\"/g" agents/Dockerfile noagent/Dockerfile
+
+          # Dockerfiles (unquoted: web base images)
+          sed -i "s/ENV DOCKER_VER=[0-9]*\.[0-9]*\.[0-9]*/ENV DOCKER_VER=$VERSION/g" web/base/noagent/Dockerfile web/base/oneagent/Dockerfile
+
+          # K8s YAMLs: version label
+          sed -i "s|app.kubernetes.io/version: [0-9]*\.[0-9]*\.[0-9]*|app.kubernetes.io/version: $VERSION|g" k8s/*.yaml
+
+          # K8s YAMLs: DT_RELEASE_BUILD_VERSION timestamp
+          sed -i "s|value: \"[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]-[0-9][0-9]:[0-9][0-9]:[0-9][0-9]\"|value: \"$TIMESTAMP\"|g" k8s/*.yaml
+
+          # application.properties: version and date
+          find . -name "application.properties" -exec sed -i "s/^application\.version=.*/application.version=$VERSION/" {} \;
+          find . -name "application.properties" -exec sed -i "s/^application\.date=.*/application.date=$DATE/" {} \;
+
+          # Angular environments: dateGUI
+          sed -i "s/dateGUI: '[A-Za-z]*-[0-9][0-9]-[0-9][0-9][0-9][0-9]'/dateGUI: '$DATE'/g" web/src/environments/environment*.ts
+
+          # k8s/README.adoc: version + date header
+          sed -i "s/^[0-9]*\.[0-9]*\.[0-9]*, [A-Za-z]* [0-9]*, [0-9]*: Kubernetes Deployment/$VERSION, $LONG_DATE: Kubernetes Deployment/" k8s/README.adoc
+
+      - name: Commit version bump
+        if: ${{ env.RELEASE_VERSION != 'none' }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --staged --quiet || git commit -m "chore: bump version to $RELEASE_VERSION [skip ci]"
+          git push origin HEAD:refs/heads/master
       - name: Test
         run: |
           echo $RELEASE_VERSION
