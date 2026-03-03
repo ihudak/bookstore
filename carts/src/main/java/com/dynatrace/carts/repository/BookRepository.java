@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @Repository
@@ -26,7 +27,12 @@ public class BookRepository {
                 "?isbn=" +
                 isbn;
         logger.info("Getting book " + isbn);
-        Book book = restTemplate.getForObject(urlBuilder, Book.class);
+        Book book;
+        try {
+            book = restTemplate.getForObject(urlBuilder, Book.class);
+        } catch (HttpClientErrorException.NotFound e) {
+            return null;
+        }
         if (null == book) {
             ResourceNotFoundException ex = new ResourceNotFoundException("Book not found by isbn: " + isbn);
             logger.error(ex.toString());

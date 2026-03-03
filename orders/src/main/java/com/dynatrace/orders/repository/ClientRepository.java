@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @Repository
@@ -29,7 +30,12 @@ public class ClientRepository {
         logger.info("Checking client");
         logger.info(urlBuilder);
 
-        Client client = restTemplate.getForObject(urlBuilder, Client.class);
+        Client client;
+        try {
+            client = restTemplate.getForObject(urlBuilder, Client.class);
+        } catch (HttpClientErrorException.NotFound e) {
+            return null;
+        }
         if (null == client) {
             ResourceNotFoundException ex = new ResourceNotFoundException("Client not found by email: " + email);
             logger.error(ex.getMessage());

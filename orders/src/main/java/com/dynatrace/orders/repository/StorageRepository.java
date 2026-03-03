@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @Repository
@@ -29,7 +30,14 @@ public class StorageRepository {
                 "/sell-book";
         logger.info("Taking from storage");
         logger.info(urlBuilder);
-        Storage storageNew = restTemplate.postForObject(urlBuilder, storage, Storage.class);
+        Storage storageNew;
+        try {
+            storageNew = restTemplate.postForObject(urlBuilder, storage, Storage.class);
+        } catch (HttpClientErrorException.NotFound e) {
+            ResourceNotFoundException ex = new ResourceNotFoundException("Book not found in storage, ISBN: " + storage.getIsbn());
+            logger.error(ex.getMessage());
+            throw ex;
+        }
         if (storageNew == null || storageNew.getQuantity() < 0) {
             PurchaseForbiddenException ex = new PurchaseForbiddenException("Purchase was rejected, ISBN: " + storage.getIsbn());
             logger.error(ex.getMessage());
@@ -43,7 +51,14 @@ public class StorageRepository {
                 "/ingest-book";
         logger.info("Returning to storage");
         logger.info(urlBuilder);
-        Storage storageNew = restTemplate.postForObject(urlBuilder, storage, Storage.class);
+        Storage storageNew;
+        try {
+            storageNew = restTemplate.postForObject(urlBuilder, storage, Storage.class);
+        } catch (HttpClientErrorException.NotFound e) {
+            ResourceNotFoundException ex = new ResourceNotFoundException("Book not found in storage, ISBN: " + storage.getIsbn());
+            logger.error(ex.getMessage());
+            throw ex;
+        }
         if (storageNew == null || storageNew.getQuantity() < 0) {
             PurchaseForbiddenException ex = new PurchaseForbiddenException("Return was rejected, ISBN: " + storage.getIsbn());
             logger.error(ex.getMessage());
@@ -59,7 +74,12 @@ public class StorageRepository {
                 isbn;
         logger.info("Checking in storage");
         logger.info(urlBuilder);
-        Storage storage = restTemplate.getForObject(urlBuilder, Storage.class);
+        Storage storage;
+        try {
+            storage = restTemplate.getForObject(urlBuilder, Storage.class);
+        } catch (HttpClientErrorException.NotFound e) {
+            return null;
+        }
         if (null == storage) {
             ResourceNotFoundException ex = new ResourceNotFoundException("Book in Storage is not found by isbn: " + isbn);
             logger.error(ex.getMessage());

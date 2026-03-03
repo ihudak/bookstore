@@ -4,7 +4,9 @@ import com.dynatrace.ingest.model.Model;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import jakarta.validation.constraints.Pattern;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 public class Storage implements Model {
     private long id;
@@ -14,6 +16,7 @@ public class Storage implements Model {
     @Schema(name = "quantity", example = "20", requiredMode = Schema.RequiredMode.REQUIRED, description = "How many pieces per ISBN to generate in a storage (0 stands for random)")
     private int quantity;
     private static final Random random = new Random();
+    private static final Set<String> usedISBNs = new HashSet<>();
 
     public Storage() {
     }
@@ -29,14 +32,23 @@ public class Storage implements Model {
     }
 
     public static Storage generate(int quantity) {
-        String isbn = Book.getRandomISBN();
-        if (isbn == null) {
-            return null;
+        if (usedISBNs.size() >= Book.getNumOfISBNs()) {
+            return null; // all known ISBNs already in storage
         }
+        String isbn;
+        do {
+            isbn = Book.getRandomISBN();
+            if (isbn == null) {
+                return null;
+            }
+        } while (usedISBNs.contains(isbn));
+        usedISBNs.add(isbn);
         return new Storage(0, isbn, quantity > 0 ? quantity : random.nextInt(100) + 1);
     }
 
-    public static void reset() {}
+    public static void reset() {
+        usedISBNs.clear();
+    }
 
     public long getId() {
         return id;
