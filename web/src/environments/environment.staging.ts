@@ -18,6 +18,6 @@ export const environment = {
   dynapatSrvUrl: `${baseSrvUrl}:87`,
   ingestSrvUrl: `${baseSrvUrl}:89`,
   selectedTenant: '',
-  verGUI: '1.8.9.stage',
-  dateGUI: 'Mar-01-2026'
+  verGUI: '1.9.0.stage',
+  dateGUI: 'Mar-03-2026'
 };
