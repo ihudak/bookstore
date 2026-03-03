@@ -125,11 +125,9 @@ public class RatingController extends SecurityController {
             logger.error(ex.getMessage());
             throw ex;
         }
-        Client[] clients = clientRepository.getAllClients();
-        logger.debug(clients.toString());
     }
 
-    private Book verifyBook(String isbn) {
+    private void verifyBook(String isbn) {
         logger.info("Verifying book " + isbn);
         Book book = bookRepository.getBookByISBN(isbn);
         if (null == book) {
@@ -137,8 +135,5 @@ public class RatingController extends SecurityController {
             logger.error(ex.getMessage());
             throw ex;
         }
-        Book[] books = bookRepository.getAllBooks();
-        logger.debug(books.toString());
-        return book;
     }
 }
