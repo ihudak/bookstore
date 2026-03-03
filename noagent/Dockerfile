@@ -28,7 +28,7 @@ ENV LC_ALL=C.UTF-8
 ENV LC_CTYPE=C.UTF-8
 ENV LANGUAGE=en_US:en
 ENV JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -Dfile.encoding=UTF-8 -Dsun.jnu.encoding=UTF-8 -XX:MaxRAMPercentage=75"
-ENV DOCKER_VER="1.8.9"
+ENV DOCKER_VER="1.9.0"
 
 ENTRYPOINT export OTEL_SERVICE_NAME="$SERVICE_FULL_NAME" && \
            java -Dotel.service.name=$SERVICE_FULL_NAME -jar /opt/app/app.jar
