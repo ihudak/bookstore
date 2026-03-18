@@ -1,7 +1,7 @@
 #!/bin/bash
 #export NS=boostrore
 
-helm install ingress-nginx ingress-nginx/ingress-nginx --create-namespace --namespace ingess-nginx --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-health-probe-request-path"=/healthz
+helm install ingress-nginx ingress-nginx/ingress-nginx --create-namespace --namespace ingress-nginx --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-health-probe-request-path"=/healthz
 
 kubectl apply -f namespace.yaml
 kubectl apply -f config_agents.yaml
