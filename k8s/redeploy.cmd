@@ -1,0 +1,9 @@
+kubectl rollout restart deployment/books -n bookstore
+kubectl rollout restart deployment/clients -n bookstore
+kubectl rollout restart deployment/ratings -n bookstore
+kubectl rollout restart deployment/carts -n bookstore
+kubectl rollout restart deployment/storage -n bookstore
+kubectl rollout restart deployment/orders -n bookstore
+kubectl rollout restart deployment/payments -n bookstore
+kubectl rollout restart deployment/dynapay -n bookstore
+kubectl rollout restart deployment/ingest -n bookstore
