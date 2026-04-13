@@ -49,3 +49,6 @@ bin/
 !/.ai/mcp/dt-environments.json
 /.ai/mcp/.env
 dynatrace-managed-mcp.log
+/.agent-blocked/
+/.agent-discovery/
+/dev-containers/
