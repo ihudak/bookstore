@@ -118,14 +118,16 @@ run_container() {
 
   # Build optional config mount flags; skip and warn for any directory not found.
   local config_mount_flags=()
-  add_mount_if_exists config_mount_flags "$ssh_scope_dir"     "$dev_home/.ssh"       ro
-  add_mount_if_exists config_mount_flags "$HOME/.config/gh"   "$dev_home/.config/gh"
-  add_mount_if_exists config_mount_flags "$HOME/.copilot"     "$dev_home/.copilot"
-  add_mount_if_exists config_mount_flags "$HOME/.kiro"        "$dev_home/.kiro"
+  add_mount_if_exists config_mount_flags "$ssh_scope_dir"      "$dev_home/.ssh"       ro
+  add_mount_if_exists config_mount_flags "$HOME/.config/gh"    "$dev_home/.config/gh"
+  add_mount_if_exists config_mount_flags "$HOME/.copilot"      "$dev_home/.copilot"
+  add_mount_if_exists config_mount_flags "$HOME/.kiro"         "$dev_home/.kiro"
   add_mount_if_exists config_mount_flags "$HOME/.local/share/kiro-cli" "$dev_home/.local/share/kiro-cli"
-  add_mount_if_exists config_mount_flags "$HOME/.aws"         "$dev_home/.aws"
-  add_mount_if_exists config_mount_flags "$HOME/.azure"       "$dev_home/.azure"
-  add_mount_if_exists config_mount_flags "$HOME/.kube"        "$dev_home/.kube"
+  add_mount_if_exists config_mount_flags "$HOME/.aws"          "$dev_home/.aws"
+  add_mount_if_exists config_mount_flags "$HOME/.azure"        "$dev_home/.azure"
+  add_mount_if_exists config_mount_flags "$HOME/.kube"         "$dev_home/.kube"
+  add_mount_if_exists config_mount_flags "$HOME/.config/dtctl" "$dev_home/.config/dtctl"
+  add_mount_if_exists config_mount_flags "$HOME/.config/dtmgd" "$dev_home/.config/dtmgd"
 
   docker run -it --rm \
     "${capabilities[@]}" \
