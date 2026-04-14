@@ -76,10 +76,10 @@ RUN chmod +x /usr/local/bin/refresh-ipset-allowlist.sh \
 RUN set -eux; \
     ARCH=$(uname -m | sed 's/x86_64/amd64/; s/aarch64/arm64/'); \
     OS=$(uname -s | tr '[:upper:]' '[:lower:]'); \
-    TAG=$(curl -sI -L https://github.com/dynatrace-oss/dtctl/releases/latest | tr -d '\r' | awk -F/ '/^location:/{print $NF}' | tail -1); \
+    TAG=$(curl -fsSL https://api.github.com/repos/dynatrace-oss/dtctl/releases/latest | grep '"tag_name"' | head -1 | sed 's/.*"tag_name": *"\([^"]*\)".*/\1/'); \
     curl -fsSL "https://github.com/dynatrace-oss/dtctl/releases/download/${TAG}/dtctl_${TAG#v}_${OS}_${ARCH}.tar.gz" \
       | tar xz -C /usr/local/bin dtctl; \
-    TAG=$(curl -sI -L https://github.com/dynatrace-oss/dtmgd/releases/latest | tr -d '\r' | awk -F/ '/^location:/{print $NF}' | tail -1); \
+    TAG=$(curl -fsSL https://api.github.com/repos/dynatrace-oss/dtmgd/releases/latest | grep '"tag_name"' | head -1 | sed 's/.*"tag_name": *"\([^"]*\)".*/\1/'); \
     curl -fsSL "https://github.com/dynatrace-oss/dtmgd/releases/download/${TAG}/dtmgd_${TAG#v}_${OS}_${ARCH}.tar.gz" \
       | tar xz -C /usr/local/bin dtmgd; \
     chmod +x /usr/local/bin/dtctl /usr/local/bin/dtmgd
