@@ -54,11 +54,15 @@ setup_sandbox_user() {
 
   # Ensure the home directory exists with skel defaults and correct ownership.
   # cp -rn (no-clobber) won't overwrite bind-mounted subdirectories like .ssh.
+  # chown uses -xdev to recurse fully without crossing into bind-mounted volumes.
   local home_dir="/home/$username"
   mkdir -p "$home_dir"
   cp -rn /etc/skel/. "$home_dir/" 2>/dev/null || true
+  # Recursively chown only the container's own filesystem, skipping bind-mounted
+  # volumes (.ssh, .copilot, .config/gh, .local/share/kiro-cli, etc.) by using
+  # -xdev to stay on the same filesystem as $home_dir.
   chown "$uid:$gid" "$home_dir"
-  find "$home_dir" -maxdepth 1 ! -type d -exec chown "$uid:$gid" {} + 2>/dev/null || true
+  find "$home_dir" -xdev -exec chown "$uid:$gid" {} + 2>/dev/null || true
 
   sandbox_user="$(getent passwd "$uid" | cut -d: -f1)"
 }
