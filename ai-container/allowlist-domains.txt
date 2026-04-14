@@ -77,4 +77,5 @@ services.gradle.org
 # Add the concrete endpoints for every MCP server you configure.
 # Example: the concrete environment URLs used by your MCP server.
 # your-managed-environment.example.com
-
+amd808.dynatrace-managed.com
+tac886.managed-dev.dynalabs.io

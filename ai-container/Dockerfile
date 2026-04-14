@@ -55,9 +55,9 @@ RUN npm install -g @github/copilot @angular/cli
 ARG INSTALL_KIRO=0
 RUN if [ "$INSTALL_KIRO" = "1" ]; then \
   curl -fsSL https://cli.kiro.dev/install | bash && \
-  cp /root/.local/bin/kiro-cli /usr/local/bin/kiro-cli && \
-  cp /root/.local/bin/kiro-cli-chat /usr/local/bin/kiro-cli-chat && \
-  cp /root/.local/bin/kiro-cli-term /usr/local/bin/kiro-cli-term; \
+  cp ~/.local/bin/kiro-cli /usr/local/bin/kiro-cli && \
+  cp ~/.local/bin/kiro-cli-chat /usr/local/bin/kiro-cli-chat && \
+  cp ~/.local/bin/kiro-cli-term /usr/local/bin/kiro-cli-term; \
   fi
 
 COPY refresh-ipset-allowlist.sh /usr/local/bin/
@@ -71,6 +71,20 @@ RUN chmod +x /usr/local/bin/refresh-ipset-allowlist.sh \
   /usr/local/bin/capture-agent-destinations.sh \
   /usr/local/bin/capture-blocked-traffic.sh \
   /entrypoint.sh
+
+# Install dtctl and dtmgd
+  RUN set -eux; \
+      ARCH=$(uname -m | sed 's/x86_64/amd64/; s/aarch64/arm64/'); \
+      OS=$(uname -s | tr '[:upper:]' '[:lower:]'); \
+      # dtctl \
+      TAG=$(curl -sI -L https://github.com/dynatrace-oss/dtctl/releases/latest | tr -d '\r' | awk -F/ '/^location:/{print $NF}' | tail -1); \
+      curl -fsSL "https://github.com/dynatrace-oss/dtctl/releases/download/${TAG}/dtctl_${TAG#v}_${OS}_${ARCH}.tar.gz" \
+        | tar xz -C /usr/local/bin dtctl; \
+      # dtmgd \
+      TAG=$(curl -sI -L https://github.com/dynatrace-oss/dtmgd/releases/latest | tr -d '\r' | awk -F/ '/^location:/{print $NF}' | tail -1); \
+      curl -fsSL "https://github.com/dynatrace-oss/dtmgd/releases/download/${TAG}/dtmgd_${TAG#v}_${OS}_${ARCH}.tar.gz" \
+        | tar xz -C /usr/local/bin dtmgd; \
+      chmod +x /usr/local/bin/dtctl /usr/local/bin/dtmgd
 
 # The sandbox user is NOT created here.
 # The entrypoint creates it at startup using SANDBOX_UID/SANDBOX_GID env vars.
