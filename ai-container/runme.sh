@@ -69,6 +69,17 @@ add_mount_if_exists() {
   fi
 }
 
+# Same as add_mount_if_exists but for individual files.
+add_file_mount_if_exists() {
+  local -n _flags=$1
+  local original_src="$2" dst="$3" opts="${4:-rw}"
+  local src
+  src="$(resolve_path "$original_src")"
+  if [[ -f "$src" ]]; then
+    _flags+=(-v "$src:$dst:$opts")
+  fi
+}
+
 run_container() {
   local mode="$1"
   local workspace_dir
@@ -107,7 +118,7 @@ run_container() {
       dir="${entry%%:*}"
       opt="${entry##*:}"
       [[ "$opt" == "$dir" ]] && opt="rw"
-      real_dir="$(resolve_path "$dir")"
+      real_dir="$(resolve_path "${dir/#\~/$HOME}")"
       if [[ ! -d "$real_dir" ]]; then
         printf 'ERROR: EXTRA_MOUNTS path does not exist: %s\n' "$dir" >&2
         exit 1
@@ -118,14 +129,16 @@ run_container() {
 
   # Build optional config mount flags; skip and warn for any directory not found.
   local config_mount_flags=()
-  add_mount_if_exists config_mount_flags "$ssh_scope_dir"      "$dev_home/.ssh"       ro
-  add_mount_if_exists config_mount_flags "$HOME/.config/gh"    "$dev_home/.config/gh"
-  add_mount_if_exists config_mount_flags "$HOME/.copilot"      "$dev_home/.copilot"
-  add_mount_if_exists config_mount_flags "$HOME/.kiro"         "$dev_home/.kiro"
+  add_mount_if_exists config_mount_flags "$ssh_scope_dir"     "$dev_home/.ssh"       ro
+  add_mount_if_exists config_mount_flags "$HOME/.config/gh"   "$dev_home/.config/gh"
+  add_mount_if_exists config_mount_flags "$HOME/.copilot"     "$dev_home/.copilot"
+  add_mount_if_exists config_mount_flags "$HOME/.kiro"        "$dev_home/.kiro"
   add_mount_if_exists config_mount_flags "$HOME/.local/share/kiro-cli" "$dev_home/.local/share/kiro-cli"
-  add_mount_if_exists config_mount_flags "$HOME/.aws"          "$dev_home/.aws"
-  add_mount_if_exists config_mount_flags "$HOME/.azure"        "$dev_home/.azure"
-  add_mount_if_exists config_mount_flags "$HOME/.kube"         "$dev_home/.kube"
+  add_mount_if_exists config_mount_flags "$HOME/.claude"      "$dev_home/.claude"
+  add_file_mount_if_exists config_mount_flags "$HOME/.claude.json" "$dev_home/.claude.json"
+  add_mount_if_exists config_mount_flags "$HOME/.aws"         "$dev_home/.aws"
+  add_mount_if_exists config_mount_flags "$HOME/.azure"       "$dev_home/.azure"
+  add_mount_if_exists config_mount_flags "$HOME/.kube"        "$dev_home/.kube"
   add_mount_if_exists config_mount_flags "$HOME/.config/dtctl" "$dev_home/.config/dtctl"
   add_mount_if_exists config_mount_flags "$HOME/.config/dtmgd" "$dev_home/.config/dtmgd"
 
