@@ -27,6 +27,14 @@ githubcopilot.com
 # GitHub Models / multi-model support (required by newer Copilot CLI versions)
 models.inference.ai.azure.com
 
+# Claude Code (Anthropic API and auth)
+api.anthropic.com
+claude.ai
+statsig.anthropic.com
+statsigapi.net
+sentry.io
+o4507156944379904.ingest.sentry.io
+
 # Kiro CLI (core endpoints — see https://kiro.dev/docs/cli/privacy-and-security/firewalls/)
 app.kiro.dev
 cli.kiro.dev

@@ -52,7 +52,7 @@ setup_sandbox_user() {
     useradd -M -s /bin/bash -u "$uid" -g "$gid" -d "/home/$username" "$username"
   fi
 
-  # Ensure the home directory exists with skel defaults and correct ownership.
+    # Ensure the home directory exists with skel defaults and correct ownership.
   # cp -rn (no-clobber) won't overwrite bind-mounted subdirectories like .ssh.
   # chown uses -xdev to recurse fully without crossing into bind-mounted volumes.
   local home_dir="/home/$username"
