@@ -48,8 +48,8 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | \
   apt update && apt install -y gh && \
   rm -rf /var/lib/apt/lists/*
 
-# GitHub Copilot CLI + Angular CLI
-RUN npm install -g @github/copilot @angular/cli
+# GitHub Copilot CLI + Angular CLI + Claude Code
+RUN npm install -g @github/copilot @angular/cli @anthropic-ai/claude-code
 
 # Kiro CLI (optional — only installed when INSTALL_KIRO=1 is passed at build time)
 ARG INSTALL_KIRO=0
