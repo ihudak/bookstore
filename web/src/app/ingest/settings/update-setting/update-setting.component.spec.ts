@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { provideRouter } from '@angular/router';
 
 import { UpdateSettingComponent } from './update-setting.component';
 
@@ -8,7 +10,9 @@ describe('UpdateSettingComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ UpdateSettingComponent ]
+      declarations: [ UpdateSettingComponent ],
+      imports: [ FormsModule ],
+      providers: [ provideRouter([]) ]
     })
     .compileComponents();
 

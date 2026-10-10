@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { provideRouter } from '@angular/router';
 
 import { UpdateOrderComponent } from './update-order.component';
 
@@ -8,7 +10,9 @@ describe('UpdateOrderComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ UpdateOrderComponent ]
+      declarations: [ UpdateOrderComponent ],
+      imports: [ FormsModule ],
+      providers: [ provideRouter([]) ]
     })
     .compileComponents();
 

@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 
 import { CreateBookComponent } from './create-book.component';
 
@@ -8,7 +9,8 @@ describe('CreateBookComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CreateBookComponent ]
+      declarations: [ CreateBookComponent ],
+      imports: [ FormsModule ]
     })
     .compileComponents();
 

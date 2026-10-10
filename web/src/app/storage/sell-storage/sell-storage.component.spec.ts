@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { provideRouter } from '@angular/router';
 
 import { SellStorageComponent } from './sell-storage.component';
 
@@ -8,7 +10,9 @@ describe('SellStorageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SellStorageComponent ]
+      declarations: [ SellStorageComponent ],
+      imports: [ FormsModule ],
+      providers: [ provideRouter([]) ]
     })
     .compileComponents();
 

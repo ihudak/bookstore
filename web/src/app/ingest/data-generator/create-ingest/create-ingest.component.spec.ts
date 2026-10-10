@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 
 import { CreateIngestComponent } from './create-ingest.component';
 
@@ -8,7 +9,8 @@ describe('IngestDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CreateIngestComponent ]
+      declarations: [ CreateIngestComponent ],
+      imports: [ FormsModule ]
     })
     .compileComponents();
 

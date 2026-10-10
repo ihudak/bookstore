@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 
 import { StorageDetailsComponent } from './storage-details.component';
 
@@ -8,7 +9,8 @@ describe('StorageDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ StorageDetailsComponent ]
+      declarations: [ StorageDetailsComponent ],
+      providers: [ provideRouter([]) ]
     })
     .compileComponents();
 

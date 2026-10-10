@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { provideRouter } from '@angular/router';
 
 import { IngestStorageComponent } from './ingest-storage.component';
 
@@ -8,7 +10,9 @@ describe('IngestStorageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ IngestStorageComponent ]
+      declarations: [ IngestStorageComponent ],
+      imports: [ FormsModule ],
+      providers: [ provideRouter([]) ]
     })
     .compileComponents();
 

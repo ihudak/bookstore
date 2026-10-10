@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 
 import { BookDetailsComponent } from './book-details.component';
 
@@ -8,7 +9,8 @@ describe('BookDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ BookDetailsComponent ]
+      declarations: [ BookDetailsComponent ],
+      providers: [ provideRouter([]) ]
     })
     .compileComponents();
 

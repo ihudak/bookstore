@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 
 import { CreateCartComponent } from './create-cart.component';
 
@@ -8,7 +9,8 @@ describe('CreateCartComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CreateCartComponent ]
+      declarations: [ CreateCartComponent ],
+      imports: [ FormsModule ]
     })
     .compileComponents();
 

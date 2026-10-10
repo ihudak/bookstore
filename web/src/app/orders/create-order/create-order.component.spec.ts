@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 
 import { CreateOrderComponent } from './create-order.component';
 
@@ -8,7 +9,8 @@ describe('CreateOrderComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CreateOrderComponent ]
+      declarations: [ CreateOrderComponent ],
+      imports: [ FormsModule ]
     })
     .compileComponents();
 
