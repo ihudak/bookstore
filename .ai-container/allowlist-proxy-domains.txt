@@ -1,9 +1,0 @@
-*.anthropic.com
-*.githubcopilot.com
-*.individual.githubcopilot.com
-*.business.githubcopilot.com
-*.enterprise.githubcopilot.com
-*.kiro.dev
-*.dynatrace.com
-*.dynalabs.io
-*.dynatrace-managed.com

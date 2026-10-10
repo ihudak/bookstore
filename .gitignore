@@ -53,3 +53,9 @@ dynatrace-managed-mcp.log
 /.agent-discovery/
 /dev-containers/
 /.remember/
+# AI sandbox tooling — the engine is a local working copy synced from the central
+# ai-containers repo; only this project's sandbox config is versioned.
+/.ai-containers/*
+!/.ai-containers/sandbox.conf
+!/.ai-containers/sandbox.env
+!/.ai-containers/container.env
