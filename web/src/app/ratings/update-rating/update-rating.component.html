@@ -1,28 +1,34 @@
 <div class="col-md-6 offset-md-3">
-  <h3>Create Rating</h3>
-  <form (ngSubmit)="onSubmit()">
-    <div class="form-group">
-      <label>e-mail</label>
-      <input type="text" class="form-control" id="email" [(ngModel)] = "rating.email" name="email">
-    </div>
-    <br>
-    <div class="form-group">
-      <label>ISBN</label>
-      <input type="text" class="form-control" id="isbn" [(ngModel)] = "rating.isbn" name="isbn">
-    </div>
-    <br>
-    <div class="form-group">
-      <label>Rating</label>
-      <input type="number" class="form-control" id="rating" [(ngModel)] = "rating.rating" name="rating">
-    </div>
-    <br>
-    <div class="form-group">
-      <label>Comment</label>
-      <input type="text" class="form-control" id="comment" [(ngModel)] = "rating.comment" name="comment">
-    </div>
-    <br>
+  <h3>Update Rating</h3>
+  @if (loaded; as rating) {
+    <form (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label>e-mail</label>
+        <div id="email">{{ rating.email }}</div>
+      </div>
+      <br>
+      <div class="form-group">
+        <label>ISBN</label>
+        <div id="isbn">{{ rating.isbn }}</div>
+      </div>
+      <br>
+      <div class="form-group">
+        <app-star-choice [(stars)]="stars" name="change-stars"></app-star-choice>
+      </div>
+      <br>
+      <div class="form-group">
+        <label>Comment</label>
+        <input type="text" class="form-control" id="comment" [(ngModel)] = "comment" name="comment">
+        <small class="form-text d-block">{{ commentNote }}</small>
+        <small class="form-text d-block">{{ keepCommentNote }}</small>
+      </div>
+      <br>
 
-    <br>
-    <button class="btn btn-success" type="submit">Submit</button>
-  </form>
+      <br>
+      <button class="btn btn-success" type="submit" [disabled]="sending">Submit</button>
+      <div role="alert">{{ outcomeText }}</div>
+    </form>
+  } @else if (loadFailure) {
+    <p>{{ loadFailure }}</p>
+  }
 </div>

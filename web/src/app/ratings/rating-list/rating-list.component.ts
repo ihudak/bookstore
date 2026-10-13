@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import {Router} from "@angular/router";
 import {Rating} from "../rating";
 import {RatingService} from "../rating.service";
@@ -11,6 +12,7 @@ import {RatingService} from "../rating.service";
 })
 export class RatingListComponent {
   ratings: Rating[] = [];
+  private destroyRef = inject(DestroyRef);
   ngOnInit(): void {
     this.getRatings();
   }
@@ -19,19 +21,19 @@ export class RatingListComponent {
   }
 
   private getRatings() {
-    this.ratingService.getRatingList().subscribe(data => {
+    this.ratingService.getRatingList().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(data => {
       this.ratings = data;
     });
   }
 
   getRatingsByEmail(email: string) {
-    this.ratingService.getRatingByEmail(email).subscribe(data => {
+    this.ratingService.getRatingByEmail(email).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(data => {
       this.ratings = data;
     });
   }
 
   getRatingsByISBN(isbn: string) {
-    this.ratingService.getRatingByISBN(isbn).subscribe(data => {
+    this.ratingService.getRatingByISBN(isbn).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(data => {
       this.ratings = data;
     });
   }
@@ -40,23 +42,7 @@ export class RatingListComponent {
     this.router.navigate(['update-rating', id]);
   }
 
-  deleteRating(rating: Rating) {
-    if (!confirm("Are you sure to delete rating for user " + rating.email + " and book " + rating.isbn)) { return;}
-    this.ratingService.deleteRating(rating.id).subscribe(data => {
-      console.log(data);
-      this.getRatings();
-    })
-  }
-
   ratingDetails(id: number) {
     this.router.navigate(['rating-details', id]);
-  }
-
-  deleteAllRatings() {
-    if (!confirm("Are you sure to delete ALL ratings")) { return;}
-    this.ratingService.deleteAllRatings().subscribe(data => {
-      console.log(data);
-      this.getRatings();
-    })
   }
 }

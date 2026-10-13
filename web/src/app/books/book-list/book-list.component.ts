@@ -1,7 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import {Router} from "@angular/router";
 import {Book} from "../book";
 import {BookService} from "../book.service";
+import {RatingService} from "../../ratings/rating.service";
+import {RatingLine} from "../../ratings/rating-outcomes";
 
 @Component({
     selector: 'app-book-list',
@@ -11,8 +14,14 @@ import {BookService} from "../book.service";
 })
 export class BookListComponent {
   books: Book[] = [];
+  lineFor: ((isbn: string) => RatingLine) | undefined;
+  private destroyRef = inject(DestroyRef);
   ngOnInit(): void {
     this.getBooks();
+    // once per screen open; the in-place refreshes below reload the books only
+    this.ratingService.catalogueLines().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(lineFor => {
+      this.lineFor = lineFor;
+    });
   }
 
   private getBooks() {
@@ -24,7 +33,7 @@ export class BookListComponent {
   updateBook(id: number) {
     this.router.navigate(['update-book', id]);
   }
-  constructor(private bookService: BookService, private router: Router) {
+  constructor(private bookService: BookService, private router: Router, private ratingService: RatingService) {
   }
 
   deleteBook(id: number) {
