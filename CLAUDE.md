@@ -59,6 +59,7 @@ com.dynatrace.{service}/
   model/        — DTOs and service-local models
   config/       — Spring @Configuration (WebConfig, RestTemplate beans)
 ```
+Services with business rules may add `service/` (rules, kept out of controllers) and, for an outbound call that needs its own timeouts or a test seam, a `purchase/`-style package holding an interface (port) plus its RestTemplate adapter instead of a client in `repository/`. `ratings` does this: `service/RatingService` and `purchase/PurchaseCheck` (orders client, 1 s connect / 3 s read via `ordersRestTemplate`).
 
 ### Inter-service communication
 Services call each other via **RestTemplate** over HTTP. URLs are externalized via env vars:

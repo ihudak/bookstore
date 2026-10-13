@@ -1,15 +1,13 @@
 package com.dynatrace.ratings.controller;
 
 import com.dynatrace.controller.SecurityController;
-import com.dynatrace.exception.BadRequestException;
 import com.dynatrace.exception.ResourceNotFoundException;
-import com.dynatrace.model.Book;
-import com.dynatrace.model.Client;
 import com.dynatrace.ratings.model.Rating;
-import com.dynatrace.ratings.repository.BookRepository;
-import com.dynatrace.ratings.repository.ClientRepository;
+import com.dynatrace.ratings.model.RatingRequest;
+import com.dynatrace.ratings.model.RatingSummary;
 import com.dynatrace.ratings.repository.ConfigRepository;
 import com.dynatrace.ratings.repository.RatingRepository;
+import com.dynatrace.ratings.service.RatingService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.slf4j.Logger;
@@ -27,9 +25,7 @@ public class RatingController extends SecurityController {
     @Autowired
     private RatingRepository ratingRepository;
     @Autowired
-    private ClientRepository clientRepository;
-    @Autowired
-    private BookRepository bookRepository;
+    private RatingService ratingService;
     @Autowired
     private ConfigRepository configRepository;
     private Logger logger = LoggerFactory.getLogger(RatingController.class);
@@ -55,6 +51,20 @@ public class RatingController extends SecurityController {
         return ratingRepository.findByIsbn(isbn);
     }
 
+    // get a book's rating summary
+    @GetMapping("/summary")
+    @Operation(summary = "Get one book's rating count and average")
+    public RatingSummary getSummary(@Parameter(name="isbn", description = "ISBN13, digits only (no dashes, no spaces)", example = "9783161484100") @RequestParam String isbn) {
+        return ratingService.summary(isbn);
+    }
+
+    // get the rating summary of every rated book
+    @GetMapping("/summaries")
+    @Operation(summary = "Get the rating count and average of every rated book")
+    public List<RatingSummary> getSummaries() {
+        return ratingService.summaries();
+    }
+
     // get a rating by id
     @GetMapping("/{id}")
     @Operation(summary = "Get a rating by ID")
@@ -68,33 +78,22 @@ public class RatingController extends SecurityController {
         return rating.get();
     }
 
-    // create a rating
+    // create a rating, or change the customer's existing rating of the book
     @PostMapping("")
-    @Operation(summary = "Create a rating. This operation does not require client/book to exist")
-    public Rating createRating(@RequestBody Rating rating) {
+    @Operation(summary = "Create a rating, or change the customer's existing rating of the book")
+    public Rating createRating(@RequestBody RatingRequest request) {
         runThreatScan();
         applySecurityPolicy();
-        this.verifyBook(rating.getIsbn());
-        this.verifyClient(rating.getEmail());
-        logger.debug("Creating Rating for book " + rating.getIsbn() + " from user " + rating.getEmail());
-        return ratingRepository.save(rating);
+        Rating rating = ratingService.give(request);
+        logger.debug("Rating " + rating.getId() + " saved for book " + rating.getIsbn());
+        return rating;
     }
 
     // update a rating
     @PutMapping("/{id}")
-    @Operation(summary = "Update a rating")
-    public Rating updateRatingById(@PathVariable Long id, @RequestBody Rating rating) {
-        Optional<Rating> ratingDb = ratingRepository.findById(id);
-        if (ratingDb.isEmpty()) {
-            ResourceNotFoundException ex = new ResourceNotFoundException("Rating not found");
-            logger.error(ex.getMessage());
-            throw ex;
-        } else if (rating.getId() != id || ratingDb.get().getId() != id) {
-            BadRequestException ex = new BadRequestException("bad rating id");
-            logger.error(ex.getMessage());
-            throw ex;
-        }
-        return ratingRepository.save(rating);
+    @Operation(summary = "Update a rating's stars and comment")
+    public Rating updateRatingById(@PathVariable Long id, @RequestBody RatingRequest request) {
+        return ratingService.change(id, request);
     }
 
     // delete a rating by id
@@ -104,36 +103,8 @@ public class RatingController extends SecurityController {
         ratingRepository.deleteById(id);
     }
 
-    // delete all ratings
-    @DeleteMapping("/delete-all")
-    @Operation(summary = "Delete all ratings")
-    public void deleteAllRatings() {
-        ratingRepository.truncateTable();
-    }
-
     @Override
     public ConfigRepository getConfigRepository() {
         return configRepository;
-    }
-
-
-    private void verifyClient(String email) {
-        logger.info("Verifying client " + email);
-        Client client = clientRepository.getClientByEmail(email);
-        if (null == client) {
-            ResourceNotFoundException ex = new ResourceNotFoundException("Client is not found by email " + email);
-            logger.error(ex.getMessage());
-            throw ex;
-        }
-    }
-
-    private void verifyBook(String isbn) {
-        logger.info("Verifying book " + isbn);
-        Book book = bookRepository.getBookByISBN(isbn);
-        if (null == book) {
-            ResourceNotFoundException ex = new ResourceNotFoundException("Book not found by isbn " + isbn);
-            logger.error(ex.getMessage());
-            throw ex;
-        }
     }
 }
