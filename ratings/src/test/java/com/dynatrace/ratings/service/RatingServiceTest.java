@@ -314,6 +314,25 @@ class RatingServiceTest {
         assertEquals("  replaced", stored(first.getId()).getComment());
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = {"", "   ", "\\t\\n\\t"})
+    void repeatGiveWithBlankCommentKeepsTheStoredComment(String comment) {
+        Rating first = seed(READER, ISBN, 2, "old", T0);
+        inMemoryPurchaseCheck.order(READER, ISBN, true);
+        ratingService.give(req(giveJson(READER, ISBN, 5, comment)));
+        Rating after = stored(first.getId());
+        assertEquals(5, after.getRating());
+        assertEquals("old", after.getComment());
+    }
+
+    @Test
+    void repeatGiveWithNoCommentFieldKeepsTheStoredComment() {
+        Rating first = seed(READER, ISBN, 2, "old", T0);
+        inMemoryPurchaseCheck.order(READER, ISBN, true);
+        ratingService.give(req("{\"email\":\"" + READER + "\",\"isbn\":\"" + ISBN + "\",\"rating\":5}"));
+        assertEquals("old", stored(first.getId()).getComment());
+    }
+
     @Test
     void repeatGiveAfterOrderWasCancelledIsRefusedAndLeavesTheRating() {
         Rating first = seed(READER, ISBN, 2, "old", T0);
@@ -367,6 +386,25 @@ class RatingServiceTest {
         Rating after = stored(first.getId());
         assertEquals(4, after.getRating());
         assertEquals("new comment", after.getComment());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"", "   ", "\\t\\n\\t"})
+    void changeWithBlankCommentKeepsTheStoredComment(String comment) {
+        Rating first = seed(READER, ISBN, 2, "old", T0);
+        inMemoryPurchaseCheck.order(READER, ISBN, true);
+        ratingService.change(first.getId(), req(changeJson(first.getId(), 4, comment)));
+        Rating after = stored(first.getId());
+        assertEquals(4, after.getRating());
+        assertEquals("old", after.getComment());
+    }
+
+    @Test
+    void changeWithNoCommentFieldKeepsTheStoredComment() {
+        Rating first = seed(READER, ISBN, 2, "old", T0);
+        inMemoryPurchaseCheck.order(READER, ISBN, true);
+        ratingService.change(first.getId(), req("{\"id\":" + first.getId() + ",\"rating\":4}"));
+        assertEquals("old", stored(first.getId()).getComment());
     }
 
     @Test

@@ -27,7 +27,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-// [U02] Change my rating of a book, through MockMvc. A blank comment on a change is not asserted anywhere here.
+// [U02] Change my rating of a book, through MockMvc.
 class RatingControllerChangeIT extends RatingControllerTestBase {
     private static final String READER = "reader@example.com";
     private static final String BOOK = "9780000000017";
@@ -216,6 +216,56 @@ class RatingControllerChangeIT extends RatingControllerTestBase {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/ratings/findByISBN").param("isbn", BOOK))
                 .andExpect(jsonPath("$.length()").value(1))
                 .andExpect(jsonPath("$[0].rating").value(5));
+    }
+
+    // ---- [AC05] An empty comment on a change keeps the stored comment --------------------------------------
+
+    @Test
+    void U02_AC05_TC01() throws Exception {
+        Rating rating = seed(READER, BOOK, 2, "Great plot");
+        ordersBuyer(READER, BOOK);
+
+        assertOkWithoutComment(put(rating.getId(),
+                "{\"id\":%d,\"rating\":4,\"comment\":\"\"}".formatted(rating.getId())), "Great plot");
+
+        assertEquals(4, stored(rating.getId()).getRating());
+        assertEquals("Great plot", stored(rating.getId()).getComment());
+    }
+
+    @Test
+    void U02_AC05_TC02() throws Exception {
+        Rating rating = seed("direct@example.com", OTHER_BOOK, 5, "Slow start");
+        ordersBuyer("direct@example.com", OTHER_BOOK);
+
+        assertOkWithoutComment(put(rating.getId(),
+                "{\"id\":%d,\"rating\":4}".formatted(rating.getId())), "Slow start");
+
+        assertEquals(4, stored(rating.getId()).getRating());
+        assertEquals("Slow start", stored(rating.getId()).getComment());
+    }
+
+    @Test
+    void U02_AC05_TC03() throws Exception {
+        Rating rating = seed("direct@example.com", OTHER_BOOK, 5, "Slow start");
+        ordersBuyer("direct@example.com", OTHER_BOOK);
+
+        assertOkWithoutComment(put(rating.getId(),
+                "{\"id\":%d,\"rating\":3,\"comment\":\"   \"}".formatted(rating.getId())), "Slow start");
+
+        assertEquals(3, stored(rating.getId()).getRating());
+        assertEquals("Slow start", stored(rating.getId()).getComment());
+    }
+
+    @Test
+    void U02_AC05_TC04() throws Exception {
+        Rating rating = seed(READER, BOOK, 2, "Great plot");
+        ordersBuyer(READER, BOOK);
+
+        assertOkWithoutComment(post("{\"email\":\"%s\",\"isbn\":\"%s\",\"rating\":4}".formatted(READER, BOOK)),
+                "Great plot");
+
+        assertEquals(4, stored(rating.getId()).getRating());
+        assertEquals("Great plot", stored(rating.getId()).getComment());
     }
 
     // ---- [AC06] A comment on a change replaces the stored comment ------------------------------------------
