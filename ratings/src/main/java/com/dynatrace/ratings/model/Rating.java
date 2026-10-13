@@ -58,10 +58,12 @@ public class Rating {
         this.updatedAt = at;
     }
 
-    // a change alters only the stars, the comment and Updated At
+    // a change alters only the stars, the comment and Updated At; an empty, absent or blank comment keeps the stored one
     public void applyChange(int stars, String comment, Date at) {
         this.rating = stars;
-        this.comment = commentOrNull(comment);
+        if (comment != null && !comment.isBlank()) {
+            this.comment = comment;
+        }
         this.updatedAt = at;
     }
 
