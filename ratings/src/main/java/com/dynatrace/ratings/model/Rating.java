@@ -1,14 +1,16 @@
 package com.dynatrace.ratings.model;
 
-import com.dynatrace.exception.BadRequestException;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name="ratings")
+@Table(name = "ratings",
+        uniqueConstraints = @UniqueConstraint(name = "uk_ratings_email_isbn", columnNames = {"email", "isbn"}),
+        indexes = @Index(name = "idx_ratings_isbn", columnList = "isbn"))
 public class Rating {
-    private final String emailRegExp = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
+    public static final String EMAIL_PATTERN = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
+    private final String emailRegExp = EMAIL_PATTERN;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -46,13 +48,33 @@ public class Rating {
         this.updatedAt = this.createdAt = new Date();
     }
 
+    // a new rating: Created At and Updated At are both the time it is given
+    public Rating(String email, String isbn, int stars, String comment, Date at) {
+        this.email = email;
+        this.isbn = isbn;
+        this.rating = stars;
+        this.comment = commentOrNull(comment);
+        this.createdAt = at;
+        this.updatedAt = at;
+    }
+
+    // a change alters only the stars, the comment and Updated At
+    public void applyChange(int stars, String comment, Date at) {
+        this.rating = stars;
+        this.comment = commentOrNull(comment);
+        this.updatedAt = at;
+    }
+
+    private static String commentOrNull(String comment) {
+        return (comment == null || comment.isBlank()) ? null : comment;
+    }
+
     public long getId() {
         return id;
     }
 
     public void setId(long id) {
         this.id = id;
-        this.updatedAt = new Date();
     }
 
     public String getEmail() {
@@ -60,11 +82,7 @@ public class Rating {
     }
 
     public void setEmail(String email) {
-        if (!email.matches(this.emailRegExp)) {
-            throw new BadRequestException("Invalid email address");
-        }
         this.email = email;
-        this.updatedAt = new Date();
     }
 
     public String getIsbn() {
@@ -72,11 +90,7 @@ public class Rating {
     }
 
     public void setIsbn(String isbn) {
-        if (isbn.length() != 13 || !isbn.matches("^\\d{13}$")) {
-            throw new BadRequestException("ISBN must be a 13-digits value");
-        }
         this.isbn = isbn;
-        this.updatedAt = new Date();
     }
 
     public int getRating() {
@@ -84,20 +98,17 @@ public class Rating {
     }
 
     public void setRating(int rating) {
-        if (rating <= 0 || rating > 5) {
-            throw new BadRequestException("Invalid rating. Must be between 0 and 5. Got: " + rating);
-        }
         this.rating = rating;
-        this.updatedAt = new Date();
     }
 
+    // comments are stored, and returned by no answer of the ratings service
+    @JsonIgnore
     public String getComment() {
         return comment;
     }
 
     public void setComment(String comment) {
         this.comment = comment;
-        this.updatedAt = new Date();
     }
 
     public Date getUpdatedAt() {
