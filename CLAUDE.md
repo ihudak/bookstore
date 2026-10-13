@@ -24,6 +24,11 @@ ng build                   # production build to dist/
 ng test                    # unit tests via Karma
 ```
 
+Karma spec gotchas (Angular 21 TestBed is zoneless with auto-detect, but the app is zone-based):
+- Use `provideHttpClient()` + `provideHttpClientTesting()` and `HttpTestingController`; `TestRequest.flush` rejects an `unknown` body under strict TS, so type the body.
+- Tests of timers/timeouts must create the fixture *inside* `fakeAsync`.
+- Angular strips inter-element whitespace, so host `textContent` joins adjacent elements; the TestBed host is a `<div>`, so avoid `div > div` selectors (use classes or `data-` hooks).
+
 ### Docker images (from `k8s/`)
 ```bash
 ./build_docker_all.sh      # Linux — builds all service images

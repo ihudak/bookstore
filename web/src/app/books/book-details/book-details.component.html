@@ -23,4 +23,8 @@
   <div>
     <label><b>Vend:</b></label> {{book.published}}
   </div>
+
+  @if (bookLoaded && ratingLine) {
+    <div class="rating-line">{{ ratingLine.text }}</div>
+  }
 </div>

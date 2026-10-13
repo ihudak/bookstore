@@ -1,0 +1,10 @@
+<fieldset>
+  <legend class="form-label fs-6">Rating</legend>
+  @for (n of choices; track n) {
+    <div class="form-check form-check-inline">
+      <input type="radio" class="form-check-input" [id]="name + '-' + n" [name]="name" [value]="n"
+             [checked]="stars === n" (change)="stars = n; starsChange.emit(n)">
+      <label class="form-check-label" [for]="name + '-' + n">{{ n }}</label>
+    </div>
+  }
+</fieldset>

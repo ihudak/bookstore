@@ -3,8 +3,6 @@ export class Rating {
   email: string | undefined;
   isbn: string | undefined;
   rating: number | undefined;
-  comment: string | undefined;
   createdAt: string | undefined;
   updatedAt: string | undefined;
 }
-

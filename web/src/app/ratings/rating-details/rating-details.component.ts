@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import {ActivatedRoute} from "@angular/router";
 import {RatingService} from "../rating.service";
 import {Rating} from "../rating";
@@ -12,13 +13,14 @@ import {Rating} from "../rating";
 export class RatingDetailsComponent {
   id: number = 0;
   rating: Rating = new Rating();
+  private destroyRef = inject(DestroyRef);
 
   constructor(private route: ActivatedRoute, private ratingService: RatingService) {  }
 
   ngOnInit(): void {
     this.id = this.route.snapshot.params['id'];
     this.rating = new Rating();
-    this.ratingService.getRatingById(this.id).subscribe(data => {
+    this.ratingService.getRatingById(this.id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(data => {
       this.rating = data;
     })
   }

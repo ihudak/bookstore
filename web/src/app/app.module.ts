@@ -28,6 +28,7 @@ import { RatingListComponent } from './ratings/rating-list/rating-list.component
 import { RatingDetailsComponent } from './ratings/rating-details/rating-details.component';
 import { CreateRatingComponent } from './ratings/create-rating/create-rating.component';
 import { UpdateRatingComponent } from './ratings/update-rating/update-rating.component';
+import { StarChoiceComponent } from './ratings/star-choice/star-choice.component';
 import { CartDetailsComponent } from './carts/cart-details/cart-details.component';
 import { StorageDetailsComponent } from './storage/storage-details/storage-details.component';
 import { UpdateStorageComponent } from './storage/update-storage/update-storage.component';
@@ -65,6 +66,7 @@ import { UpdateSettingComponent } from './ingest/settings/update-setting/update-
         RatingDetailsComponent,
         CreateRatingComponent,
         UpdateRatingComponent,
+        StarChoiceComponent,
         CartDetailsComponent,
         StorageDetailsComponent,
         UpdateStorageComponent,
