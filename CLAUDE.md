@@ -16,7 +16,7 @@ BookStore is a **Dynatrace observability demo** — a deliberately unhealthy, hi
 ./gradlew :books:test --tests "com.dynatrace.books.*BooksControllerTest"  # single test class
 ```
 
-### Frontend (Angular 18, in `web/`)
+### Frontend (Angular 21, in `web/`)
 ```bash
 ng serve                   # dev server on :4200
 ng serve -c staging        # staging config
@@ -91,7 +91,7 @@ All service controllers extend `SecurityController`. It implements DB-driven fau
 | Java | 21 |
 | PostgreSQL driver | pinned via `ext['postgresql.version']` in root `build.gradle` |
 | MySQL driver | pinned via `ext['mysql-connector-j.version']` in root `build.gradle` |
-| Angular | 18.2.x |
+| Angular | 21.1.x (see `web/package.json`) |
 
 ## Kubernetes Conventions
 
