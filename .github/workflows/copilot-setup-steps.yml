@@ -1,0 +1,22 @@
+
+name: Copilot setup steps
+on:
+  push:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+jobs:
+  copilot-setup-steps:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: plengauer/opentelemetry-github/actions/instrument/job@v5.63.1
+        env:
+          OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: ${{ secrets.DT_ENV_URL }}/api/v2/otlp/v1/traces
+          OTEL_EXPORTER_OTLP_METRICS_ENDPOINT: ${{ secrets.DT_ENV_URL }}/api/v2/otlp/v1/metrics
+          OTEL_EXPORTER_OTLP_LOGS_ENDPOINT: ${{ secrets.DT_ENV_URL }}/api/v2/otlp/v1/logs
+          OTEL_EXPORTER_OTLP_TRACES_HEADERS: Authorization=Api-Token ${{ secrets.DT_TOKEN }}
+          OTEL_EXPORTER_OTLP_METRICS_HEADERS: Authorization=Api-Token ${{ secrets.DT_TOKEN }}
+          OTEL_EXPORTER_OTLP_LOGS_HEADERS: Authorization=Api-Token ${{ secrets.DT_TOKEN }}
+      - run: |
+          :
+    permissions:
+      actions: read

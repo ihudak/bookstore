@@ -3,8 +3,13 @@ name: OpenTelemetry
 on:
   workflow_run:
     workflows:
+      - Claude
+      - Copilot
+      - Copilot cloud agent
+      - Copilot code review
       - Docker Images CI
       - Java CI with Gradle
+      - OpenAI Codex
     types:
       - completed
 jobs:

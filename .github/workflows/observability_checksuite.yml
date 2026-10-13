@@ -1,0 +1,21 @@
+name: OpenTelemetry
+on:
+  check_suite:
+    types:
+      - completed
+jobs:
+  export:
+    if: github.event.check_suite.app.slug != 'github-actions'
+    runs-on: ubuntu-latest
+    permissions:
+      checks: read
+      actions: read
+    steps:
+      - uses: plengauer/opentelemetry-github/actions/instrument/checksuite@v5.63.1
+        env:
+          OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: ${{ secrets.DT_ENV_URL }}/api/v2/otlp/v1/traces
+          OTEL_EXPORTER_OTLP_METRICS_ENDPOINT: ${{ secrets.DT_ENV_URL }}/api/v2/otlp/v1/metrics
+          OTEL_EXPORTER_OTLP_LOGS_ENDPOINT: ${{ secrets.DT_ENV_URL }}/api/v2/otlp/v1/logs
+          OTEL_EXPORTER_OTLP_TRACES_HEADERS: Authorization=Api-Token ${{ secrets.DT_TOKEN }}
+          OTEL_EXPORTER_OTLP_METRICS_HEADERS: Authorization=Api-Token ${{ secrets.DT_TOKEN }}
+          OTEL_EXPORTER_OTLP_LOGS_HEADERS: Authorization=Api-Token ${{ secrets.DT_TOKEN }}
