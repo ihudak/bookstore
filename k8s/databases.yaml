@@ -31,6 +31,8 @@ metadata:
     app: mysql
 spec:
   replicas:  1
+  strategy:
+    type: Recreate # RWO disk: old pod must release it before the new one starts
   selector:
     matchLabels:
       app: mysql
@@ -47,6 +49,7 @@ spec:
         app.kubernetes.io/version: 1.9.0
         app.kubernetes.io/part-of: BookStore
     spec:
+      terminationGracePeriodSeconds: 60
       containers:
         - name: mysql
           image: ghcr.io/ihudak/dt-mysql:latest
@@ -73,6 +76,19 @@ spec:
             requests:
               cpu: 500m
               memory: 1Gi
+          readinessProbe:
+            exec:
+              command: ["sh", "-c", "mysqladmin ping -h 127.0.0.1 -p\"$MYSQL_ROOT_PASSWORD\" --silent"]
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 5
+          livenessProbe:
+            exec:
+              command: ["sh", "-c", "mysqladmin ping -h 127.0.0.1 -p\"$MYSQL_ROOT_PASSWORD\" --silent"]
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
       volumes:
         - name: mysql-data
           persistentVolumeClaim:
@@ -102,6 +118,8 @@ metadata:
     app: postgres
 spec:
   replicas:  1
+  strategy:
+    type: Recreate # RWO disk: old pod must release it before the new one starts
   selector:
     matchLabels:
       app: postgres
@@ -118,6 +136,7 @@ spec:
         app.kubernetes.io/version: 1.9.0
         app.kubernetes.io/part-of: BookStore
     spec:
+      terminationGracePeriodSeconds: 60
       containers:
         - name: postgres
           image: ghcr.io/ihudak/dt-postgres:latest
@@ -144,6 +163,19 @@ spec:
             requests:
               cpu: 500m
               memory: 1Gi
+          readinessProbe:
+            exec:
+              command: ["sh", "-c", "pg_isready -h 127.0.0.1 -U \"$POSTGRES_USER\""]
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 5
+          livenessProbe:
+            exec:
+              command: ["sh", "-c", "pg_isready -h 127.0.0.1 -U \"$POSTGRES_USER\""]
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
       volumes:
         - name: postgres-data
           persistentVolumeClaim:
